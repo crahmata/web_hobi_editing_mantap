@@ -1,0 +1,282 @@
+/* ============================================
+   VIDHOBBY — style.css
+   ============================================ */
+
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: #000;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 3px;
+}
+::-webkit-scrollbar-track {
+    background: #000;
+}
+::-webkit-scrollbar-thumb {
+    background: #059669;
+    border-radius: 99px;
+}
+
+/* Grid background overlay */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+        filter: blur(8px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+.fade-up {
+    animation: fadeUp 0.7s ease-out both;
+}
+
+.d1 { animation-delay: 0.1s; }
+.d2 { animation-delay: 0.2s; }
+.d3 { animation-delay: 0.3s; }
+.d4 { animation-delay: 0.4s; }
+.d5 { animation-delay: 0.5s; }
+.d6 { animation-delay: 0.6s; }
+
+/* Scroll reveal */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(8px);
+    transition: all 0.7s ease-out;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+
+/* Glow button spinning border */
+@property --ga {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes gspin {
+    to { --ga: 360deg; }
+}
+
+.glow-btn {
+    position: relative;
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.glow-btn::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 9999px;
+    background: conic-gradient(
+        from var(--ga),
+        transparent 0%,
+        #059669 5%,
+        #34d399 15%,
+        #059669 30%,
+        transparent 40%
+    );
+    animation: gspin 2.5s linear infinite;
+    z-index: -1;
+}
+
+.glow-btn::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 9999px;
+    background: #0A0B0E;
+    z-index: -1;
+}
+
+/* Scanline */
+@keyframes scan {
+    0% { top: -5%; }
+    100% { top: 105%; }
+}
+
+.scanline {
+    position: relative;
+    overflow: hidden;
+}
+
+.scanline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.2), transparent);
+    animation: scan 5s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Glitch text on hover */
+@keyframes glitch {
+    0%, 100% { text-shadow: 2px 0 #059669, -2px 0 #34d399; }
+    25% { text-shadow: -2px 0 #059669, 2px 0 #34d399; }
+    50% { text-shadow: 1px 1px #059669, -1px -1px #34d399; }
+    75% { text-shadow: -1px 1px #059669, 1px -1px #34d399; }
+}
+
+.glitch-hover:hover {
+    animation: glitch 0.25s ease infinite;
+}
+
+/* Blink cursor */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.blink {
+    animation: blink 1s step-end infinite;
+}
+
+/* Pulse ring */
+@keyframes pulseRing {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.3); }
+    100% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+}
+
+/* ============================================
+   COMPONENTS
+   ============================================ */
+
+/* Card hover */
+.card {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.35s ease;
+}
+
+.card:hover {
+    border-color: rgba(16, 185, 129, 0.2);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.06);
+    transform: translateY(-4px);
+}
+
+/* Corner brackets on gallery hover */
+.bracket {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.group:hover .bracket {
+    opacity: 1;
+}
+
+.br-tl {
+    top: 8px;
+    left: 8px;
+    border-top: 2px solid rgba(16, 185, 129, 0.5);
+    border-left: 2px solid rgba(16, 185, 129, 0.5);
+    width: 16px;
+    height: 16px;
+}
+
+.br-tr {
+    top: 8px;
+    right: 8px;
+    border-top: 2px solid rgba(16, 185, 129, 0.5);
+    border-right: 2px solid rgba(16, 185, 129, 0.5);
+    width: 16px;
+    height: 16px;
+}
+
+.br-bl {
+    bottom: 8px;
+    left: 8px;
+    border-bottom: 2px solid rgba(16, 185, 129, 0.5);
+    border-left: 2px solid rgba(16, 185, 129, 0.5);
+    width: 16px;
+    height: 16px;
+}
+
+.br-br {
+    bottom: 8px;
+    right: 8px;
+    border-bottom: 2px solid rgba(16, 185, 129, 0.5);
+    border-right: 2px solid rgba(16, 185, 129, 0.5);
+    width: 16px;
+    height: 16px;
+}
+
+/* Toast notification */
+.toast {
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Mobile menu */
+.mob-nav {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+}
+
+.mob-nav.open {
+    max-height: 300px;
+}
+
+/* SPA pages */
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+/* Tab button active */
+.tab.on {
+    background: rgba(16, 185, 129, 0.12);
+    color: #34d399;
+    border-color: rgba(16, 185, 129, 0.25);
+}
