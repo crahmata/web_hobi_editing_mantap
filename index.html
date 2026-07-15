@@ -2,1111 +2,752 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>CEPEDIT — Editing Video sebagai Gaya Hidup</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CEPEDIT — Video Editing Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        space: ['Space Grotesk', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
-                    }
-                }
-            }
-        }
+    tailwind.config={theme:{extend:{fontFamily:{space:['Space Grotesk','sans-serif'],mono:['JetBrains Mono','monospace']}}}}
     </script>
-
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        html{-webkit-tap-highlight-color:transparent}
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        html{-webkit-text-size-adjust:100%;overflow-x:hidden}
         body{
-            background:#050506;
-            color:#e2e8f0;
+            background:#050506;color:#e2e8f0;
             font-family:'Space Grotesk',sans-serif;
             overflow-x:hidden;
-            /* Safe area untuk iPhone notch */
-            padding-left:env(safe-area-inset-left);
-            padding-right:env(safe-area-inset-right);
-            padding-bottom:env(safe-area-inset-bottom);
+            -webkit-overflow-scrolling:touch;
         }
-        ::-webkit-scrollbar{width:4px}
+        ::-webkit-scrollbar{width:3px}
         ::-webkit-scrollbar-track{background:#050506}
-        ::-webkit-scrollbar-thumb{background:rgba(16,185,129,0.2);border-radius:3px}
+        ::-webkit-scrollbar-thumb{background:rgba(16,185,129,.2);border-radius:3px}
 
-        /* ═══════════ LOADER ═══════════ */
-        #loader{
-            position:fixed;inset:0;z-index:9999;
-            background:#050506;
-            display:flex;flex-direction:column;align-items:center;justify-content:center;
-            transition:opacity .8s cubic-bezier(.4,0,.2,1),visibility .8s;
-        }
-        #loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
-        #loaderFlash{position:absolute;inset:0;background:#fff;opacity:0;animation:loaderFlash 3.5s ease-out forwards}
-        .loader-grain{
-            position:absolute;inset:0;opacity:.025;
-            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-size:128px 128px;
-        }
-        .loader-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 35%,rgba(0,0,0,.7) 100%)}
-        .loader-hline{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(16,185,129,.08),transparent)}
-        .loader-hline.top{top:33.33%}.loader-hline.bottom{bottom:33.33%}
+        /* ===== LOADER ===== */
+        #loader{position:fixed;inset:0;z-index:9999;background:#050506;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .7s,visibility .7s}
+        #loader.out{opacity:0;visibility:hidden;pointer-events:none}
+        #loaderFlash{position:absolute;inset:0;background:#fff;opacity:0;animation:lFlash 3s ease-out forwards}
+        .lgrain{position:absolute;inset:0;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:100px 100px}
+        .lvig{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.65) 100%)}
+        .lhl{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(16,185,129,.06),transparent)}
+        .lhl.t{top:33%}.lhl.b{bottom:33%}
 
-        .loader-viewfinder{
-            position:relative;width:90px;height:90px;margin-bottom:24px;
-            animation:viewfinderPulse 2.5s ease-in-out infinite;
-        }
-        .vf-tl,.vf-tr,.vf-bl,.vf-br{position:absolute;width:18px;height:18px}
-        .vf-tl{top:0;left:0;border-top:2px solid rgba(16,185,129,.5);border-left:2px solid rgba(16,185,129,.5)}
-        .vf-tr{top:0;right:0;border-top:2px solid rgba(16,185,129,.5);border-right:2px solid rgba(16,185,129,.5)}
-        .vf-bl{bottom:0;left:0;border-bottom:2px solid rgba(16,185,129,.5);border-left:2px solid rgba(16,185,129,.5)}
-        .vf-br{bottom:0;right:0;border-bottom:2px solid rgba(16,185,129,.5);border-right:2px solid rgba(16,185,129,.5)}
-        .vf-cross{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px}
-        .vf-cross::before,.vf-cross::after{content:'';position:absolute;background:rgba(16,185,129,.3)}
-        .vf-cross::before{width:1px;height:100%;left:50%;transform:translateX(-50%)}
-        .vf-cross::after{height:1px;width:100%;top:50%;transform:translateY(-50%)}
+        .lvf{position:relative;width:80px;height:80px;margin-bottom:20px;animation:vfp 2.5s ease-in-out infinite}
+        .vtl,.vtr,.vbl,.vbr{position:absolute;width:16px;height:16px}
+        .vtl{top:0;left:0;border-top:2px solid rgba(16,185,129,.45);border-left:2px solid rgba(16,185,129,.45)}
+        .vtr{top:0;right:0;border-top:2px solid rgba(16,185,129,.45);border-right:2px solid rgba(16,185,129,.45)}
+        .vbl{bottom:0;left:0;border-bottom:2px solid rgba(16,185,129,.45);border-left:2px solid rgba(16,185,129,.45)}
+        .vbr{bottom:0;right:0;border-bottom:2px solid rgba(16,185,129,.45);border-right:2px solid rgba(16,185,129,.45)}
+        .vc{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:5px;height:5px}
+        .vc::before,.vc::after{content:'';position:absolute;background:rgba(16,185,129,.25)}
+        .vc::before{width:1px;height:100%;left:50%;transform:translateX(-50%)}
+        .vc::after{height:1px;width:100%;top:50%;transform:translateY(-50%)}
 
-        .loader-rec{display:flex;align-items:center;gap:6px;margin-bottom:16px}
-        .loader-rec-dot{width:6px;height:6px;border-radius:50%;background:#ef4444;animation:recBlink 1s ease infinite}
-        .loader-rec-text{font-family:'JetBrains Mono',monospace;font-size:9px;color:#ef4444;letter-spacing:.12em;font-weight:600}
+        .lrec{display:flex;align-items:center;gap:5px;margin-bottom:14px}
+        .lrec-d{width:6px;height:6px;border-radius:50%;background:#ef4444;animation:rb 1s ease infinite}
+        .lrec-t{font-family:'JetBrains Mono',monospace;font-size:8px;color:#ef4444;letter-spacing:.1em;font-weight:600}
 
-        .loader-title-scan{overflow:hidden;position:relative}
-        .loader-title-scan::after{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(16,185,129,.08),transparent);animation:scanLine 2s linear infinite}
-        .loader-title{
-            font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;
-            color:#fff;position:relative;letter-spacing:.12em;
-        }
-        .loader-title::before,.loader-title::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
-        .loader-title::before{animation:glitch1 3s infinite linear;clip-path:polygon(0 0,100% 0,100% 33%,0 33%);color:#10b981;opacity:.7}
-        .loader-title::after{animation:glitch2 3s infinite linear;clip-path:polygon(0 67%,100% 67%,100% 100%,0 100%);color:#06b6d4;opacity:.7}
-        .loader-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(148,163,184,.35);letter-spacing:.2em;margin-bottom:28px;margin-top:4px}
+        .lts{overflow:hidden;position:relative}
+        .lts::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(16,185,129,.06),transparent);animation:sl 2s linear infinite}
+        .lt{font-family:'Space Grotesk',sans-serif;font-size:1.75rem;font-weight:700;color:#fff;position:relative;letter-spacing:.1em}
+        .lt::before,.lt::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+        .lt::before{animation:g1 3s infinite linear;clip-path:polygon(0 0,100% 0,100% 33%,0 33%);color:#10b981;opacity:.6}
+        .lt::after{animation:g2 3s infinite linear;clip-path:polygon(0 67%,100% 67%,100% 100%,0 100%);color:#06b6d4;opacity:.6}
+        .lsub{font-family:'JetBrains Mono',monospace;font-size:8px;color:rgba(148,163,184,.3);letter-spacing:.18em;margin-bottom:24px}
 
-        .loader-bar-wrap{width:180px}
-        .loader-bar-label{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:8px;color:rgba(148,163,184,.3);margin-bottom:6px}
-        .loader-bar{height:2px;background:rgba(255,255,255,.04);border-radius:1px;overflow:hidden}
-        .loader-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:1px;transition:width .15s linear;box-shadow:0 0 8px rgba(16,185,129,.4)}
-        .loader-status{margin-top:14px;min-height:14px}
-        .loader-status-line{font-family:'JetBrains Mono',monospace;font-size:8px;color:rgba(148,163,184,.2);letter-spacing:.05em}
+        .lbw{width:160px}
+        .lbl{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:7px;color:rgba(148,163,184,.25);margin-bottom:5px}
+        .lb{height:2px;background:rgba(255,255,255,.03);border-radius:1px;overflow:hidden}
+        .lbf{height:100%;width:0%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:1px;transition:width .12s linear;box-shadow:0 0 6px rgba(16,185,129,.35)}
+        .lst{margin-top:12px;min-height:12px}
+        .lst span{font-family:'JetBrains Mono',monospace;font-size:7px;color:rgba(148,163,184,.18);letter-spacing:.04em}
 
-        /* ═══════════ MAIN ═══════════ */
-        #mainContent{opacity:0;transition:opacity .8s ease .2s}
-        #mainContent.visible{opacity:1}
-        .page{display:none}.page.active{display:block}
+        /* ===== MAIN ===== */
+        #mainContent{opacity:0;transition:opacity .7s ease .15s}
+        #mainContent.vis{opacity:1}
+        .page{display:none}.page.on{display:block}
 
-        /* ═══════════ COMPONENTS ═══════════ */
-        .toast{opacity:0;transform:translate(-50%,-20px);transition:opacity .3s,transform .3s;pointer-events:none}
-        .toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+        /* ===== COMPONENTS ===== */
+        .toast{opacity:0;transform:translate(-50%,-16px);transition:opacity .25s,transform .25s;pointer-events:none}
+        .toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 
-        .mob-nav{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
-        .mob-nav.open{max-height:300px}
+        .mobnav{max-height:0;overflow:hidden;transition:max-height .3s ease}
+        .mobnav.op{max-height:280px}
+        .nv.act{color:#fff!important;background:rgba(255,255,255,.05)}
 
-        .nv.active{color:#fff!important;background:rgba(255,255,255,.05)}
+        .scanl::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.012) 2px,rgba(0,0,0,.012) 4px);pointer-events:none;z-index:1}
 
-        .scanline::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.015) 2px,rgba(0,0,0,.015) 4px);pointer-events:none;z-index:1}
+        .fu{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+        .fu.sh{opacity:1;transform:translateY(0)}
+        .d1{transition-delay:.05s}.d2{transition-delay:.1s}.d3{transition-delay:.15s}.d4{transition-delay:.2s}.d5{transition-delay:.25s}.d6{transition-delay:.3s}
 
-        .fade-up{opacity:0;transform:translateY(20px);transition:opacity .6s cubic-bezier(.4,0,.2,1),transform .6s cubic-bezier(.4,0,.2,1)}
-        .fade-up.show{opacity:1;transform:translateY(0)}
-        .d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}.d4{transition-delay:.24s}.d5{transition-delay:.3s}.d6{transition-delay:.36s}
+        .rv{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+        .rv.sh{opacity:1;transform:translateY(0)}
 
-        .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.4,0,.2,1),transform .6s cubic-bezier(.4,0,.2,1)}
-        .reveal.show{opacity:1;transform:translateY(0)}
+        .cd{border:1px solid rgba(255,255,255,.04);transition:border-color .3s,transform .3s,box-shadow .3s}
+        .cd:hover{border-color:rgba(16,185,129,.1);transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,0,0,.25)}
 
-        .card{border:1px solid rgba(255,255,255,.04);transition:border-color .3s,transform .3s,box-shadow .3s}
-        .card:hover{border-color:rgba(16,185,129,.12);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+        .gbtn{position:relative;border-radius:9999px;background:transparent;border:1px solid rgba(16,185,129,.2);transition:all .3s;outline:none;display:inline-flex;align-items:center;justify-content:center;min-height:42px;cursor:pointer}
+        .gbtn:hover{background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.4);box-shadow:0 0 20px rgba(16,185,129,.08)}
 
-        .glow-btn{
-            position:relative;border-radius:9999px;background:transparent;
-            border:1px solid rgba(16,185,129,.25);transition:all .3s;outline:none;
-            /* Touch target minimal 44px */
-            min-height:44px;display:inline-flex;align-items:center;justify-content:center;
-        }
-        .glow-btn:hover{background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.5);box-shadow:0 0 24px rgba(16,185,129,.12),0 0 60px rgba(16,185,129,.05)}
+        .tab{outline:none;display:inline-flex;align-items:center;cursor:pointer;min-height:34px}
+        .tab.on{background:rgba(16,185,129,.1);color:#10b981!important;border-color:rgba(16,185,129,.25)!important}
 
-        .tab{outline:none;min-height:36px;display:inline-flex;align-items:center}
-        .tab.on{background:rgba(16,185,129,.1);color:#10b981!important;border-color:rgba(16,185,129,.3)!important}
+        .sp{background:#08090b;border:1px solid rgba(16,185,129,.05);overflow:hidden;position:relative}
+        .si{transition:background .3s}.si:hover{background:rgba(16,185,129,.015)}
+        .sd{animation:pr 2s ease infinite}
+        .sn{text-shadow:0 0 16px rgba(16,185,129,.25)}
+        .sc{transition:color .3s}.si:hover .sc{color:rgba(16,185,129,.35)}
 
-        .stat-panel{position:relative;background:#08090b;border:1px solid rgba(16,185,129,.06);overflow:hidden}
-        .stat-item{border-right:1px solid rgba(16,185,129,.05);transition:background .3s}
-        .stat-item:hover{background:rgba(16,185,129,.02)}
-        .stat-item:last-child{border-right:none}
-        /* Pada mobile: hapus border kanan item ganjil di grid 2-col */
-        .stat-dot{animation:pulseRing 2s ease infinite}
-        .stat-num{text-shadow:0 0 20px rgba(16,185,129,.3)}
-        .stat-caption{transition:color .3s}
-        .stat-item:hover .stat-caption{color:rgba(16,185,129,.4)}
+        .gh:hover{animation:tg .3s ease}
+        .bk{animation:bl 1s step-end infinite}
 
-        .glitch-hover{transition:color .3s}
-        .glitch-hover:hover{animation:textGlitch .35s ease}
-        .blink{animation:blink 1s step-end infinite}
-
-        /* Karya Cards */
-        .karya-card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.04);border-radius:16px;background:#0A0B0E;transition:all .4s}
-        .karya-card:hover{border-color:rgba(16,185,129,.15);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
-        .karya-card img{transition:transform .6s cubic-bezier(.4,0,.2,1)}
-        .karya-card:hover img{transform:scale(1.05)}
-        .karya-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,6,.95) 0%,rgba(5,5,6,.3) 50%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:16px;opacity:.7;transition:opacity .4s}
-        .karya-card:hover .karya-overlay{opacity:1}
+        .kc{overflow:hidden;border:1px solid rgba(255,255,255,.04);border-radius:14px;background:#0A0B0E;transition:all .35s}
+        .kc:hover{border-color:rgba(16,185,129,.12);transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.35)}
+        .kc img{transition:transform .5s ease}
+        .kc:hover img{transform:scale(1.04)}
+        .ko{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,6,.92) 0%,rgba(5,5,6,.25) 55%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:14px;opacity:.65;transition:opacity .35s}
+        .kc:hover .ko{opacity:1}
 
         footer a{transition:color .2s}footer a:hover{color:#10b981}
 
-        /* ═══════════ ANIMATIONS ═══════════ */
-        @keyframes loaderFlash{0%{opacity:0}4%{opacity:.6}100%{opacity:0}}
-        @keyframes viewfinderPulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.03)}}
-        @keyframes recBlink{0%,100%{opacity:1}50%{opacity:.2}}
-        @keyframes glitch1{0%,100%{transform:translate(0)}10%{transform:translate(-2px,1px)}20%{transform:translate(2px,-1px)}30%{transform:translate(0)}50%{transform:translate(-1px,2px)}60%{transform:translate(0)}}
-        @keyframes glitch2{0%,100%{transform:translate(0)}15%{transform:translate(2px,-2px)}25%{transform:translate(-2px,1px)}35%{transform:translate(0)}55%{transform:translate(1px,-1px)}65%{transform:translate(0)}}
-        @keyframes scanLine{0%{left:-50%}100%{left:150%}}
-        @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-        @keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(16,185,129,.3)}70%{box-shadow:0 0 0 8px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
-        @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-        @keyframes textGlitch{0%{transform:translate(0)}20%{transform:translate(-2px,2px)}40%{transform:translate(2px,-1px)}60%{transform:translate(-1px,-1px)}80%{transform:translate(1px,1px)}100%{transform:translate(0)}}
+        /* ===== KEYFRAMES ===== */
+        @keyframes lFlash{0%{opacity:0}3%{opacity:.5}100%{opacity:0}}
+        @keyframes vfp{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.02)}}
+        @keyframes rb{0%,100%{opacity:1}50%{opacity:.15}}
+        @keyframes g1{0%,100%{transform:translate(0)}10%{transform:translate(-2px,1px)}20%{transform:translate(1px,-1px)}30%{transform:translate(0)}50%{transform:translate(-1px,1px)}60%{transform:translate(0)}}
+        @keyframes g2{0%,100%{transform:translate(0)}15%{transform:translate(1px,-1px)}25%{transform:translate(-1px,1px)}35%{transform:translate(0)}55%{transform:translate(1px,-1px)}65%{transform:translate(0)}}
+        @keyframes sl{0%{left:-60%}100%{left:160%}}
+        @keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+        @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        @keyframes pr{0%{box-shadow:0 0 0 0 rgba(16,185,129,.25)}70%{box-shadow:0 0 0 6px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+        @keyframes bl{0%,100%{opacity:1}50%{opacity:0}}
+        @keyframes tg{0%{transform:translate(0)}25%{transform:translate(-1px,1px)}50%{transform:translate(1px,-1px)}75%{transform:translate(-1px,-1px)}100%{transform:translate(0)}}
 
-        /* ═══════════ RESPONSIVE ═══════════ */
+        /* ===== RESPONSIVE ===== */
 
-        /* --- Kecil (< 380px) --- */
-        @media(max-width:380px){
-            .loader-title{font-size:1.5rem;letter-spacing:.08em}
-            .loader-viewfinder{width:70px;height:70px}
-            .vf-tl,.vf-tr,.vf-bl,.vf-br{width:14px;height:14px}
-            .loader-bar-wrap{width:150px}
-            .loader-sub{letter-spacing:.12em}
-        }
+        /* Loader scale */
+        @media(min-width:480px){.lt{font-size:2.2rem}.lvf{width:100px;height:100px}.vtl,.vtr,.vbl,.vbr{width:20px;height:20px}.lbw{width:190px}.lsub{font-size:9px;letter-spacing:.22em}.lrec-t{font-size:9px}}
+        @media(min-width:768px){.lt{font-size:2.8rem}.lvf{width:110px;height:110px;margin-bottom:28px}}
 
-        /* --- Mobile umum (< 640px) --- */
-        @media(max-width:639px){
-            .loader-title{font-size:1.8rem;letter-spacing:.1em}
-            .loader-viewfinder{width:80px;height:80px}
-            .vf-tl,.vf-tr,.vf-bl,.vf-br{width:16px;height:16px}
-            .loader-bar-wrap{width:170px}
+        /* Stat panel borders on mobile - hide separator on odd items */
+        @media(max-width:767px){.si{border-right:none!important}.si+.si{border-left:1px solid rgba(16,185,129,.05)}}
 
-            /* Hero image badges - sembunyikan floating FX di mobile */
-            .hero-badge-fx{display:none!important}
-            /* Badge cut & grade lebih kecil */
-            .hero-badge{padding:6px!important}
-            .hero-badge span{font-size:8px!important}
-            .hero-badge iconify-icon{font-size:12px!important}
+        /* Corner brackets only on md+ */
+        .sp-c{display:none}
+        @media(min-width:768px){.sp-c{display:block}}
 
-            /* Stat numbers lebih kecil */
-            .stat-num{font-size:1.5rem!important}
-            .stat-item{padding:16px 8px!important}
+        /* Hero floating badges: smaller on mobile, hide FX */
+        .hfx{display:none}
+        @media(min-width:640px){.hfx{display:block}}
 
-            /* Hapus border kanan item pertama di row 2-col */
-            .stat-item:nth-child(odd){border-right:none}
+        /* Bridge CTA stack on mobile */
+        @media(max-width:767px){.bcta{flex-direction:column!important}.bcta .bcta-r{width:100%;display:flex;flex-direction:column;align-items:stretch}}
 
-            /* Workflow step icon lebih kecil */
-            .wf-icon{width:48px!important;height:48px!important}
-            .wf-icon iconify-icon{font-size:18px!important}
+        /* Hobi card image */
+        .himg{height:160px}
+        @media(min-width:640px){.himg{height:200px}}
+        @media(min-width:768px){.himg{height:100%;min-height:280px}}
 
-            /* Bridge CTA - stack vertikal */
-            .bridge-cta{flex-direction:column!important;text-align:center}
-            .bridge-cta .flex-shrink-0{width:100%}
-        }
-
-        /* --- Tablet (640-1023px) --- */
-        @media(min-width:640px) and (max-width:1023px){
-            .loader-title{font-size:2.4rem}
-            .loader-viewfinder{width:100px;height:100px}
-            .stat-num{font-size:2rem!important}
-        }
-
-        /* --- Desktop besar --- */
-        @media(min-width:1024px){
-            .loader-title{font-size:2.8rem}
-            .loader-viewfinder{width:110px;height:110px}
-            .stat-item:nth-child(odd){border-right:1px solid rgba(16,185,129,.05)}
-        }
-
-        /* Karya card height responsif */
-        .karya-img{height:200px}
-        @media(min-width:640px){.karya-img{height:220px}}
-        @media(min-width:1024px){.karya-img{height:240px}}
-
-        /* Hobi card image height */
-        .hobi-img{height:180px}
-        @media(min-width:768px){.hobi-img{height:100%}}
+        /* Karya card image */
+        .kimg{height:170px}
+        @media(min-width:640px){.kimg{height:210px}}
+        @media(min-width:1024px){.kimg{height:230px}}
     </style>
 </head>
 <body>
 
-    <!-- ═══════════════════════════════════════
-         LOADING SCREEN
-    ═══════════════════════════════════════ -->
-    <div id="loader">
-        <div id="loaderFlash"></div>
-        <div class="loader-grain"></div>
-        <div class="loader-vignette"></div>
-        <div class="loader-hline top"></div>
-        <div class="loader-hline bottom"></div>
-        <div class="loader-viewfinder">
-            <div class="vf-tl"></div><div class="vf-tr"></div>
-            <div class="vf-bl"></div><div class="vf-br"></div>
-            <div class="vf-cross"></div>
-        </div>
-        <div class="loader-rec">
-            <div class="loader-rec-dot"></div>
-            <span class="loader-rec-text">REC</span>
-        </div>
-        <div class="loader-title-scan">
-            <div class="loader-title" data-text="CEPEDIT">CEPEDIT</div>
-        </div>
-        <div class="loader-sub">VIDEO EDITING STUDIO</div>
-        <div class="loader-bar-wrap">
-            <div class="loader-bar-label">
-                <span>LOADING</span>
-                <span id="loaderBarPercent">0%</span>
+<!-- ===== LOADER ===== -->
+<div id="loader">
+    <div id="loaderFlash"></div>
+    <div class="lgrain"></div>
+    <div class="lvig"></div>
+    <div class="lhl t"></div><div class="lhl b"></div>
+    <div class="lvf">
+        <div class="vtl"></div><div class="vtr"></div><div class="vbl"></div><div class="vbr"></div><div class="vc"></div>
+    </div>
+    <div class="lrec"><div class="lrec-d"></div><span class="lrec-t">REC</span></div>
+    <div class="lts"><div class="lt" data-text="CEPEDIT">CEPEDIT</div></div>
+    <div class="lsub">VIDEO EDITING STUDIO</div>
+    <div class="lbw">
+        <div class="lbl"><span>LOADING</span><span id="lbp">0%</span></div>
+        <div class="lb"><div class="lbf" id="lbf"></div></div>
+    </div>
+    <div class="lst"><span id="lst">AWAITING SIGNAL...</span></div>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div id="mainContent">
+
+    <!-- Toast -->
+    <div id="toast" class="toast fixed top-16 left-1/2 -translate-x-1/2 z-[300] bg-[#0c0d10]/95 border border-emerald-500/20 backdrop-blur-xl rounded-xl px-4 py-2 flex items-center gap-2 max-w-[85vw]">
+        <iconify-icon icon="mdi:check-circle-outline" class="text-emerald-400 text-sm flex-shrink-0"></iconify-icon>
+        <span id="tmsg" class="text-[11px] text-slate-300 font-medium truncate">OK</span>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-[200] border-b border-white/5 bg-black/60 backdrop-blur-xl">
+        <div class="max-w-[1300px] mx-auto px-4 md:px-8 flex items-center justify-between h-12 md:h-14">
+            <a href="#" onclick="go('beranda');return false" class="flex items-center gap-2 flex-shrink-0">
+                <img src="https://z-cdn-media.chatglm.cn/files/673527df-e761-4e9a-956e-1a37c62585a5.jpeg?auth_key=1884015929-40618e49287c4f9ba3b74eae48a36097-0-d700f49054296bb95350c8dbb53e51b2" alt="" class="h-7 w-7 rounded object-cover">
+                <span class="font-space font-bold text-xs tracking-tight">CEP<span class="text-emerald-400">EDIT</span></span>
+            </a>
+            <div class="hidden md:flex items-center gap-0.5">
+                <button onclick="go('beranda')" data-p="beranda" class="nv text-[13px] font-medium text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all">Beranda</button>
+                <button onclick="go('hobi')" data-p="hobi" class="nv text-[13px] font-medium text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all">Hobi Ini</button>
+                <button onclick="go('tools')" data-p="tools" class="nv text-[13px] font-medium text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all">Tools</button>
+                <button onclick="go('karya')" data-p="karya" class="nv text-[13px] font-medium text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all">Karya</button>
             </div>
-            <div class="loader-bar">
-                <div class="loader-bar-fill" id="loaderBarFill"></div>
+            <button onclick="tmob()" class="md:hidden text-white w-10 h-10 flex items-center justify-center -mr-1 flex-shrink-0">
+                <iconify-icon icon="mdi:menu" class="text-xl" id="mico"></iconify-icon>
+            </button>
+        </div>
+        <div id="mnav" class="mobnav md:hidden border-t border-white/5 bg-black/80 backdrop-blur-xl">
+            <div class="py-1 px-2 flex flex-col">
+                <button onclick="go('beranda');cmob()" class="text-[13px] text-slate-400 hover:text-white px-3 py-3 rounded-lg hover:bg-white/5 text-left transition-all">Beranda</button>
+                <button onclick="go('hobi');cmob()" class="text-[13px] text-slate-400 hover:text-white px-3 py-3 rounded-lg hover:bg-white/5 text-left transition-all">Hobi Ini</button>
+                <button onclick="go('tools');cmob()" class="text-[13px] text-slate-400 hover:text-white px-3 py-3 rounded-lg hover:bg-white/5 text-left transition-all">Tools</button>
+                <button onclick="go('karya');cmob()" class="text-[13px] text-slate-400 hover:text-white px-3 py-3 rounded-lg hover:bg-white/5 text-left transition-all">Karya</button>
             </div>
         </div>
-        <div class="loader-status">
-            <div class="loader-status-line"><span id="loaderStatusText">AWAITING SIGNAL...</span></div>
+    </nav>
+
+
+    <!-- ===== BERANDA ===== -->
+    <div id="pg-beranda" class="page on">
+        <section class="relative min-h-screen flex items-center pt-12 md:pt-14 scanl">
+            <div class="absolute top-1/4 left-1/4 w-[280px] h-[280px] sm:w-[450px] sm:h-[450px] bg-emerald-500/[0.05] rounded-full blur-[90px] sm:blur-[110px]"></div>
+            <div class="absolute bottom-1/3 right-1/5 w-[200px] h-[200px] sm:w-[280px] sm:h-[280px] bg-emerald-600/[0.03] rounded-full blur-[60px] sm:blur-[70px]"></div>
+
+            <div class="max-w-[1300px] mx-auto px-4 md:px-8 w-full py-8 md:py-24">
+                <div class="grid lg:grid-cols-12 gap-6 lg:gap-10 items-center">
+                    <div class="lg:col-span-7 flex flex-col gap-4 md:gap-6">
+                        <div class="fu d1 inline-flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04]">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" style="animation:pr 2s ease infinite"></span>
+                            <span class="font-mono text-[8px] sm:text-[9px] font-semibold text-emerald-400/80 uppercase tracking-[.1em]">Hobi // Video Editing</span>
+                        </div>
+
+                        <h1 class="fu d2 font-space text-[clamp(1.6rem,7vw,4.2rem)] font-light leading-[.95] tracking-tight">
+                            Mengedit Video<br>
+                            Itu <span class="gh text-emerald-400 font-medium cursor-default">Menghidupkan Imajinasi</span>,<br>
+                            <span class="text-neutral-500">Bukan Sekadar Memotong Video</span>
+                        </h1>
+
+                        <p class="fu d3 text-[13px] sm:text-[14px] md:text-base text-slate-400 leading-relaxed max-w-lg">
+                            Bayangkan punya kekuatan untuk mengubah footage mentah jadi sesuatu yang bikin orang merinding. Ini bukan tugas — ini <span class="text-white">obsesi yang menyenangkan</span>.
+                        </p>
+
+                        <div class="fu d4 bg-[#08090b] border border-white/[0.05] rounded-lg p-3 md:p-4 max-w-sm font-mono text-[10px] md:text-[12px] overflow-x-auto">
+                            <div class="flex items-center gap-1.5 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-red-500/50 flex-shrink-0"></span>
+                                <span class="w-2 h-2 rounded-full bg-yellow-500/50 flex-shrink-0"></span>
+                                <span class="w-2 h-2 rounded-full bg-green-500/50 flex-shrink-0"></span>
+                                <span class="text-[8px] md:text-[9px] text-neutral-700 ml-1">hobi.log</span>
+                            </div>
+                            <div class="space-y-0.5 text-slate-500 whitespace-nowrap">
+                                <div><span class="text-emerald-500/70">→</span> checking passion_level...</div>
+                                <div class="text-emerald-400/80">✓ menyenangkan <span class="text-white font-semibold" id="c1">0</span>%</div>
+                                <div class="text-emerald-400/80">✓ bikin lupa waktu <span class="text-white font-semibold" id="c2">0</span>%</div>
+                                <div class="text-emerald-400/80">✓ hasilnya bangga <span class="text-white font-semibold" id="c3">0</span>%</div>
+                                <div class="text-neutral-700 mt-0.5"><span class="text-emerald-500/70">→</span> <span class="bk text-white/40">▊</span></div>
+                            </div>
+                        </div>
+
+                        <div class="fu d5 flex flex-wrap gap-2.5">
+                            <button onclick="go('hobi')" class="gbtn text-[12px] sm:text-[14px] font-medium text-emerald-400 px-5 sm:px-7 py-2.5 sm:py-3">Pelajari Hobiku</button>
+                            <button onclick="go('karya')" class="text-[12px] sm:text-[14px] font-medium text-slate-400 hover:text-white px-5 sm:px-7 py-2.5 sm:py-3 rounded-full border border-white/10 hover:border-white/20 transition-all cursor-pointer min-h-[42px]">Lihat Hasilnya</button>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5 fu d5 relative flex justify-center mt-2 lg:mt-0">
+                        <div class="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[420px]">
+                            <div class="relative rounded-xl overflow-hidden border border-white/[0.08] bg-[#0A0B0E]">
+                                <img src="https://picsum.photos/seed/vidhero77/600/450.jpg" alt="" class="w-full h-[200px] sm:h-[260px] md:h-[370px] object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                                <div class="absolute top-2 left-2 sm:top-3 sm:left-3 w-4 h-4 sm:w-5 sm:h-5 border-t-2 border-l-2 border-emerald-500/50"></div>
+                                <div class="absolute top-2 right-2 sm:top-3 sm:right-3 w-4 h-4 sm:w-5 sm:h-5 border-t-2 border-r-2 border-emerald-500/50"></div>
+                                <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 w-4 h-4 sm:w-5 sm:h-5 border-b-2 border-l-2 border-emerald-500/50"></div>
+                                <div class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 w-4 h-4 sm:w-5 sm:h-5 border-b-2 border-r-2 border-emerald-500/50"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <button onclick="toast('Video demo segera!')" class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-emerald-500/10 backdrop-blur border border-emerald-500/25 flex items-center justify-center hover:bg-emerald-500/20 hover:scale-110 transition-all cursor-pointer" style="animation:pr 3s ease infinite">
+                                        <iconify-icon icon="mdi:play" class="text-emerald-400 text-lg sm:text-xl md:text-2xl ml-0.5"></iconify-icon>
+                                    </button>
+                                </div>
+                                <div class="absolute bottom-0 left-0 right-0 p-2.5 sm:p-4">
+                                    <div class="font-mono text-[7px] sm:text-[9px] text-emerald-500/50 mb-0.5">REC ● 00:32:08 // 4K // 24fps</div>
+                                    <div class="text-[11px] sm:text-sm font-medium">Cinematic Night Edit</div>
+                                </div>
+                            </div>
+                            <div class="absolute -top-1.5 -left-1.5 sm:-top-2.5 sm:-left-2.5 bg-[#08090b]/90 backdrop-blur border border-emerald-500/15 rounded-lg p-1.5 sm:p-2.5 fu d6">
+                                <div class="flex items-center gap-1 sm:gap-1.5">
+                                    <iconify-icon icon="mdi:scissors-cutting" class="text-emerald-400 text-[11px] sm:text-sm"></iconify-icon>
+                                    <span class="font-mono text-[8px] sm:text-[10px] font-semibold">CUT</span>
+                                </div>
+                            </div>
+                            <div class="absolute -bottom-1.5 -right-1.5 sm:-bottom-2.5 sm:-right-2.5 bg-[#08090b]/90 backdrop-blur border border-emerald-500/15 rounded-lg p-1.5 sm:p-2.5 fu d6">
+                                <div class="flex items-center gap-1 sm:gap-1.5">
+                                    <iconify-icon icon="mdi:palette-outline" class="text-emerald-400 text-[11px] sm:text-sm"></iconify-icon>
+                                    <span class="font-mono text-[8px] sm:text-[10px] font-semibold">GRADE</span>
+                                </div>
+                            </div>
+                            <div class="hfx absolute -top-1.5 right-8 sm:-top-2.5 right-10 bg-[#08090b]/90 backdrop-blur border border-white/[0.06] rounded-lg p-1.5 sm:p-2.5 fu d6" style="animation:fl 3.5s ease-in-out infinite .8s">
+                                <div class="flex items-center gap-1 sm:gap-1.5">
+                                    <iconify-icon icon="mdi:lightning-bolt" class="text-amber-400 text-[11px] sm:text-sm"></iconify-icon>
+                                    <span class="font-mono text-[8px] sm:text-[10px] font-semibold text-zinc-400">FX</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 fu d6 z-10">
+                <span class="font-mono text-[7px] sm:text-[9px] text-neutral-700 uppercase tracking-[.18em]">scroll</span>
+                <div class="w-3.5 h-6 rounded-full border border-white/10 flex items-start justify-center p-0.5">
+                    <div class="w-0.5 h-1.5 rounded-full bg-emerald-500/60 animate-bounce"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Marquee -->
+        <div class="border-y border-white/[0.04] py-2.5 sm:py-3 overflow-hidden relative z-10 bg-black/40">
+            <div class="flex whitespace-nowrap" style="animation:mq 22s linear infinite">
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Premiere Pro</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">DaVinci Resolve</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">CapCut</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">After Effects</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Final Cut Pro</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Filmora</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Color Grading</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Motion Graphics</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Sound Design</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Premiere Pro</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">DaVinci Resolve</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">CapCut</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">After Effects</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Final Cut Pro</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Filmora</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Color Grading</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Motion Graphics</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+                <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Sound Design</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
+            </div>
         </div>
+
+        <!-- Stats -->
+        <section class="py-8 sm:py-12 md:py-16 relative z-10">
+            <div class="max-w-[1300px] mx-auto px-4 md:px-8">
+                <div class="rv flex items-center gap-2 mb-4 sm:mb-6">
+                    <span class="sd inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span class="font-mono text-[8px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[.15em]">Live Data Monitor</span>
+                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-700 ml-auto hidden sm:block">SYS::STATS_01</span>
+                </div>
+                <div class="rv sp rounded">
+                    <!-- Corner brackets - desktop only -->
+                    <div class="sp-c absolute top-0 left-0 w-3 h-3 border-t border-l border-emerald-500/25"></div>
+                    <div class="sp-c absolute top-0 right-0 w-3 h-3 border-t border-r border-emerald-500/25"></div>
+                    <div class="sp-c absolute bottom-0 left-0 w-3 h-3 border-b border-l border-emerald-500/25"></div>
+                    <div class="sp-c absolute bottom-0 right-0 w-3 h-3 border-b border-r border-emerald-500/25"></div>
+                    <div class="grid grid-cols-2 md:grid-cols-4">
+                        <div class="si py-4 sm:py-6 md:py-8 text-center px-2">
+                            <div class="font-mono text-[6px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[.15em] mb-1 sm:mb-2">TIMELINE_HRS</div>
+                            <div class="sn font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-400 mb-0.5 sm:mb-2" id="c4">---</div>
+                            <div class="text-[10px] sm:text-[11px] text-slate-500 mb-0.5 sm:mb-2">Jam di Timeline</div>
+                            <div class="sc font-mono text-[6px] sm:text-[7px] text-emerald-500/20 uppercase">TERUS BERTAMBAH</div>
+                        </div>
+                        <div class="si py-4 sm:py-6 md:py-8 text-center px-2">
+                            <div class="font-mono text-[6px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[.15em] mb-1 sm:mb-2">PROJECTS_DONE</div>
+                            <div class="sn font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-400 mb-0.5 sm:mb-2" id="c5">---</div>
+                            <div class="text-[10px] sm:text-[11px] text-slate-500 mb-0.5 sm:mb-2">Proyek Selesai</div>
+                            <div class="sc font-mono text-[6px] sm:text-[7px] text-emerald-500/20 uppercase">MASIH NGENJOT</div>
+                        </div>
+                        <div class="si py-4 sm:py-6 md:py-8 text-center px-2">
+                            <div class="font-mono text-[6px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[.15em] mb-1 sm:mb-2">TEA_CONSUMED</div>
+                            <div class="sn font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-400 mb-0.5 sm:mb-2" id="c6">---</div>
+                            <div class="text-[10px] sm:text-[11px] text-slate-500 mb-0.5 sm:mb-2">Teh Dihabiskan</div>
+                            <div class="sc font-mono text-[6px] sm:text-[7px] text-emerald-500/20 uppercase">BAHAN BAKAR UTAMA</div>
+                        </div>
+                        <div class="si py-4 sm:py-6 md:py-8 text-center px-2">
+                            <div class="font-mono text-[6px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[.15em] mb-1 sm:mb-2">RE_RENDERS</div>
+                            <div class="sn font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-400 mb-0.5 sm:mb-2" id="c7">---</div>
+                            <div class="text-[10px] sm:text-[11px] text-slate-500 mb-0.5 sm:mb-2">Kali Render Ulang</div>
+                            <div class="sc font-mono text-[6px] sm:text-[7px] text-emerald-500/20 uppercase">"BISA LEBIH BAIK"</div>
+                        </div>
+                    </div>
+                    <div class="border-t border-emerald-500/5 px-3 sm:px-5 py-1.5 flex items-center justify-between">
+                        <div class="flex items-center gap-1.5"><span class="sd inline-block w-1 h-1 rounded-full bg-emerald-500/50"></span><span class="font-mono text-[7px] sm:text-[8px] text-neutral-700">LIVE</span></div>
+                        <div class="font-mono text-[6px] sm:text-[8px] text-neutral-800 hidden sm:block">DATA_STREAM::ACTIVE</div>
+                        <div class="flex items-center gap-1"><span class="w-2.5 h-[1px] bg-emerald-500/15"></span><span class="w-2.5 h-[1px] bg-emerald-500/30"></span><span class="w-2.5 h-[1px] bg-emerald-500/15"></span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workflow -->
+        <section class="pb-8 sm:pb-12 md:pb-16 relative z-10">
+            <div class="max-w-[1300px] mx-auto px-4 md:px-8">
+                <div class="rv text-center mb-6 sm:mb-10">
+                    <span class="font-mono text-[8px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[.12em]">Proses</span>
+                    <h2 class="font-space text-lg sm:text-xl md:text-2xl lg:text-3xl font-light tracking-tight mt-1.5 sm:mt-2">Dari <span class="text-emerald-400">Footage Mentah</span> Jadi Karya</h2>
+                </div>
+
+                <!-- Mobile: 2 baris (3+2) -->
+                <div class="rv md:hidden">
+                    <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-1.5 sm:mb-2"><iconify-icon icon="mdi:folder-open-outline" class="text-emerald-400 text-base sm:text-lg"></iconify-icon></div>
+                            <span class="font-mono text-[7px] sm:text-[8px] text-emerald-400/60 uppercase">Step 01</span>
+                            <span class="text-[10px] sm:text-[11px] font-medium text-center mt-0.5">Import</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-1.5 sm:mb-2"><iconify-icon icon="mdi:scissors-cutting" class="text-emerald-400 text-base sm:text-lg"></iconify-icon></div>
+                            <span class="font-mono text-[7px] sm:text-[8px] text-emerald-400/60 uppercase">Step 02</span>
+                            <span class="text-[10px] sm:text-[11px] font-medium text-center mt-0.5">Cut</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-1.5 sm:mb-2"><iconify-icon icon="mdi:music-note" class="text-emerald-400 text-base sm:text-lg"></iconify-icon></div>
+                            <span class="font-mono text-[7px] sm:text-[8px] text-emerald-400/60 uppercase">Step 03</span>
+                            <span class="text-[10px] sm:text-[11px] font-medium text-center mt-0.5">Audio</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-center gap-2 sm:gap-3 mt-2 sm:mt-3">
+                        <div class="flex flex-col items-center w-[80px] sm:w-[90px]">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-1.5 sm:mb-2"><iconify-icon icon="mdi:palette-outline" class="text-emerald-400 text-base sm:text-lg"></iconify-icon></div>
+                            <span class="font-mono text-[7px] sm:text-[8px] text-emerald-400/60 uppercase">Step 04</span>
+                            <span class="text-[10px] sm:text-[11px] font-medium text-center mt-0.5">Grade</span>
+                        </div>
+                        <div class="flex flex-col items-center w-[80px] sm:w-[90px]">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center mb-1.5 sm:mb-2" style="animation:pr 3s ease infinite"><iconify-icon icon="mdi:export" class="text-emerald-400 text-base sm:text-lg"></iconify-icon></div>
+                            <span class="font-mono text-[7px] sm:text-[8px] text-emerald-400/80 uppercase">Step 05</span>
+                            <span class="text-[10px] sm:text-[11px] font-medium text-center mt-0.5 text-emerald-400">Export!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop: 5 kolom dengan garis penghubung -->
+                <div class="rv hidden md:grid grid-cols-5">
+                    <div class="relative flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-2"><iconify-icon icon="mdi:folder-open-outline" class="text-emerald-400 text-xl"></iconify-icon></div>
+                        <span class="font-mono text-[9px] text-emerald-400/60 uppercase tracking-wider mb-1">Step 01</span>
+                        <span class="text-xs font-medium">Import</span>
+                        <span class="text-[10px] text-neutral-600 text-center mt-1">Masukin semua footage</span>
+                        <div class="absolute top-7 left-[calc(50%+28px)] w-[calc(100%-56px)] h-px bg-gradient-to-r from-emerald-500/20 to-emerald-500/10"></div>
+                        <div class="absolute top-[26px] left-[calc(100%-6px)] w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-l-[5px] border-l-emerald-500/15"></div>
+                    </div>
+                    <div class="relative flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-2"><iconify-icon icon="mdi:scissors-cutting" class="text-emerald-400 text-xl"></iconify-icon></div>
+                        <span class="font-mono text-[9px] text-emerald-400/60 uppercase tracking-wider mb-1">Step 02</span>
+                        <span class="text-xs font-medium">Cut & Arrange</span>
+                        <span class="text-[10px] text-neutral-600 text-center mt-1">Potong, susun, ulang</span>
+                        <div class="absolute top-7 left-[calc(50%+28px)] w-[calc(100%-56px)] h-px bg-gradient-to-r from-emerald-500/20 to-emerald-500/10"></div>
+                        <div class="absolute top-[26px] left-[calc(100%-6px)] w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-l-[5px] border-l-emerald-500/15"></div>
+                    </div>
+                    <div class="relative flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-2"><iconify-icon icon="mdi:music-note" class="text-emerald-400 text-xl"></iconify-icon></div>
+                        <span class="font-mono text-[9px] text-emerald-400/60 uppercase tracking-wider mb-1">Step 03</span>
+                        <span class="text-xs font-medium">Audio & SFX</span>
+                        <span class="text-[10px] text-neutral-600 text-center mt-1">Sync musik & suara</span>
+                        <div class="absolute top-7 left-[calc(50%+28px)] w-[calc(100%-56px)] h-px bg-gradient-to-r from-emerald-500/20 to-emerald-500/10"></div>
+                        <div class="absolute top-[26px] left-[calc(100%-6px)] w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-l-[5px] border-l-emerald-500/15"></div>
+                    </div>
+                    <div class="relative flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-2"><iconify-icon icon="mdi:palette-outline" class="text-emerald-400 text-xl"></iconify-icon></div>
+                        <span class="font-mono text-[9px] text-emerald-400/60 uppercase tracking-wider mb-1">Step 04</span>
+                        <span class="text-xs font-medium">Color Grade</span>
+                        <span class="text-[10px] text-neutral-600 text-center mt-1">Kasih warna & mood</span>
+                        <div class="absolute top-7 left-[calc(50%+28px)] w-[calc(100%-56px)] h-px bg-gradient-to-r from-emerald-500/20 to-emerald-500/10"></div>
+                        <div class="absolute top-[26px] left-[calc(100%-6px)] w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-l-[5px] border-l-emerald-500/15"></div>
+                    </div>
+                    <div class="relative flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center mb-2" style="animation:pr 3s ease infinite"><iconify-icon icon="mdi:export" class="text-emerald-400 text-xl"></iconify-icon></div>
+                        <span class="font-mono text-[9px] text-emerald-400/80 uppercase tracking-wider mb-1">Step 05</span>
+                        <span class="text-xs font-medium text-emerald-400">Export!</span>
+                        <span class="text-[10px] text-neutral-600 text-center mt-1">Render & bagikan</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bridge -->
+        <section class="relative z-10 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-emerald-500/[0.02] to-emerald-500/[0.04]"></div>
+            <div class="relative border-t border-white/[0.04]">
+                <div class="max-w-[1300px] mx-auto px-4 md:px-8">
+                    <div class="rv grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-5 py-10 sm:py-16 md:py-24">
+                        <div class="cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5 md:p-6">
+                            <div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-3"><iconify-icon icon="mdi:brain" class="text-emerald-400 text-base sm:text-lg"></iconify-icon></div>
+                            <h3 class="font-space text-[13px] sm:text-sm md:text-base font-semibold mb-1.5">Kreativitas Yang Terus Mengalir</h3>
+                            <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed">Setiap inspirasi menjadi awal dari sebuah karya yang tercipta melalui proses dan imajinasi</p>
+                            <div class="mt-3 pt-2.5 border-t border-white/5 font-mono text-[7px] sm:text-[8px] md:text-[9px] text-neutral-700">STATUS // FLOW_ACTIVE</div>
+                        </div>
+                        <div class="cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5 md:p-6">
+                            <div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-3"><iconify-icon icon="mdi:trending-up" class="text-emerald-400 text-base sm:text-lg"></iconify-icon></div>
+                            <h3 class="font-space text-[13px] sm:text-sm md:text-base font-semibold mb-1.5">Skill Yang Nggak Pernah Berhenti</h3>
+                            <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed">Setiap proyek baru adalah level baru. Selalu ada teknik baru yang bisa dipelajari.</p>
+                            <div class="mt-3 pt-2.5 border-t border-white/5 font-mono text-[7px] sm:text-[8px] md:text-[9px] text-neutral-700">PROGRESS // ALWAYS_UP</div>
+                        </div>
+                        <div class="cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5 md:p-6 sm:col-span-2 md:col-span-1">
+                            <div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-3"><iconify-icon icon="mdi:share-variant-outline" class="text-emerald-400 text-base sm:text-lg"></iconify-icon></div>
+                            <h3 class="font-space text-[13px] sm:text-sm md:text-base font-semibold mb-1.5">Karya Yang Bisa Dibanggakan</h3>
+                            <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed">Hasil edit yang dibuat dengan sabar dan penuh proses akan terasa lebih berharga</p>
+                            <div class="mt-3 pt-2.5 border-t border-white/5 font-mono text-[7px] sm:text-[8px] md:text-[9px] text-neutral-700">OUTPUT // SHAREABLE</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="max-w-[1300px] mx-auto px-4 md:px-8 pb-10 sm:pb-16 md:pb-24">
+                    <div class="rv rounded-xl sm:rounded-2xl border border-emerald-500/10 bg-[#0A0B0E] overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/[0.03] via-transparent to-emerald-500/[0.01]"></div>
+                        <div class="relative p-4 sm:p-6 md:p-12 flex flex-col md:flex-row items-center gap-5 sm:gap-8 bcta">
+                            <div class="flex-1 text-center md:text-left">
+                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[.1em] mb-2">Kenapa ini berbeda?</div>
+                                <h2 class="font-space text-base sm:text-xl md:text-2xl lg:text-3xl font-light tracking-tight mb-2 sm:mb-3 leading-tight">
+                                    Tapi ini bukan sekadar tiga poin.<br><span class="text-emerald-400">Ada lebih banyak di baliknya.</span>
+                                </h2>
+                                <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed max-w-lg mx-auto md:mx-0">Yang sebenarnya terjadi jauh lebih dalam. Yuk masuk lebih dalam.</p>
+                            </div>
+                            <div class="flex-shrink-0 bcta-r">
+                                <button onclick="go('hobi')" class="gbtn text-[12px] sm:text-[14px] md:text-[15px] font-medium text-emerald-400 px-6 sm:px-8 py-2.5 sm:py-4 w-full sm:w-auto">Masuk Kedalaman <iconify-icon icon="mdi:arrow-right" class="ml-1 text-sm sm:text-base align-middle"></iconify-icon></button>
+                                <div class="font-mono text-[7px] sm:text-[8px] text-neutral-700 text-center mt-2">ATAU LANJUT SCROLL</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
 
-    <!-- ═══════════════════════════════════════
-         MAIN CONTENT
-    ═══════════════════════════════════════ -->
-    <div id="mainContent">
-
-        <!-- Toast -->
-        <div id="toast" class="toast fixed top-20 left-1/2 -translate-x-1/2 z-[300] bg-[#0c0d10]/95 border border-emerald-500/20 backdrop-blur-xl rounded-2xl px-4 py-2.5 flex items-center gap-2.5 whitespace-nowrap max-w-[90vw] overflow-hidden text-ellipsis">
-            <iconify-icon icon="mdi:check-circle-outline" class="text-emerald-400 text-base flex-shrink-0"></iconify-icon>
-            <span id="toastMsg" class="text-xs sm:text-sm text-slate-300 font-medium">OK</span>
-        </div>
-
-        <!-- NAVBAR -->
-        <nav class="fixed top-0 left-0 right-0 z-[200] border-b border-white/5 bg-black/60 backdrop-blur-xl" style="padding-top:env(safe-area-inset-top)">
-            <div class="max-w-[1300px] mx-auto px-4 sm:px-5 md:px-8 flex items-center justify-between h-12 sm:h-14">
-                <a href="#" onclick="nav('beranda'); return false;" class="flex items-center gap-2 min-h-44px">
-                    <img src="https://z-cdn-media.chatglm.cn/files/673527df-e761-4e9a-956e-1a37c62585a5.jpeg?auth_key=1884015929-40618e49287c4f9ba3b74eae48a36097-0-d700f49054296bb95350c8dbb53e51b2" alt="CEPEDIT Logo" class="h-7 w-7 sm:h-8 sm:w-8 rounded object-cover">
-                    <span class="font-space font-bold text-xs sm:text-sm tracking-tight">CEP<span class="text-emerald-400">EDIT</span></span>
-                </a>
-                <div class="hidden md:flex items-center gap-0.5">
-                    <button onclick="nav('beranda')" data-p="beranda" class="nv text-[13px] font-medium text-slate-400 hover:text-white px-3.5 py-1.5 rounded-lg hover:bg-white/5 transition-all">Beranda</button>
-                    <button onclick="nav('hobi')" data-p="hobi" class="nv text-[13px] font-medium text-slate-400 hover:text-white px-3.5 py-1.5 rounded-lg hover:bg-white/5 transition-all">Hobi Ini</button>
-                    <button onclick="nav('tools')" data-p="tools" class="nv text-[13px] font-medium text-slate-400 hover:text-white px-3.5 py-1.5 rounded-lg hover:bg-white/5 transition-all">Tools</button>
-                    <button onclick="nav('karya')" data-p="karya" class="nv text-[13px] font-medium text-slate-400 hover:text-white px-3.5 py-1.5 rounded-lg hover:bg-white/5 transition-all">Karya</button>
+    <!-- ===== HOBI ===== -->
+    <div id="pg-hobi" class="page">
+        <section class="pt-16 sm:pt-20 md:pt-24 pb-10 sm:pb-16 md:pb-24">
+            <div class="max-w-[1300px] mx-auto px-4 md:px-8">
+                <div class="rv max-w-2xl mb-8 sm:mb-14">
+                    <div class="inline-flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04] mb-4">
+                        <span class="font-mono text-[8px] sm:text-[10px] font-bold text-emerald-400/70 uppercase tracking-[.1em]">Deep Dive</span>
+                    </div>
+                    <h1 class="font-space text-[1.6rem] sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-4 leading-[1.05]">Apa Itu Hobi<br><span class="text-emerald-400">Video Editing</span> Sesungguhnya?</h1>
+                    <p class="text-slate-400 text-[12px] sm:text-sm md:text-[15px] leading-relaxed">Banyak orang mengira video editing hanya tentang software. Padahal, yang paling penting bukan alat yang digunakan, melainkan bagaimana kamu melihat dunia dan <span class="text-white">mengubahnya menjadi cerita</span>.</p>
                 </div>
-                <button id="mobBtn" onclick="toggleMob()" class="md:hidden text-white p-2 -mr-2 min-w-[44px] min-h-[44px] flex items-center justify-center">
-                    <iconify-icon icon="mdi:menu" class="text-xl" id="mobIco"></iconify-icon>
-                </button>
-            </div>
-            <div id="mobNav" class="mob-nav md:hidden border-t border-white/5 bg-black/80 backdrop-blur-xl">
-                <div class="p-2 flex flex-col gap-0.5">
-                    <button onclick="nav('beranda'); closeMob();" class="text-[14px] text-slate-400 hover:text-white px-4 py-3 rounded-lg hover:bg-white/5 text-left transition-all min-h-[44px] flex items-center">Beranda</button>
-                    <button onclick="nav('hobi'); closeMob();" class="text-[14px] text-slate-400 hover:text-white px-4 py-3 rounded-lg hover:bg-white/5 text-left transition-all min-h-[44px] flex items-center">Hobi Ini</button>
-                    <button onclick="nav('tools'); closeMob();" class="text-[14px] text-slate-400 hover:text-white px-4 py-3 rounded-lg hover:bg-white/5 text-left transition-all min-h-[44px] flex items-center">Tools</button>
-                    <button onclick="nav('karya'); closeMob();" class="text-[14px] text-slate-400 hover:text-white px-4 py-3 rounded-lg hover:bg-white/5 text-left transition-all min-h-[44px] flex items-center">Karya</button>
-                </div>
-            </div>
-        </nav>
 
-
-        <!-- ═══════════════════════════════════════
-             PAGE: BERANDA
-        ═══════════════════════════════════════ -->
-        <div id="pg-beranda" class="page active">
-            <section class="relative min-h-screen flex items-center pt-12 sm:pt-14 scanline">
-                <div class="absolute top-1/4 left-1/3 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-emerald-500/[0.06] rounded-full blur-[100px] sm:blur-[120px]"></div>
-                <div class="absolute bottom-1/4 right-1/4 w-[200px] sm:w-[300px] h-[200px] sm:h-[300px] bg-emerald-600/[0.04] rounded-full blur-[60px] sm:blur-[80px]"></div>
-
-                <div class="max-w-[1300px] mx-auto px-4 sm:px-5 md:px-8 w-full py-10 sm:py-16 md:py-24">
-                    <div class="grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-
-                        <!-- Kolom Kiri -->
-                        <div class="lg:col-span-7 flex flex-col gap-5 sm:gap-6">
-                            <div class="fade-up d1 inline-flex items-center gap-2 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04]">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" style="animation:pulseRing 2s ease infinite"></span>
-                                <span class="font-mono text-[9px] sm:text-[10px] font-semibold text-emerald-400/80 uppercase tracking-[0.12em]">Hobi // Video Editing</span>
-                            </div>
-
-                            <h1 class="fade-up d2 font-space text-[clamp(1.8rem,7vw,4.5rem)] font-light leading-[0.95] tracking-tight text-balance">
-                                Mengedit Video<br>
-                                Itu <span class="glitch-hover text-emerald-400 font-medium cursor-default">Menghidupkan Imajinasi</span>,<br>
-                                <span class="text-neutral-500">Bukan Sekadar Memotong Video</span>
-                            </h1>
-
-                            <p class="fade-up d3 text-sm sm:text-base text-slate-400 leading-relaxed max-w-lg">
-                                Bayangkan punya kekuatan untuk mengubah footage mentah jadi sesuatu yang bikin orang merinding. Itu yang terjadi setiap kali kamu duduk di depan timeline. Ini bukan tugas — ini <span class="text-white">obsesi yang menyenangkan</span>.
-                            </p>
-
-                            <div class="fade-up d4 bg-[#08090b] border border-white/[0.05] rounded-xl p-3 sm:p-4 max-w-md font-mono text-[11px] sm:text-[12px] overflow-x-auto">
-                                <div class="flex items-center gap-1.5 mb-2.5">
-                                    <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-500/50 flex-shrink-0"></span>
-                                    <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-yellow-500/50 flex-shrink-0"></span>
-                                    <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-green-500/50 flex-shrink-0"></span>
-                                    <span class="text-[8px] sm:text-[9px] text-neutral-700 ml-1.5">hobi.log</span>
-                                </div>
-                                <div class="space-y-1 text-slate-500 whitespace-nowrap">
-                                    <div><span class="text-emerald-500/70">→</span> checking passion_level...</div>
-                                    <div class="text-emerald-400/80">✓ menyenangkan <span class="text-white font-semibold" id="c1">0</span>%</div>
-                                    <div class="text-emerald-400/80">✓ bikin lupa waktu <span class="text-white font-semibold" id="c2">0</span>%</div>
-                                    <div class="text-emerald-400/80">✓ hasilnya bangga <span class="text-white font-semibold" id="c3">0</span>%</div>
-                                    <div class="text-neutral-700 mt-1"><span class="text-emerald-500/70">→</span> <span class="blink text-white/40">▊</span></div>
-                                </div>
-                            </div>
-
-                            <div class="fade-up d5 flex flex-wrap gap-2.5 sm:gap-3">
-                                <button onclick="nav('hobi')" class="glow-btn text-[13px] sm:text-[15px] font-medium text-emerald-400 px-5 sm:px-7 py-3 sm:py-3.5 cursor-pointer">Pelajari Hobiku</button>
-                                <button onclick="nav('karya')" class="text-[13px] sm:text-[15px] font-medium text-slate-400 hover:text-white px-5 sm:px-7 py-3 sm:py-3.5 rounded-full border border-white/10 hover:border-white/20 transition-all cursor-pointer min-h-[44px]">Lihat Hasilnya</button>
+                <div class="space-y-3 sm:space-y-5 md:space-y-6 mb-10 sm:mb-16">
+                    <div class="rv cd rounded-xl bg-[#0A0B0E] overflow-hidden">
+                        <div class="grid md:grid-cols-5">
+                            <div class="md:col-span-2 relative overflow-hidden"><img src="https://picsum.photos/seed/hobcraft01/500/400.jpg" class="w-full himg object-cover" alt=""><div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#0A0B0E] hidden md:block"></div><div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div></div>
+                            <div class="md:col-span-3 p-4 sm:p-5 md:p-8 flex flex-col justify-center">
+                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[.1em] mb-1.5">01 // Narasi</div>
+                                <h2 class="font-space text-[15px] sm:text-lg md:text-xl lg:text-2xl font-semibold mb-2">Kamu Belajar Bercerita Tanpa Kata</h2>
+                                <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed mb-3">Editing mengajarkan bahwa cerita bukan cuma dialog. Pilihan shot, durasi, transisi, musik — semuanya bahasa. <span class="text-white">Pace menentukan emosi</span>.</p>
+                                <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">visual_storytelling</span><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">emotional_pacing</span><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">montage_theory</span></div>
                             </div>
                         </div>
-
-                        <!-- Kolom Kanan: Hero Image -->
-                        <div class="lg:col-span-5 fade-up d5 relative flex justify-center mt-4 lg:mt-0">
-                            <div class="relative w-full max-w-[380px] sm:max-w-[420px]">
-                                <div class="relative rounded-xl sm:rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0A0B0E]">
-                                    <img src="https://picsum.photos/seed/vidhero77/600/450.jpg" alt="Editing" class="w-full h-[240px] sm:h-[300px] md:h-[380px] object-cover">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                                    <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 w-4 h-4 sm:w-5 sm:h-5 border-t-2 border-l-2 border-emerald-500/50"></div>
-                                    <div class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 w-4 h-4 sm:w-5 sm:h-5 border-t-2 border-r-2 border-emerald-500/50"></div>
-                                    <div class="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 w-4 h-4 sm:w-5 sm:h-5 border-b-2 border-l-2 border-emerald-500/50"></div>
-                                    <div class="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 w-4 h-4 sm:w-5 sm:h-5 border-b-2 border-r-2 border-emerald-500/50"></div>
-                                    <div class="absolute inset-0 flex items-center justify-center">
-                                        <button onclick="toast('Video demo segera!')" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-emerald-500/10 backdrop-blur border border-emerald-500/25 flex items-center justify-center hover:bg-emerald-500/20 hover:scale-110 transition-all cursor-pointer" style="animation:pulseRing 3s ease infinite">
-                                            <iconify-icon icon="mdi:play" class="text-emerald-400 text-xl sm:text-2xl ml-0.5"></iconify-icon>
-                                        </button>
-                                    </div>
-                                    <div class="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                                        <div class="font-mono text-[8px] sm:text-[9px] text-emerald-500/50 mb-0.5 sm:mb-1">REC ● 00:32:08 // 4K // 24fps</div>
-                                        <div class="text-xs sm:text-sm font-medium">Cinematic Night Edit</div>
-                                    </div>
-                                </div>
-                                <!-- Floating Badges -->
-                                <div class="absolute -top-2 -left-2 sm:-top-3 sm:-left-3 bg-[#08090b]/90 backdrop-blur border border-emerald-500/15 rounded-lg sm:rounded-xl p-2 sm:p-2.5 fade-up d6 hero-badge">
-                                    <div class="flex items-center gap-1.5">
-                                        <iconify-icon icon="mdi:scissors-cutting" class="text-emerald-400 text-xs sm:text-sm"></iconify-icon>
-                                        <span class="font-mono text-[9px] sm:text-[10px] font-semibold">CUT</span>
-                                    </div>
-                                </div>
-                                <div class="absolute -bottom-2 -right-2 sm:-bottom-3 sm:-right-3 bg-[#08090b]/90 backdrop-blur border border-emerald-500/15 rounded-lg sm:rounded-xl p-2 sm:p-2.5 fade-up d6 hero-badge">
-                                    <div class="flex items-center gap-1.5">
-                                        <iconify-icon icon="mdi:palette-outline" class="text-emerald-400 text-xs sm:text-sm"></iconify-icon>
-                                        <span class="font-mono text-[9px] sm:text-[10px] font-semibold">GRADE</span>
-                                    </div>
-                                </div>
-                                <div class="hero-badge-fx absolute -top-2 right-8 sm:-top-3 right-12 bg-[#08090b]/90 backdrop-blur border border-white/[0.06] rounded-lg sm:rounded-xl p-2 sm:p-2.5 fade-up d6" style="animation:float 3.5s ease-in-out infinite .8s">
-                                    <div class="flex items-center gap-1.5">
-                                        <iconify-icon icon="mdi:lightning-bolt" class="text-amber-400 text-xs sm:text-sm"></iconify-icon>
-                                        <span class="font-mono text-[9px] sm:text-[10px] font-semibold text-zinc-400">FX</span>
-                                    </div>
-                                </div>
+                    </div>
+                    <div class="rv cd rounded-xl bg-[#0A0B0E] overflow-hidden">
+                        <div class="grid md:grid-cols-5">
+                            <div class="md:col-span-3 p-4 sm:p-5 md:p-8 flex flex-col justify-center order-2 md:order-1">
+                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[.1em] mb-1.5">02 // Observasi</div>
+                                <h2 class="font-space text-[15px] sm:text-lg md:text-xl lg:text-2xl font-semibold mb-2">Kamu Mulai Melihat Dunia Berbeda</h2>
+                                <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed mb-3">Setelah terbiasa edit, kamu mulai notice hal-hal yang orang lain nggak lihat. Cahaya golden hour, komposisi rule of thirds. <span class="text-white">Kamu jadi filmmaker di kepala sendiri</span>.</p>
+                                <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">visual_awareness</span><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">composition_eye</span><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">sound_design_mind</span></div>
+                            </div>
+                            <div class="md:col-span-2 relative overflow-hidden order-1 md:order-2"><img src="https://picsum.photos/seed/hobsee02/500/400.jpg" class="w-full himg object-cover" alt=""><div class="absolute inset-0 bg-gradient-to-l from-transparent to-[#0A0B0E] hidden md:block"></div><div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div></div>
+                        </div>
+                    </div>
+                    <div class="rv cd rounded-xl bg-[#0A0B0E] overflow-hidden">
+                        <div class="grid md:grid-cols-5">
+                            <div class="md:col-span-2 relative overflow-hidden"><img src="https://picsum.photos/seed/hobsatis03/500/400.jpg" class="w-full himg object-cover" alt=""><div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#0A0B0E] hidden md:block"></div><div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div></div>
+                            <div class="md:col-span-3 p-4 sm:p-5 md:p-8 flex flex-col justify-center">
+                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[.1em] mb-1.5">03 // Kepuasan</div>
+                                <h2 class="font-space text-[15px] sm:text-lg md:text-xl lg:text-2xl font-semibold mb-2">Rasanya Seperti Menyelesaikan Puzzle Raksasa</h2>
+                                <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed mb-3">Ada kepuasan unik saat semua piece akhirnya klik — audio sync sempurna, warna konsisten. Itu adalah <span class="text-white">dopamine hit yang legit</span>.</p>
+                                <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">dopamine_reward</span><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">problem_solving</span><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">instant_gratification</span></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Scroll Indicator -->
-                <div class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 fade-up d6 z-10">
-                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-700 uppercase tracking-[0.2em]">scroll</span>
-                    <div class="w-4 h-6 sm:h-7 rounded-full border border-white/10 flex items-start justify-center p-1">
-                        <div class="w-0.5 h-1.5 rounded-full bg-emerald-500/60 animate-bounce"></div>
+                <div class="rv mb-6 sm:mb-10">
+                    <h2 class="font-space text-lg sm:text-xl md:text-2xl lg:text-3xl font-light tracking-tight mb-1.5">Fase Seorang <span class="text-emerald-400">Hobiest Editor</span></h2>
+                    <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 mb-6 sm:mb-8">Semua orang melewati ini. Nggak ada yang skip.</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
+                    <div class="rv cd rounded-lg bg-[#0A0B0E] p-3 sm:p-4 md:p-5 text-center">
+                        <div class="font-mono text-xl sm:text-2xl font-bold text-emerald-400/80 mb-1">01</div>
+                        <h4 class="font-space text-[11px] sm:text-xs md:text-sm font-semibold mb-1">Kagum</h4>
+                        <p class="text-[10px] sm:text-[11px] text-slate-500 leading-relaxed">"Gimana cara buatnya?"</p>
+                        <div class="mt-2 font-mono text-[7px] sm:text-[8px] text-neutral-700">WEEK 1-2</div>
+                    </div>
+                    <div class="rv cd rounded-lg bg-[#0A0B0E] p-3 sm:p-4 md:p-5 text-center">
+                        <div class="font-mono text-xl sm:text-2xl font-bold text-emerald-400/80 mb-1">02</div>
+                        <h4 class="font-space text-[11px] sm:text-xs md:text-sm font-semibold mb-1">Frustasi</h4>
+                        <p class="text-[10px] sm:text-[11px] text-slate-500 leading-relaxed">Bingung. Tapi penasaran.</p>
+                        <div class="mt-2 font-mono text-[7px] sm:text-[8px] text-neutral-700">MONTH 1-2</div>
+                    </div>
+                    <div class="rv cd rounded-lg bg-[#0A0B0E] p-3 sm:p-4 md:p-5 text-center">
+                        <div class="font-mono text-xl sm:text-2xl font-bold text-emerald-400/80 mb-1">03</div>
+                        <h4 class="font-space text-[11px] sm:text-xs md:text-sm font-semibold mb-1">Ketagihan</h4>
+                        <p class="text-[10px] sm:text-[11px] text-slate-500 leading-relaxed">Hasil pertama oke. Nggak bisa berhenti.</p>
+                        <div class="mt-2 font-mono text-[7px] sm:text-[8px] text-neutral-700">MONTH 3-6</div>
+                    </div>
+                    <div class="rv cd rounded-lg bg-[#0A0B0E] p-3 sm:p-4 md:p-5 text-center border-emerald-500/15">
+                        <div class="font-mono text-xl sm:text-2xl font-bold text-emerald-400 mb-1">04</div>
+                        <h4 class="font-space text-[11px] sm:text-xs md:text-sm font-semibold mb-1">Identitas</h4>
+                        <p class="text-[10px] sm:text-[11px] text-slate-500 leading-relaxed">"Oh, kamu editor ya?"</p>
+                        <div class="mt-2 font-mono text-[7px] sm:text-[8px] text-emerald-500/50">MONTH 6 → ∞</div>
                     </div>
                 </div>
-            </section>
-
-            <!-- Marquee -->
-            <div class="border-y border-white/[0.04] py-2.5 sm:py-3.5 overflow-hidden relative z-10 bg-black/40">
-                <div class="flex whitespace-nowrap" style="animation:marquee 20s linear infinite">
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">Premiere Pro</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">DaVinci Resolve</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">CapCut</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">After Effects</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">Final Cut Pro</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">Filmora</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">Color Grading</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">Motion Graphics</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">Sound Design</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">Premiere Pro</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">DaVinci Resolve</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">CapCut</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">After Effects</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">Final Cut Pro</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">Filmora</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">Color Grading</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">Motion Graphics</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
-                    <span class="font-mono text-[9px] sm:text-[10px] text-neutral-600 uppercase tracking-[0.15em] mx-4 sm:mx-6">Sound Design</span><span class="text-emerald-500/25 mx-2 sm:mx-3">◆</span>
+                <div class="rv mt-8 sm:mt-14 cd rounded-xl bg-[#0A0B0E] p-5 sm:p-7 md:p-10 text-center">
+                    <iconify-icon icon="mdi:format-quote-open" class="text-emerald-500/20 text-2xl sm:text-3xl md:text-4xl mb-3"></iconify-icon>
+                    <p class="font-space text-[14px] sm:text-base md:text-lg lg:text-xl font-light leading-relaxed max-w-2xl mx-auto mb-3">"Hobi terbaik adalah yang nggak terasa seperti hobi. Video editing seperti itu — kamu <span class="text-emerald-400 font-medium">kecanduan prosesnya</span>, bukan cuma hasilnya."</p>
+                    <div class="font-mono text-[8px] sm:text-[10px] text-neutral-600">— Seorang hobiest editor, jam 3 pagi</div>
                 </div>
             </div>
+        </section>
+    </div>
 
-            <!-- Stats -->
-            <section class="py-10 sm:py-16 relative z-10">
-                <div class="max-w-[1300px] mx-auto px-4 sm:px-5 md:px-8">
-                    <div class="reveal flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                        <span class="stat-dot inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                        <span class="font-mono text-[9px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[0.15em]">Live Data Monitor</span>
-                        <span class="font-mono text-[8px] sm:text-[9px] text-neutral-700 ml-auto hidden sm:block">SYS::STATS_01</span>
+
+    <!-- ===== TOOLS ===== -->
+    <div id="pg-tools" class="page">
+        <section class="pt-16 sm:pt-20 md:pt-24 pb-10 sm:pb-16 md:pb-24">
+            <div class="max-w-[1300px] mx-auto px-4 md:px-8">
+                <div class="rv max-w-2xl mb-8 sm:mb-12">
+                    <div class="inline-flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04] mb-4">
+                        <span class="font-mono text-[8px] sm:text-[10px] font-bold text-emerald-400/70 uppercase tracking-[.1em]">Arsenal</span>
                     </div>
-                    <div class="reveal stat-panel rounded-sm">
-                        <div class="absolute top-0 left-0 w-3 h-3 border-t border-l border-emerald-500/30"></div>
-                        <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-emerald-500/30"></div>
-                        <div class="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-emerald-500/30"></div>
-                        <div class="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-emerald-500/30"></div>
-                        <div class="grid grid-cols-2 md:grid-cols-4">
-                            <div class="stat-item py-4 sm:py-6 md:py-8 text-center">
-                                <div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[0.15em] mb-1.5 sm:mb-2">TIMELINE_HRS</div>
-                                <div class="stat-num font-mono text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-400 mb-1 sm:mb-2" id="c4">---</div>
-                                <div class="text-[10px] sm:text-[11px] text-slate-500 mb-1 sm:mb-2">Jam di Timeline</div>
-                                <div class="stat-caption font-mono text-[6px] sm:text-[7px] text-emerald-500/25 uppercase">DAN TERUS BERTAMBAH</div>
-                            </div>
-                            <div class="stat-item py-4 sm:py-6 md:py-8 text-center">
-                                <div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[0.15em] mb-1.5 sm:mb-2">PROJECTS_DONE</div>
-                                <div class="stat-num font-mono text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-400 mb-1 sm:mb-2" id="c5">---</div>
-                                <div class="text-[10px] sm:text-[11px] text-slate-500 mb-1 sm:mb-2">Proyek Selesai</div>
-                                <div class="stat-caption font-mono text-[6px] sm:text-[7px] text-emerald-500/25 uppercase">DAN MASIH NGENJOT</div>
-                            </div>
-                            <div class="stat-item py-4 sm:py-6 md:py-8 text-center">
-                                <div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[0.15em] mb-1.5 sm:mb-2">TEA_CONSUMED</div>
-                                <div class="stat-num font-mono text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-400 mb-1 sm:mb-2" id="c6">---</div>
-                                <div class="text-[10px] sm:text-[11px] text-slate-500 mb-1 sm:mb-2">Teh Dihabiskan</div>
-                                <div class="stat-caption font-mono text-[6px] sm:text-[7px] text-emerald-500/25 uppercase">BAHAN BAKAR UTAMA</div>
-                            </div>
-                            <div class="stat-item py-4 sm:py-6 md:py-8 text-center">
-                                <div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[0.15em] mb-1.5 sm:mb-2">RE_RENDERS</div>
-                                <div class="stat-num font-mono text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-400 mb-1 sm:mb-2" id="c7">---</div>
-                                <div class="text-[10px] sm:text-[11px] text-slate-500 mb-1 sm:mb-2">Kali Render Ulang</div>
-                                <div class="stat-caption font-mono text-[6px] sm:text-[7px] text-emerald-500/25 uppercase">KARENA "BISA LEBIH BAIK"</div>
-                            </div>
-                        </div>
-                        <div class="border-t border-emerald-500/8 px-3 sm:px-5 py-1.5 sm:py-2 flex items-center justify-between">
-                            <div class="flex items-center gap-1.5">
-                                <span class="stat-dot inline-block w-1 h-1 rounded-full bg-emerald-500/60"></span>
-                                <span class="font-mono text-[7px] sm:text-[8px] text-neutral-700">LIVE</span>
-                            </div>
-                            <div class="font-mono text-[6px] sm:text-[8px] text-neutral-800 hidden xs:block">DATA_STREAM::ACTIVE</div>
-                            <div class="flex items-center gap-1">
-                                <span class="w-3 h-[1px] bg-emerald-500/20"></span>
-                                <span class="w-3 h-[1px] bg-emerald-500/40"></span>
-                                <span class="w-3 h-[1px] bg-emerald-500/20"></span>
-                            </div>
-                        </div>
-                    </div>
+                    <h1 class="font-space text-[1.6rem] sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-4">Senjata untuk <span class="text-emerald-400">Hobimu</span></h1>
+                    <p class="text-slate-400 text-[12px] sm:text-sm md:text-[15px] leading-relaxed">Nggak perlu mahal. Mulai gratis, pindah kalau sudah butuh. Pilih SATU dan kuasai.</p>
                 </div>
-            </section>
-
-            <!-- Workflow -->
-            <section class="pb-10 sm:pb-16 relative z-10">
-                <div class="max-w-[1300px] mx-auto px-4 sm:px-5 md:px-8">
-                    <div class="reveal text-center mb-8 sm:mb-10">
-                        <span class="font-mono text-[9px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[0.12em]">Proses</span>
-                        <h2 class="font-space text-xl sm:text-2xl md:text-3xl font-light tracking-tight mt-2">Dari <span class="text-emerald-400">Footage Mentah</span> Jadi Karya</h2>
-                    </div>
-                    <div class="reveal grid grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-0">
-                        <div class="relative flex flex-col items-center">
-                            <div class="wf-icon w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-2 sm:mb-3"><iconify-icon icon="mdi:folder-open-outline" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon></div>
-                            <span class="font-mono text-[8px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5 sm:mb-1">Step 01</span>
-                            <span class="text-[11px] sm:text-xs font-medium text-center leading-tight">Import</span>
-                            <span class="text-[9px] sm:text-[10px] text-neutral-600 text-center mt-0.5 sm:mt-1 hidden md:block">Masukin semua footage</span>
-                            <div class="hidden md:block absolute top-7 left-[calc(50%+28px)] w-[calc(100%-56px)] h-px bg-gradient-to-r from-emerald-500/20 to-emerald-500/10"></div>
-                            <div class="hidden md:block absolute top-[26px] left-[calc(100%-8px)] w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-l-[6px] border-l-emerald-500/15"></div>
-                        </div>
-                        <div class="relative flex flex-col items-center">
-                            <div class="wf-icon w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-2 sm:mb-3"><iconify-icon icon="mdi:scissors-cutting" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon></div>
-                            <span class="font-mono text-[8px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5 sm:mb-1">Step 02</span>
-                            <span class="text-[11px] sm:text-xs font-medium text-center leading-tight">Cut</span>
-                            <span class="text-[9px] sm:text-[10px] text-neutral-600 text-center mt-0.5 sm:mt-1 hidden md:block">Potong, susun, ulang</span>
-                            <div class="hidden md:block absolute top-7 left-[calc(50%+28px)] w-[calc(100%-56px)] h-px bg-gradient-to-r from-emerald-500/20 to-emerald-500/10"></div>
-                            <div class="hidden md:block absolute top-[26px] left-[calc(100%-8px)] w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-l-[6px] border-l-emerald-500/15"></div>
-                        </div>
-                        <div class="relative flex flex-col items-center">
-                            <div class="wf-icon w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-2 sm:mb-3"><iconify-icon icon="mdi:music-note" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon></div>
-                            <span class="font-mono text-[8px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5 sm:mb-1">Step 03</span>
-                            <span class="text-[11px] sm:text-xs font-medium text-center leading-tight">Audio</span>
-                            <span class="text-[9px] sm:text-[10px] text-neutral-600 text-center mt-0.5 sm:mt-1 hidden md:block">Sync musik & suara</span>
-                            <div class="hidden md:block absolute top-7 left-[calc(50%+28px)] w-[calc(100%-56px)] h-px bg-gradient-to-r from-emerald-500/20 to-emerald-500/10"></div>
-                            <div class="hidden md:block absolute top-[26px] left-[calc(100%-8px)] w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-l-[6px] border-l-emerald-500/15"></div>
-                        </div>
-                        <div class="relative flex flex-col items-center hidden md:flex">
-                            <div class="wf-icon w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-3"><iconify-icon icon="mdi:palette-outline" class="text-emerald-400 text-xl"></iconify-icon></div>
-                            <span class="font-mono text-[9px] text-emerald-400/60 uppercase tracking-wider mb-1">Step 04</span>
-                            <span class="text-xs font-medium text-center">Color Grade</span>
-                            <span class="text-[10px] text-neutral-600 text-center mt-1">Kasih warna & mood</span>
-                            <div class="hidden md:block absolute top-7 left-[calc(50%+28px)] w-[calc(100%-56px)] h-px bg-gradient-to-r from-emerald-500/20 to-emerald-500/10"></div>
-                            <div class="hidden md:block absolute top-[26px] left-[calc(100%-8px)] w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-l-[6px] border-l-emerald-500/15"></div>
-                        </div>
-                        <div class="relative flex flex-col items-center hidden md:flex">
-                            <div class="w-14 h-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center mb-3" style="animation:pulseRing 3s ease infinite"><iconify-icon icon="mdi:export" class="text-emerald-400 text-xl"></iconify-icon></div>
-                            <span class="font-mono text-[9px] text-emerald-400/80 uppercase tracking-wider mb-1">Step 05</span>
-                            <span class="text-xs font-medium text-center text-emerald-400">Export!</span>
-                            <span class="text-[10px] text-neutral-600 text-center mt-1">Render & bagikan</span>
-                        </div>
-                    </div>
-                    <!-- Mobile: tampilkan step 4 & 5 sebagai row kedua -->
-                    <div class="flex md:hidden justify-center gap-2 sm:gap-3 mt-2 sm:mt-3">
-                        <div class="flex flex-col items-center">
-                            <div class="wf-icon w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center mb-2 sm:mb-3"><iconify-icon icon="mdi:palette-outline" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon></div>
-                            <span class="font-mono text-[8px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5 sm:mb-1">Step 04</span>
-                            <span class="text-[11px] sm:text-xs font-medium text-center leading-tight">Grade</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="wf-icon w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center mb-2 sm:mb-3" style="animation:pulseRing 3s ease infinite"><iconify-icon icon="mdi:export" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon></div>
-                            <span class="font-mono text-[8px] sm:text-[9px] text-emerald-400/80 uppercase tracking-wider mb-0.5 sm:mb-1">Step 05</span>
-                            <span class="text-[11px] sm:text-xs font-medium text-center leading-tight text-emerald-400">Export!</span>
-                        </div>
-                    </div>
+                <div class="rv flex flex-wrap gap-1.5 sm:gap-2 mb-5 sm:mb-7">
+                    <button onclick="fT('all',this)" class="tab on font-mono text-[10px] sm:text-[11px] font-medium px-3 sm:px-4 py-1.5 rounded-full border border-white/10 transition-all">SEMUA</button>
+                    <button onclick="fT('free',this)" class="tab font-mono text-[10px] sm:text-[11px] font-medium text-slate-500 px-3 sm:px-4 py-1.5 rounded-full border border-white/10 hover:border-white/20 transition-all">GRATIS</button>
+                    <button onclick="fT('paid',this)" class="tab font-mono text-[10px] sm:text-[11px] font-medium text-slate-500 px-3 sm:px-4 py-1.5 rounded-full border border-white/10 hover:border-white/20 transition-all">BERBAYAR</button>
+                    <button onclick="fT('easy',this)" class="tab font-mono text-[10px] sm:text-[11px] font-medium text-slate-500 px-3 sm:px-4 py-1.5 rounded-full border border-white/10 hover:border-white/20 transition-all">MUDAH</button>
                 </div>
-            </section>
-
-            <!-- Bridge Section -->
-            <section class="relative z-10 overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-emerald-500/[0.03] to-emerald-500/[0.06]"></div>
-                <div class="relative border-t border-white/[0.04]">
-                    <div class="max-w-[1300px] mx-auto px-4 sm:px-5 md:px-8">
-                        <div class="reveal grid sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5 py-12 sm:py-20 md:py-28">
-                            <div class="card rounded-xl sm:rounded-2xl bg-[#0A0B0E] p-5 sm:p-6">
-                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3 sm:mb-4"><iconify-icon icon="mdi:brain" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon></div>
-                                <h3 class="font-space text-sm sm:text-base font-semibold mb-1.5 sm:mb-2">Kreativitas Yang Terus Mengalir</h3>
-                                <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">Setiap inspirasi menjadi awal dari sebuah karya yang tercipta melalui proses dan imajinasi</p>
-                                <div class="mt-3 sm:mt-4 pt-3 border-t border-white/5 font-mono text-[8px] sm:text-[9px] text-neutral-700">STATUS // FLOW_ACTIVE</div>
-                            </div>
-                            <div class="card rounded-xl sm:rounded-2xl bg-[#0A0B0E] p-5 sm:p-6">
-                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3 sm:mb-4"><iconify-icon icon="mdi:trending-up" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon></div>
-                                <h3 class="font-space text-sm sm:text-base font-semibold mb-1.5 sm:mb-2">Skill Yang Nggak Pernah Berhenti</h3>
-                                <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">Setiap proyek baru adalah level baru. Nggak pernah bosen karena selalu ada teknik baru.</p>
-                                <div class="mt-3 sm:mt-4 pt-3 border-t border-white/5 font-mono text-[8px] sm:text-[9px] text-neutral-700">PROGRESS // ALWAYS_UP</div>
-                            </div>
-                            <div class="card rounded-xl sm:rounded-2xl bg-[#0A0B0E] p-5 sm:p-6 sm:col-span-2 md:col-span-1">
-                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3 sm:mb-4"><iconify-icon icon="mdi:share-variant-outline" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon></div>
-                                <h3 class="font-space text-sm sm:text-base font-semibold mb-1.5 sm:mb-2">Karya Yang Bisa Dibanggakan</h3>
-                                <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">Hasil edit yang dibuat dengan sabar dan penuh proses akan terasa lebih berharga</p>
-                                <div class="mt-3 sm:mt-4 pt-3 border-t border-white/5 font-mono text-[8px] sm:text-[9px] text-neutral-700">OUTPUT // SHAREABLE</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="relative">
-                    <div class="max-w-[1300px] mx-auto px-4 sm:px-5 md:px-8 pb-12 sm:pb-20 md:pb-28">
-                        <div class="reveal relative rounded-xl sm:rounded-2xl border border-emerald-500/10 bg-[#0A0B0E] overflow-hidden">
-                            <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/[0.04] via-transparent to-emerald-500/[0.02]"></div>
-                            <div class="relative p-5 sm:p-8 md:p-12 flex flex-col md:flex-row items-center gap-6 sm:gap-8 bridge-cta">
-                                <div class="flex-1">
-                                    <div class="font-mono text-[9px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[0.12em] mb-2 sm:mb-3">Kenapa ini berbeda?</div>
-                                    <h2 class="font-space text-lg sm:text-2xl md:text-3xl font-light tracking-tight mb-2 sm:mb-3 leading-tight text-balance">
-                                        Tapi ini bukan sekadar tiga poin.<br>
-                                        <span class="text-emerald-400">Ada lebih banyak di baliknya.</span>
-                                    </h2>
-                                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-lg">Tiga hal di atas cuma permukaan. Yang sebenarnya terjadi jauh lebih dalam. Yuk masuk lebih dalam.</p>
-                                </div>
-                                <div class="flex-shrink-0 w-full sm:w-auto">
-                                    <button onclick="nav('hobi')" class="glow-btn text-[13px] sm:text-[15px] font-medium text-emerald-400 px-6 sm:px-8 py-3 sm:py-4 cursor-pointer whitespace-nowrap w-full sm:w-auto">Masuk Kedalaman <iconify-icon icon="mdi:arrow-right" class="ml-1 text-sm sm:text-base align-middle"></iconify-icon></button>
-                                    <div class="font-mono text-[7px] sm:text-[8px] text-neutral-700 text-center sm:text-center mt-2 sm:mt-3">ATAU LANJUT SCROLL KE BAWAH</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-
-        <!-- ═══════════════════════════════════════
-             PAGE: HOBI
-        ═══════════════════════════════════════ -->
-        <div id="pg-hobi" class="page">
-            <section class="pt-20 sm:pt-24 pb-12 sm:pb-20 md:pb-28">
-                <div class="max-w-[1300px] mx-auto px-4 sm:px-5 md:px-8">
-                    <div class="reveal max-w-2xl mb-10 sm:mb-16">
-                        <div class="inline-flex items-center gap-2 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04] mb-4 sm:mb-5">
-                            <span class="font-mono text-[9px] sm:text-[10px] font-bold text-emerald-400/70 uppercase tracking-[0.12em]">Deep Dive</span>
-                        </div>
-                        <h1 class="font-space text-3xl sm:text-4xl md:text-5xl font-light tracking-tight mb-4 sm:mb-5 leading-[1.05] text-balance">Apa Itu Hobi<br><span class="text-emerald-400">Video Editing</span> Sesungguhnya?</h1>
-                        <p class="text-slate-400 text-sm sm:text-[15px] leading-relaxed">Banyak orang mengira video editing hanya tentang software dan efek visual. Padahal, yang paling penting bukan alat yang digunakan, melainkan bagaimana kamu melihat dunia dan <span class="text-white">mengubahnya menjadi sebuah cerita</span>.</p>
-                    </div>
-
-                    <div class="space-y-4 sm:space-y-6 mb-12 sm:mb-20">
-                        <div class="reveal card rounded-xl sm:rounded-2xl bg-[#0A0B0E] overflow-hidden">
-                            <div class="grid md:grid-cols-5">
-                                <div class="md:col-span-2 relative overflow-hidden">
-                                    <img src="https://picsum.photos/seed/hobcraft01/500/400.jpg" class="w-full hobi-img object-cover" alt="">
-                                    <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#0A0B0E] hidden md:block"></div>
-                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div>
-                                </div>
-                                <div class="md:col-span-3 p-4 sm:p-6 md:p-8 flex flex-col justify-center">
-                                    <div class="font-mono text-[9px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[0.12em] mb-1.5 sm:mb-2">01 // Narasi</div>
-                                    <h2 class="font-space text-base sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3">Kamu Belajar Bercerita Tanpa Kata</h2>
-                                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-3 sm:mb-4">Editing mengajarkan bahwa cerita itu bukan cuma dialog. Pilihan shot, durasi, transisi, musik — semuanya bahasa. Kamu jadi paham bahwa <span class="text-white">pace menentukan emosi</span>.</p>
-                                    <div class="flex flex-wrap gap-1 sm:gap-1.5">
-                                        <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">visual_storytelling</span>
-                                        <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">emotional_pacing</span>
-                                        <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">montage_theory</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="reveal card rounded-xl sm:rounded-2xl bg-[#0A0B0E] overflow-hidden">
-                            <div class="grid md:grid-cols-5">
-                                <div class="md:col-span-3 p-4 sm:p-6 md:p-8 flex flex-col justify-center order-2 md:order-1">
-                                    <div class="font-mono text-[9px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[0.12em] mb-1.5 sm:mb-2">02 // Observasi</div>
-                                    <h2 class="font-space text-base sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3">Kamu Mulai Melihat Dunia Berbeda</h2>
-                                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-3 sm:mb-4">Setelah terbiasa edit, kamu mulai notice hal-hal yang orang lain nggak lihat. Cahaya golden hour, komposisi rule of thirds. <span class="text-white">Kamu jadi filmmaker di kepala sendiri</span>.</p>
-                                    <div class="flex flex-wrap gap-1 sm:gap-1.5">
-                                        <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">visual_awareness</span>
-                                        <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">composition_eye</span>
-                                        <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">sound_design_mind</span>
-                                    </div>
-                                </div>
-                                <div class="md:col-span-2 relative overflow-hidden order-1 md:order-2">
-                                    <img src="https://picsum.photos/seed/hobsee02/500/400.jpg" class="w-full hobi-img object-cover" alt="">
-                                    <div class="absolute inset-0 bg-gradient-to-l from-transparent to-[#0A0B0E] hidden md:block"></div>
-                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="reveal card rounded-xl sm:rounded-2xl bg-[#0A0B0E] overflow-hidden">
-                            <div class="grid md:grid-cols-5">
-                                <div class="md:col-span-2 relative overflow-hidden">
-                                    <img src="https://picsum.photos/seed/hobsatis03/500/400.jpg" class="w-full hobi-img object-cover" alt="">
-                                    <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#0A0B0E] hidden md:block"></div>
-                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div>
-                                </div>
-                                <div class="md:col-span-3 p-4 sm:p-6 md:p-8 flex flex-col justify-center">
-                                    <div class="font-mono text-[9px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[0.12em] mb-1.5 sm:mb-2">03 // Kepuasan</div>
-                                    <h2 class="font-space text-base sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3">Rasanya Seperti Menyelesaikan Puzzle Raksasa</h2>
-                                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-3 sm:mb-4">Ada kepuasan unik saat semua piece akhirnya klik — audio sync sempurna, warna konsisten, transisi mulus. Itu adalah <span class="text-white">dopamine hit yang legit</span>.</p>
-                                    <div class="flex flex-wrap gap-1 sm:gap-1.5">
-                                        <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">dopamine_reward</span>
-                                        <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">problem_solving</span>
-                                        <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600 bg-white/[0.03] px-1.5 sm:px-2 py-0.5 rounded">instant_gratification</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="reveal mb-8 sm:mb-12">
-                        <h2 class="font-space text-xl sm:text-2xl md:text-3xl font-light tracking-tight mb-2">Fase Seorang <span class="text-emerald-400">Hobiest Editor</span></h2>
-                        <p class="text-xs sm:text-sm text-slate-400 mb-6 sm:mb-10">Semua orang melewati ini. Nggak ada yang skip.</p>
-                    </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
-                        <div class="reveal card rounded-lg sm:rounded-xl bg-[#0A0B0E] p-3.5 sm:p-5 text-center">
-                            <div class="font-mono text-xl sm:text-2xl font-bold text-emerald-400/80 mb-1.5 sm:mb-2">01</div>
-                            <h4 class="font-space text-xs sm:text-sm font-semibold mb-1 sm:mb-1.5">Kagum</h4>
-                            <p class="text-[10px] sm:text-[11px] text-slate-500 leading-relaxed">"Gimana cara buatnya?"</p>
-                            <div class="mt-2 sm:mt-3 font-mono text-[7px] sm:text-[8px] text-neutral-700">WEEK 1-2</div>
-                        </div>
-                        <div class="reveal card rounded-lg sm:rounded-xl bg-[#0A0B0E] p-3.5 sm:p-5 text-center">
-                            <div class="font-mono text-xl sm:text-2xl font-bold text-emerald-400/80 mb-1.5 sm:mb-2">02</div>
-                            <h4 class="font-space text-xs sm:text-sm font-semibold mb-1 sm:mb-1.5">Frustasi</h4>
-                            <p class="text-[10px] sm:text-[11px] text-slate-500 leading-relaxed">Bingung. Tapi penasaran.</p>
-                            <div class="mt-2 sm:mt-3 font-mono text-[7px] sm:text-[8px] text-neutral-700">MONTH 1-2</div>
-                        </div>
-                        <div class="reveal card rounded-lg sm:rounded-xl bg-[#0A0B0E] p-3.5 sm:p-5 text-center">
-                            <div class="font-mono text-xl sm:text-2xl font-bold text-emerald-400/80 mb-1.5 sm:mb-2">03</div>
-                            <h4 class="font-space text-xs sm:text-sm font-semibold mb-1 sm:mb-1.5">Ketagihan</h4>
-                            <p class="text-[10px] sm:text-[11px] text-slate-500 leading-relaxed">Hasil pertama oke. Nggak bisa berhenti.</p>
-                            <div class="mt-2 sm:mt-3 font-mono text-[7px] sm:text-[8px] text-neutral-700">MONTH 3-6</div>
-                        </div>
-                        <div class="reveal card rounded-lg sm:rounded-xl bg-[#0A0B0E] p-3.5 sm:p-5 text-center border-emerald-500/15">
-                            <div class="font-mono text-xl sm:text-2xl font-bold text-emerald-400 mb-1.5 sm:mb-2">04</div>
-                            <h4 class="font-space text-xs sm:text-sm font-semibold mb-1 sm:mb-1.5">Identitas</h4>
-                            <p class="text-[10px] sm:text-[11px] text-slate-500 leading-relaxed">"Oh, kamu editor ya?"</p>
-                            <div class="mt-2 sm:mt-3 font-mono text-[7px] sm:text-[8px] text-emerald-500/50">MONTH 6 → ∞</div>
-                        </div>
-                    </div>
-
-                    <div class="reveal mt-10 sm:mt-16 card rounded-xl sm:rounded-2xl bg-[#0A0B0E] p-6 sm:p-8 md:p-10 text-center">
-                        <iconify-icon icon="mdi:format-quote-open" class="text-emerald-500/20 text-3xl sm:text-4xl mb-3 sm:mb-4"></iconify-icon>
-                        <p class="font-space text-base sm:text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mb-3 sm:mb-4 text-balance">"Hobi terbaik adalah yang nggak terasa seperti hobi. Video editing seperti itu — kamu <span class="text-emerald-400 font-medium">kecanduan prosesnya</span>, bukan cuma hasilnya."</p>
-                        <div class="font-mono text-[9px] sm:text-[10px] text-neutral-600">— Seorang hobiest editor, jam 3 pagi, masih di depan timeline</div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-
-        <!-- ═══════════════════════════════════════
-             PAGE: TOOLS
-        ═══════════════════════════════════════ -->
-        <div id="pg-tools" class="page">
-            <section class="pt-20 sm:pt-24 pb-12 sm:pb-20 md:pb-28">
-                <div class="max-w-[1300px] mx-auto px-4 sm:px-5 md:px-8">
-                    <div class="reveal max-w-2xl mb-10 sm:mb-14">
-                        <div class="inline-flex items-center gap-2 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04] mb-4 sm:mb-5">
-                            <span class="font-mono text-[9px] sm:text-[10px] font-bold text-emerald-400/70 uppercase tracking-[0.12em]">Arsenal</span>
-                        </div>
-                        <h1 class="font-space text-3xl sm:text-4xl md:text-5xl font-light tracking-tight mb-4 sm:mb-5 text-balance">Senjata untuk <span class="text-emerald-400">Hobimu</span></h1>
-                        <p class="text-slate-400 text-sm sm:text-[15px] leading-relaxed">Nggak perlu mahal. Mulai gratis, pindah kalau sudah butuh. Yang penting: pilih SATU dan kuasai.</p>
-                    </div>
-                    <div class="reveal flex flex-wrap gap-1.5 sm:gap-2 mb-6 sm:mb-8">
-                        <button onclick="filtT('all', this)" class="tab on font-mono text-[10px] sm:text-[11px] font-medium px-3 sm:px-4 py-1.5 rounded-full border border-white/10 transition-all cursor-pointer">SEMUA</button>
-                        <button onclick="filtT('free', this)" class="tab font-mono text-[10px] sm:text-[11px] font-medium text-slate-500 px-3 sm:px-4 py-1.5 rounded-full border border-white/10 hover:border-white/20 transition-all cursor-pointer">GRATIS</button>
-                        <button onclick="filtT('paid', this)" class="tab font-mono text-[10px] sm:text-[11px] font-medium text-slate-500 px-3 sm:px-4 py-1.5 rounded-full border border-white/10 hover:border-white/20 transition-all cursor-pointer">BERBAYAR</button>
-                        <button onclick="filtT('easy', this)" class="tab font-mono text-[10px] sm:text-[11px] font-medium text-slate-500 px-3 sm:px-4 py-1.5 rounded-full border border-white/10 hover:border-white/20 transition-all cursor-pointer">MUDAH</button>
-                    </div>
-                    <div id="tGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        <div class="tc card rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="paid easy">
-                            <div class="flex items-center justify-between mb-3 sm:mb-4">
-                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#111217] flex items-center justify-center"><iconify-icon icon="simple-icons:adobepremierepro" class="text-purple-400 text-base sm:text-lg"></iconify-icon></div>
-                                <span class="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-amber-400/70 bg-amber-400/10 px-1.5 sm:px-2 py-0.5 rounded">Paid</span>
-                            </div>
-                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1">Premiere Pro</h3>
-                            <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Industry standard. Tutorial terbanyak di YouTube. Ekosistem Adobe lengkap.</p>
-                            <div class="flex items-center justify-between pt-2.5 sm:pt-3 border-t border-white/5">
-                                <div class="flex items-center gap-1"><iconify-icon icon="mdi:star" class="text-amber-400 text-[10px]"></iconify-icon><span class="text-[11px] sm:text-[11px]">4.8</span></div>
-                                <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">PRO</span>
-                            </div>
-                        </div>
-                        <div class="tc card rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="free easy">
-                            <div class="flex items-center justify-between mb-3 sm:mb-4">
-                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#111217] flex items-center justify-center"><iconify-icon icon="simple-icons:davinciresolve" class="text-orange-400 text-base sm:text-lg"></iconify-icon></div>
-                                <span class="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-emerald-400/70 bg-emerald-400/10 px-1.5 sm:px-2 py-0.5 rounded">Free</span>
-                            </div>
-                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1">DaVinci Resolve</h3>
-                            <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Color grading terbaik. Versi gratis sudah sangat powerful. Best value.</p>
-                            <div class="flex items-center justify-between pt-2.5 sm:pt-3 border-t border-white/5">
-                                <div class="flex items-center gap-1"><iconify-icon icon="mdi:star" class="text-amber-400 text-[10px]"></iconify-icon><span class="text-[11px]">4.9</span></div>
-                                <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">ALL LEVELS</span>
-                            </div>
-                        </div>
-                        <div class="tc card rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="free easy">
-                            <div class="flex items-center justify-between mb-3 sm:mb-4">
-                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#111217] flex items-center justify-center"><iconify-icon icon="mdi:movie-open-outline" class="text-cyan-400 text-base sm:text-lg"></iconify-icon></div>
-                                <span class="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-emerald-400/70 bg-emerald-400/10 px-1.5 sm:px-2 py-0.5 rounded">Free</span>
-                            </div>
-                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1">CapCut</h3>
-                            <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Paling mudah untuk pemula. Auto-caption, template trending. Mobile + Desktop.</p>
-                            <div class="flex items-center justify-between pt-2.5 sm:pt-3 border-t border-white/5">
-                                <div class="flex items-center gap-1"><iconify-icon icon="mdi:star" class="text-amber-400 text-[10px]"></iconify-icon><span class="text-[11px]">4.7</span></div>
-                                <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">BEGINNER</span>
-                            </div>
-                        </div>
-                        <div class="tc card rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="paid">
-                            <div class="flex items-center justify-between mb-3 sm:mb-4">
-                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#111217] flex items-center justify-center"><iconify-icon icon="simple-icons:adobeaftereffects" class="text-blue-400 text-base sm:text-lg"></iconify-icon></div>
-                                <span class="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-amber-400/70 bg-amber-400/10 px-1.5 sm:px-2 py-0.5 rounded">Paid</span>
-                            </div>
-                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1">After Effects</h3>
-                            <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Motion graphics & VFX. Gabungin sama Premiere untuk hasil yang gila.</p>
-                            <div class="flex items-center justify-between pt-2.5 sm:pt-3 border-t border-white/5">
-                                <div class="flex items-center gap-1"><iconify-icon icon="mdi:star" class="text-amber-400 text-[10px]"></iconify-icon><span class="text-[11px]">4.7</span></div>
-                                <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">ADVANCED</span>
-                            </div>
-                        </div>
-                        <div class="tc card rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="paid">
-                            <div class="flex items-center justify-between mb-3 sm:mb-4">
-                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#111217] flex items-center justify-center"><iconify-icon icon="simple-icons:apple" class="text-slate-300 text-base sm:text-lg"></iconify-icon></div>
-                                <span class="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-amber-400/70 bg-amber-400/10 px-1.5 sm:px-2 py-0.5 rounded">Paid</span>
-                            </div>
-                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1">Final Cut Pro</h3>
-                            <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Mac only. Cepat, stabil, magnetic timeline. Favorit YouTuber Mac.</p>
-                            <div class="flex items-center justify-between pt-2.5 sm:pt-3 border-t border-white/5">
-                                <div class="flex items-center gap-1"><iconify-icon icon="mdi:star" class="text-amber-400 text-[10px]"></iconify-icon><span class="text-[11px]">4.6</span></div>
-                                <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">MAC USER</span>
-                            </div>
-                        </div>
-                        <div class="tc card rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="free easy">
-                            <div class="flex items-center justify-between mb-3 sm:mb-4">
-                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#111217] flex items-center justify-center"><iconify-icon icon="mdi:movie-filter-outline" class="text-pink-400 text-base sm:text-lg"></iconify-icon></div>
-                                <span class="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-emerald-400/70 bg-emerald-400/10 px-1.5 sm:px-2 py-0.5 rounded">Free</span>
-                            </div>
-                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1">Filmora</h3>
-                            <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Simple tapi cukup powerful. Cocok untuk yang mau hasil cepat.</p>
-                            <div class="flex items-center justify-between pt-2.5 sm:pt-3 border-t border-white/5">
-                                <div class="flex items-center gap-1"><iconify-icon icon="mdi:star" class="text-amber-400 text-[10px]"></iconify-icon><span class="text-[11px]">4.5</span></div>
-                                <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">EASY</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-
-        <!-- ═══════════════════════════════════════
-             PAGE: KARYA
-        ═══════════════════════════════════════ -->
-        <div id="pg-karya" class="page">
-            <section class="pt-20 sm:pt-24 pb-12 sm:pb-20 md:pb-28">
-                <div class="max-w-[1300px] mx-auto px-4 sm:px-5 md:px-8">
-                    <div class="reveal max-w-2xl mb-10 sm:mb-14">
-                        <div class="inline-flex items-center gap-2 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04] mb-4 sm:mb-5">
-                            <span class="font-mono text-[9px] sm:text-[10px] font-bold text-emerald-400/70 uppercase tracking-[0.12em]">Portfolio</span>
-                        </div>
-                        <h1 class="font-space text-3xl sm:text-4xl md:text-5xl font-light tracking-tight mb-4 sm:mb-5 text-balance">Hasil Karya <span class="text-emerald-400">dari Timeline</span></h1>
-                        <p class="text-slate-400 text-sm sm:text-[15px] leading-relaxed">Setiap project punya cerita. Ini beberapa yang bisa dilihat. Bukan yang terbaik — tapi yang paling berkesan.</p>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 mb-8 sm:mb-12">
-                        <div class="reveal karya-card">
-                            <div class="relative h-[180px] sm:h-[220px] lg:h-[240px] overflow-hidden">
-                                <img src="https://picsum.photos/seed/karya01/600/400.jpg" class="w-full h-full object-cover" alt="">
-                                <div class="karya-overlay">
-                                    <div class="font-mono text-[8px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5 sm:mb-1">Cinematic</div>
-                                    <h3 class="font-space text-sm sm:text-base font-semibold mb-0.5 sm:mb-1">Night City Walk</h3>
-                                    <p class="text-[10px] sm:text-[11px] text-slate-500">Color grading eksperimental di DaVinci Resolve</p>
-                                </div>
-                            </div>
-                            <div class="p-3 sm:p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">00:02:34</span>
-                                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">4K</span>
-                                </div>
-                                <button onclick="toast('Video segera hadir!')" class="text-[10px] sm:text-[11px] text-emerald-400/70 hover:text-emerald-400 transition-colors cursor-pointer min-h-[36px] flex items-center">Lihat <iconify-icon icon="mdi:arrow-right" class="text-[10px] align-middle ml-0.5"></iconify-icon></button>
-                            </div>
-                        </div>
-                        <div class="reveal karya-card">
-                            <div class="relative h-[180px] sm:h-[220px] lg:h-[240px] overflow-hidden">
-                                <img src="https://picsum.photos/seed/karya02/600/400.jpg" class="w-full h-full object-cover" alt="">
-                                <div class="karya-overlay">
-                                    <div class="font-mono text-[8px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5 sm:mb-1">Vlog</div>
-                                    <h3 class="font-space text-sm sm:text-base font-semibold mb-0.5 sm:mb-1">Weekend Escape</h3>
-                                    <p class="text-[10px] sm:text-[11px] text-slate-500">Pacing cepat, beat sync, transitions halus</p>
-                                </div>
-                            </div>
-                            <div class="p-3 sm:p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">00:04:12</span>
-                                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">1080p</span>
-                                </div>
-                                <button onclick="toast('Video segera hadir!')" class="text-[10px] sm:text-[11px] text-emerald-400/70 hover:text-emerald-400 transition-colors cursor-pointer min-h-[36px] flex items-center">Lihat <iconify-icon icon="mdi:arrow-right" class="text-[10px] align-middle ml-0.5"></iconify-icon></button>
-                            </div>
-                        </div>
-                        <div class="reveal karya-card">
-                            <div class="relative h-[180px] sm:h-[220px] lg:h-[240px] overflow-hidden">
-                                <img src="https://picsum.photos/seed/karya03/600/400.jpg" class="w-full h-full object-cover" alt="">
-                                <div class="karya-overlay">
-                                    <div class="font-mono text-[8px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5 sm:mb-1">Motion</div>
-                                    <h3 class="font-space text-sm sm:text-base font-semibold mb-0.5 sm:mb-1">Logo Reveal</h3>
-                                    <p class="text-[10px] sm:text-[11px] text-slate-500">Motion graphics dengan After Effects</p>
-                                </div>
-                            </div>
-                            <div class="p-3 sm:p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">00:00:08</span>
-                                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">4K</span>
-                                </div>
-                                <button onclick="toast('Video segera hadir!')" class="text-[10px] sm:text-[11px] text-emerald-400/70 hover:text-emerald-400 transition-colors cursor-pointer min-h-[36px] flex items-center">Lihat <iconify-icon icon="mdi:arrow-right" class="text-[10px] align-middle ml-0.5"></iconify-icon></button>
-                            </div>
-                        </div>
-                        <div class="reveal karya-card">
-                            <div class="relative h-[180px] sm:h-[220px] lg:h-[240px] overflow-hidden">
-                                <img src="https://picsum.photos/seed/karya04/600/400.jpg" class="w-full h-full object-cover" alt="">
-                                <div class="karya-overlay">
-                                    <div class="font-mono text-[8px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5 sm:mb-1">Short Film</div>
-                                    <h3 class="font-space text-sm sm:text-base font-semibold mb-0.5 sm:mb-1">Senja di Dermaga</h3>
-                                    <p class="text-[10px] sm:text-[11px] text-slate-500">Cerita pendek, slow pacing, teks puitis</p>
-                                </div>
-                            </div>
-                            <div class="p-3 sm:p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">00:01:48</span>
-                                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">1080p</span>
-                                </div>
-                                <button onclick="toast('Video segera hadir!')" class="text-[10px] sm:text-[11px] text-emerald-400/70 hover:text-emerald-400 transition-colors cursor-pointer min-h-[36px] flex items-center">Lihat <iconify-icon icon="mdi:arrow-right" class="text-[10px] align-middle ml-0.5"></iconify-icon></button>
-                            </div>
-                        </div>
-                        <div class="reveal karya-card">
-                            <div class="relative h-[180px] sm:h-[220px] lg:h-[240px] overflow-hidden">
-                                <img src="https://picsum.photos/seed/karya05/600/400.jpg" class="w-full h-full object-cover" alt="">
-                                <div class="karya-overlay">
-                                    <div class="font-mono text-[8px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5 sm:mb-1">Edit Konten</div>
-                                    <h3 class="font-space text-sm sm:text-base font-semibold mb-0.5 sm:mb-1">Food Reels Pack</h3>
-                                    <p class="text-[10px] sm:text-[11px] text-slate-500">Kumpulan reel makanan, CapCut + Premiere</p>
-                                </div>
-                            </div>
-                            <div class="p-3 sm:p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">00:00:30</span>
-                                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">1080p</span>
-                                </div>
-                                <button onclick="toast('Video segera hadir!')" class="text-[10px] sm:text-[11px] text-emerald-400/70 hover:text-emerald-400 transition-colors cursor-pointer min-h-[36px] flex items-center">Lihat <iconify-icon icon="mdi:arrow-right" class="text-[10px] align-middle ml-0.5"></iconify-icon></button>
-                            </div>
-                        </div>
-                        <div class="reveal karya-card">
-                            <div class="relative h-[180px] sm:h-[220px] lg:h-[240px] overflow-hidden">
-                                <img src="https://picsum.photos/seed/karya06/600/400.jpg" class="w-full h-full object-cover" alt="">
-                                <div class="karya-overlay">
-                                    <div class="font-mono text-[8px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5 sm:mb-1">Experimental</div>
-                                    <h3 class="font-space text-sm sm:text-base font-semibold mb-0.5 sm:mb-1">Glitch Art Video</h3>
-                                    <p class="text-[10px] sm:text-[11px] text-slate-500">Eksplorasi efek glitch & datamoshing</p>
-                                </div>
-                            </div>
-                            <div class="p-3 sm:p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">00:01:15</span>
-                                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">4K</span>
-                                </div>
-                                <button onclick="toast('Video segera hadir!')" class="text-[10px] sm:text-[11px] text-emerald-400/70 hover:text-emerald-400 transition-colors cursor-pointer min-h-[36px] flex items-center">Lihat <iconify-icon icon="mdi:arrow-right" class="text-[10px] align-middle ml-0.5"></iconify-icon></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="reveal card rounded-xl sm:rounded-2xl bg-[#0A0B0E] p-6 sm:p-8 md:p-10 text-center border-emerald-500/10">
-                        <iconify-icon icon="mdi:plus-circle-outline" class="text-emerald-500/30 text-2xl sm:text-3xl mb-2 sm:mb-3"></iconify-icon>
-                        <h3 class="font-space text-base sm:text-lg font-semibold mb-1.5 sm:mb-2">Dan Masih Banyak Lagi</h3>
-                        <p class="text-xs sm:text-sm text-slate-400 max-w-md mx-auto mb-4 sm:mb-5">Setiap minggu ada project baru. Nggak selalu sempurna, tapi selalu ada proses di baliknya.</p>
-                        <button onclick="toast('Portofolio lengkap segera!')" class="glow-btn text-[12px] sm:text-[13px] font-medium text-emerald-400 px-5 sm:px-6 py-2.5 sm:py-3 cursor-pointer">Lihat Semua Project</button>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-
-        <!-- ═══════════════════════════════════════
-             FOOTER
-        ═══════════════════════════════════════ -->
-        <footer class="border-t border-white/[0.04] bg-[#08090b] relative z-10">
-            <div class="max-w-[1300px] mx-auto px-4 sm:px-5 md:px-8 py-8 sm:py-12 md:py-16">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-10 mb-8 sm:mb-10">
-                    <div>
-                        <div class="flex items-center gap-2 mb-3 sm:mb-4">
-                            <img src="https://z-cdn-media.chatglm.cn/files/673527df-e761-4e9a-956e-1a37c62585a5.jpeg?auth_key=1884015929-40618e49287c4f9ba3b74eae48a36097-0-d700f49054296bb95350c8dbb53e51b2" alt="Logo" class="h-6 w-6 sm:h-7 sm:w-7 rounded object-cover">
-                            <span class="font-space font-bold text-xs sm:text-sm">CEP<span class="text-emerald-400">EDIT</span></span>
-                        </div>
-                        <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed max-w-xs">Video editing bukan sekadar skill — ini cara melihat dunia, memotong waktu, dan menyusun ulang realitas.</p>
-                    </div>
-                    <div>
-                        <h4 class="font-mono text-[9px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[0.12em] mb-3 sm:mb-4">Navigasi</h4>
-                        <div class="flex flex-col gap-1.5 sm:gap-2">
-                            <a href="#" onclick="nav('beranda'); return false;" class="text-[11px] sm:text-xs text-slate-500 hover:text-white transition-colors py-0.5">Beranda</a>
-                            <a href="#" onclick="nav('hobi'); return false;" class="text-[11px] sm:text-xs text-slate-500 hover:text-white transition-colors py-0.5">Hobi Ini</a>
-                            <a href="#" onclick="nav('tools'); return false;" class="text-[11px] sm:text-xs text-slate-500 hover:text-white transition-colors py-0.5">Tools</a>
-                            <a href="#" onclick="nav('karya'); return false;" class="text-[11px] sm:text-xs text-slate-500 hover:text-white transition-colors py-0.5">Karya</a>
-                        </div>
-                    </div>
-                    <div class="sm:col-span-2 md:col-span-1">
-                        <h4 class="font-mono text-[9px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[0.12em] mb-3 sm:mb-4">Kontak</h4>
-                        <div class="flex flex-col gap-1.5 sm:gap-2">
-                            <a href="#" class="text-[11px] sm:text-xs text-slate-500 hover:text-white transition-colors flex items-center gap-2 py-0.5"><iconify-icon icon="mdi:instagram" class="text-sm sm:text-base"></iconify-icon> Instagram</a>
-                            <a href="#" class="text-[11px] sm:text-xs text-slate-500 hover:text-white transition-colors flex items-center gap-2 py-0.5"><iconify-icon icon="mdi:youtube" class="text-sm sm:text-base"></iconify-icon> YouTube</a>
-                            <a href="#" class="text-[11px] sm:text-xs text-slate-500 hover:text-white transition-colors flex items-center gap-2 py-0.5"><iconify-icon icon="mdi:twitter" class="text-sm sm:text-base"></iconify-icon> Twitter</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="border-t border-white/[0.04] pt-4 sm:pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
-                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-700 text-center sm:text-left">&copy; 2025 CEPEDIT. Dibuat dengan obsesi dan teh manis.</span>
-                    <span class="font-mono text-[7px] sm:text-[9px] text-neutral-800">SYS::STATUS::ONLINE</span>
+                <div id="tG" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 md:gap-4">
+                    <div class="tc cd rounded-xl bg-[#0A0B0E] p-3.5 sm:p-4 md:p-5" data-t="paid easy"><div class="flex items-center justify-between mb-2.5 sm:mb-3"><div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-[#111217] flex items-center justify-center"><iconify-icon icon="simple-icons:adobepremierepro" class="text-purple-400 text-sm sm:text-base md:text-lg"></iconify-icon></div><span class="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-amber-400/70 bg-amber-400/10 px-1.5 sm:px-2 py-0.5 rounded">Paid</span></div><h3 class="font-space text-[13px] sm:text-sm md:text-[15px] font-semibold mb-0.5 sm:mb-1">Premiere Pro</h3><p class="text-[10px] sm:text-[11px] md:text-xs text-slate-400 leading-relaxed mb-2.5">Industry standard. Tutorial terbanyak. Ekosistem Adobe lengkap.</p><div class="flex items-center justify-between pt-2 sm:pt-3 border-t border-white/5"><div class="flex items-center gap-1"><iconify-icon icon="mdi:star" class="text-amber-400 text-[9px]"></iconify-icon><span class="text-[10px] sm:text-[11px]">4.8</span></div><span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">PRO</span></div></div>
+                    <div class="tc cd rounded-xl bg-[#0A0B0E] p-3.5 sm:p-4 md:p-5" data-t="free easy"><div class="flex items-center justify-between mb-2.5 sm:mb-3"><div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-[#111217] flex items-center justify-center"><iconify-icon icon="simple-icons:davinciresolve" class="text-orange-400 text-sm sm:text-base md:text-lg"></iconify-icon></div><span class="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-emerald-400/70 bg-emerald-400/10 px-1.5 sm:px-2 py-0.5 rounded">Free</span></div><h3 class="font-space text-[13px] sm:text-sm md:text-[15px] font-semibold mb-0.5 sm:mb-1">DaVinci Resolve</h3><p class="text-[10px] sm:text-[11px] md:text-xs text-slate-400 leading-relaxed mb-2.5">Color grading terbaik. Versi gratis sudah sangat powerful.</p><div class="flex items-center justify-between pt-2 sm:pt-3 border-t border-white/5"><div class="flex items-center gap-1"><iconify-icon icon="mdi:star" class="text-amber-400 text-[9px]"></iconify-icon><span class="text-[10px] sm:text-[11px]">4.9</span></div><span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">ALL LEVELS</span></div></div>
+                    <div class="tc cd rounded-xl bg-[#0A0B0E] p-3.5 sm:p-4 md:p-5" data-t="free easy"><div class="flex items-center justify-between mb-2.5 sm:mb-3"><div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-[#111217] flex items-center justify-center"><iconify-icon icon="mdi:movie-open-outline" class="text-cyan-400 text-sm sm:text-base md:text-lg"></iconify-icon></div><span class="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-emerald-400/70 bg-emerald-400/10 px-1.5 sm:px-2 py-0.5 rounded">Free</span></div><h3 class="font-space text-[13px] sm:text-sm md:text-[15px] font-semibold mb-0.5 sm:mb-1">CapCut</h3><p class="text-[10px] sm:text-[11px] md:text-xs text-slate-400 leading-relaxed mb-2.5">Paling mudah untuk pemula. Auto-caption, template trending.</p><div class="flex items-center justify-between pt-2 sm:pt-3 border-t border-white/5"><div class="flex items-center gap-1"><iconify-icon icon="mdi:star" class="text-amber-400 text-[9px]"></iconify-icon><span class="text-[10px] sm:text-[11px]">4.7</span></div><span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">BEGINNER</span></div></div>
+                    <div class="tc cd rounded-xl bg-[#0A0B0E] p-3.5 sm:p-4 md:p-5" data-t="paid"><div class="flex items-center justify-between mb-2.5 sm:mb-3"><div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-[#111217] flex items-center justify-center"><iconify-icon icon="simple-icons:adobeaftereffects" class="text-blue-400 text-sm sm:text-base md:text-lg"></iconify-icon></div><span class="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-amber-400/70 bg-amber-400/10 px-1.5 sm:px-2 py-0.5 rounded">Paid</span></div><h3 class="font-space text-[13px] sm:text-sm md:text-[15px] font-semibold mb-0.5 sm:mb-1">After Effects</h3><p class="text-[10px] sm:text-[11px] md:text-xs text-slate-400 leading-relaxed mb-2.5">Motion graphics & VFX. Gabungin sama Premiere.</p><div class="flex items-center justify-between pt-2 sm:pt-3 border-t border-white/5"><div class="flex items-center gap-1"><iconify-icon icon="mdi:star" class="text-amber-400 text-[9px]"></iconify-icon><span class="text-[10px] sm:text-[11px]">4.7</span></div><span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">ADVANCED</span></div></div>
+                    <div class="tc cd rounded-xl bg-[#0A0B0E] p-3.5 sm:p-4 md:p-5" data-t="paid"><div class="flex items-center justify-between mb-2.5 sm:mb-3"><div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-[#111217] flex items-center justify-center"><iconify-icon icon="simple-icons:apple" class="text-slate-300 text-sm sm:text-base md:text-lg"></iconify-icon></div><span class="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-amber-400/70 bg-amber-400/10 px-1.5 sm:px-2 py-0.5 rounded">Paid</span></div><h3 class="font-space text-[13px] sm:text-sm md:text-[15px] font-semibold mb-0.5 sm:mb-1">Final Cut Pro</h3><p class="text-[10px] sm:text-[11px] md:text-xs text-slate-400 leading-relaxed mb-2.5">Mac only. Cepat, stabil, magnetic timeline.</p><div class="flex items-center justify-between pt-2 sm:pt-3 border-t border-white/5"><div class="flex items-center gap-1"><iconify-icon icon="mdi:star" class="text-amber-400 text-[9px]"></iconify-icon><span class="text-[10px] sm:text-[11px]">4.6</span></div><span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">MAC USER</span></div></div>
+                    <div class="tc cd rounded-xl bg-[#0A0B0E] p-3.5 sm:p-4 md:p-5" data-t="free easy"><div class="flex items-center justify-between mb-2.5 sm:mb-3"><div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-[#111217] flex items-center justify-center"><iconify-icon icon="mdi:movie-filter-outline" class="text-pink-400 text-sm sm:text-base md:text-lg"></iconify-icon></div><span class="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-emerald-400/70 bg-emerald-400/10 px-1.5 sm:px-2 py-0.5 rounded">Free</span></div><h3 class="font-space text-[13px] sm:text-sm md:text-[15px] font-semibold mb-0.5 sm:mb-1">Filmora</h3><p class="text-[10px] sm:text-[11px] md:text-xs text-slate-400 leading-relaxed mb-2.5">Simple tapi powerful. Cocok untuk hasil cepat.</p><div class="flex items-center justify-between pt-2 sm:pt-3 border-t border-white/5"><div class="flex items-center gap-1"><iconify-icon icon="mdi:star" class="text-amber-400 text-[9px]"></iconify-icon><span class="text-[10px] sm:text-[11px]">4.5</span></div><span class="font-mono text-[8px] sm:text-[9px] text-neutral-600">EASY</span></div></div>
                 </div>
             </div>
-        </footer>
+        </section>
+    </div>
 
-    </div><!-- /mainContent -->
+
+    <!-- ===== KARYA ===== -->
+    <div id="pg-karya" class="page">
+        <section class="pt-16 sm:pt-20 md:pt-24 pb-10 sm:pb-16 md:pb-24">
+            <div class="max-w-[1300px] mx-auto px-4 md:px-8">
+                <div class="rv max-w-2xl mb-8 sm:mb-12">
+                    <div class="inline-flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04] mb-4">
+                        <span class="font-mono text-[8px] sm:text-[10px] font-bold text-emerald-400/70 uppercase tracking-[.1em]">Portfolio</span>
+                    </div>
+                    <h1 class="font-space text-[1.6rem] sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-4">Hasil Karya <span class="text-emerald-400">dari Timeline</span></h1>
+                    <p class="text-slate-400 text-[12px] sm:text-sm md:text-[15px] leading-relaxed">Setiap project punya cerita. Ini beberapa yang paling berkesan.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5 mb-8 sm:mb-10">
+                    <div class="rv kc"><div class="relative kimg overflow-hidden"><img src="https://picsum.photos/seed/karya01/600/400.jpg" class="w-full h-full object-cover" alt=""><div class="ko"><div class="font-mono text-[7px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5">Cinematic</div><h3 class="font-space text-[12px] sm:text-sm md:text-base font-semibold mb-0.5">Night City Walk</h3><p class="text-[9px] sm:text-[11px] text-slate-500">Color grading eksperimental</p></div></div><div class="p-2.5 sm:p-3 md:p-4 flex items-center justify-between"><div class="flex items-center gap-2"><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600">00:02:34</span><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600">4K</span></div><button onclick="toast('Video segera hadir!')" class="text-[10px] sm:text-[11px] text-emerald-400/70 hover:text-emerald-400 transition-colors cursor-pointer">Lihat <iconify-icon icon="mdi:arrow-right" class="text-[9px] align-middle"></iconify-icon></button></div></div>
+                    <div class="rv kc"><div class="relative kimg overflow-hidden"><img src="https://picsum.photos/seed/karya02/600/400.jpg" class="w-full h-full object-cover" alt=""><div class="ko"><div class="font-mono text-[7px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5">Vlog</div><h3 class="font-space text-[12px] sm:text-sm md:text-base font-semibold mb-0.5">Weekend Escape</h3><p class="text-[9px] sm:text-[11px] text-slate-500">Beat sync, transitions halus</p></div></div><div class="p-2.5 sm:p-3 md:p-4 flex items-center justify-between"><div class="flex items-center gap-2"><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600">00:04:12</span><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600">1080p</span></div><button onclick="toast('Video segera hadir!')" class="text-[10px] sm:text-[11px] text-emerald-400/70 hover:text-emerald-400 transition-colors cursor-pointer">Lihat <iconify-icon icon="mdi:arrow-right" class="text-[9px] align-middle"></iconify-icon></button></div></div>
+                    <div class="rv kc"><div class="relative kimg overflow-hidden"><img src="https://picsum.photos/seed/karya03/600/400.jpg" class="w-full h-full object-cover" alt=""><div class="ko"><div class="font-mono text-[7px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5">Motion</div><h3 class="font-space text-[12px] sm:text-sm md:text-base font-semibold mb-0.5">Logo Reveal</h3><p class="text-[9px] sm:text-[11px] text-slate-500">Motion graphics After Effects</p></div></div><div class="p-2.5 sm:p-3 md:p-4 flex items-center justify-between"><div class="flex items-center gap-2"><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600">00:00:08</span><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600">4K</span></div><button onclick="toast('Video segera hadir!')" class="text-[10px] sm:text-[11px] text-emerald-400/70 hover:text-emerald-400 transition-colors cursor-pointer">Lihat <iconify-icon icon="mdi:arrow-right" class="text-[9px] align-middle"></iconify-icon></button></div></div>
+                    <div class="rv kc"><div class="relative kimg overflow-hidden"><img src="https://picsum.photos/seed/karya04/600/400.jpg" class="w-full h-full object-cover" alt=""><div class="ko"><div class="font-mono text-[7px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5">Short Film</div><h3 class="font-space text-[12px] sm:text-sm md:text-base font-semibold mb-0.5">Senja di Dermaga</h3><p class="text-[9px] sm:text-[11px] text-slate-500">Slow pacing, teks puitis</p></div></div><div class="p-2.5 sm:p-3 md:p-4 flex items-center justify-between"><div class="flex items-center gap-2"><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600">00:01:48</span><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600">1080p</span></div><button onclick="toast('Video segera hadir!')" class="text-[10px] sm:text-[11px] text-emerald-400/70 hover:text-emerald-400 transition-colors cursor-pointer">Lihat <iconify-icon icon="mdi:arrow-right" class="text-[9px] align-middle"></iconify-icon></button></div></div>
+                    <div class="rv kc"><div class="relative kimg overflow-hidden"><img src="https://picsum.photos/seed/karya05/600/400.jpg" class="w-full h-full object-cover" alt=""><div class="ko"><div class="font-mono text-[7px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5">Edit Konten</div><h3 class="font-space text-[12px] sm:text-sm md:text-base font-semibold mb-0.5">Food Reels Pack</h3><p class="text-[9px] sm:text-[11px] text-slate-500">CapCut + Premiere</p></div></div><div class="p-2.5 sm:p-3 md:p-4 flex items-center justify-between"><div class="flex items-center gap-2"><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600">00:00:30</span><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600">1080p</span></div><button onclick="toast('Video segera hadir!')" class="text-[10px] sm:text-[11px] text-emerald-400/70 hover:text-emerald-400 transition-colors cursor-pointer">Lihat <iconify-icon icon="mdi:arrow-right" class="text-[9px] align-middle"></iconify-icon></button></div></div>
+                    <div class="rv kc"><div class="relative kimg overflow-hidden"><img src="https://picsum.photos/seed/karya06/600/400.jpg" class="w-full h-full object-cover" alt=""><div class="ko"><div class="font-mono text-[7px] sm:text-[9px] text-emerald-400/60 uppercase tracking-wider mb-0.5">Experimental</div><h3 class="font-space text-[12px] sm:text-sm md:text-base font-semibold mb-0.5">Glitch Art Video</h3><p class="text-[9px] sm:text-[11px] text-slate-500">Efek glitch & datamoshing</p></div></div><div class="p-2.5 sm:p-3 md:p-4 flex items-center justify-between"><div class="flex items-center gap-2"><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600">00:01:15</span><span class="font-mono text-[7px] sm:text-[9px] text-neutral-600">4K</span></div><button onclick="toast('Video segera hadir!')" class="text-[10px] sm:text-[11px] text-emerald-400/70 hover:text-emerald-400 transition-colors cursor-pointer">Lihat <iconify-icon icon="mdi:arrow-right" class="text-[9px] align-middle"></iconify-icon></button></div></div>
+                </div>
+                <div class="rv cd rounded-xl bg-[#0A0B0E] p-5 sm:p-7 md:p-10 text-center border-emerald-500/10">
+                    <iconify-icon icon="mdi:plus-circle-outline" class="text-emerald-500/30 text-2xl sm:text-3xl mb-2"></iconify-icon>
+                    <h3 class="font-space text-sm sm:text-base md:text-lg font-semibold mb-1.5">Dan Masih Banyak Lagi</h3>
+                    <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 max-w-md mx-auto mb-4">Setiap minggu ada project baru.</p>
+                    <button onclick="toast('Portofolio lengkap segera!')" class="gbtn text-[11px] sm:text-[12px] md:text-[13px] font-medium text-emerald-400 px-5 sm:px-6 py-2.5 sm:py-3">Lihat Semua Project</button>
+                </div>
+            </div>
+        </section>
+    </div>
 
 
-    <!-- ═══════════════════════════════════════
-         JAVASCRIPT
-    ═══════════════════════════════════════ -->
-    <script>
-    (function(){
-        'use strict';
+    <!-- ===== FOOTER ===== -->
+    <footer class="border-t border-white/[0.04] bg-[#08090b] relative z-10">
+        <div class="max-w-[1300px] mx-auto px-4 md:px-8 py-8 sm:py-10 md:py-14">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-2.5"><img src="https://z-cdn-media.chatglm.cn/files/673527df-e761-4e9a-956e-1a37c62585a5.jpeg?auth_key=1884015929-40618e49287c4f9ba3b74eae48a36097-0-d700f49054296bb95350c8dbb53e51b2" alt="" class="h-6 w-6 rounded object-cover"><span class="font-space font-bold text-xs">CEP<span class="text-emerald-400">EDIT</span></span></div>
+                    <p class="text-[10px] sm:text-xs text-slate-500 leading-relaxed">Video editing bukan sekadar skill — ini cara melihat dunia.</p>
+                </div>
+                <div>
+                    <h4 class="font-mono text-[8px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[.1em] mb-2.5">Navigasi</h4>
+                    <div class="flex flex-col gap-1"><a href="#" onclick="go('beranda');return false" class="text-[10px] sm:text-xs text-slate-500 hover:text-white transition-colors py-0.5">Beranda</a><a href="#" onclick="go('hobi');return false" class="text-[10px] sm:text-xs text-slate-500 hover:text-white transition-colors py-0.5">Hobi Ini</a><a href="#" onclick="go('tools');return false" class="text-[10px] sm:text-xs text-slate-500 hover:text-white transition-colors py-0.5">Tools</a><a href="#" onclick="go('karya');return false" class="text-[10px] sm:text-xs text-slate-500 hover:text-white transition-colors py-0.5">Karya</a></div>
+                </div>
+                <div>
+                    <h4 class="font-mono text-[8px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[.1em] mb-2.5">Kontak</h4>
+                    <div class="flex flex-col gap-1"><a href="#" class="text-[10px] sm:text-xs text-slate-500 hover:text-white transition-colors py-0.5 flex items-center gap-1.5"><iconify-icon icon="mdi:instagram" class="text-sm"></iconify-icon> Instagram</a><a href="#" class="text-[10px] sm:text-xs text-slate-500 hover:text-white transition-colors py-0.5 flex items-center gap-1.5"><iconify-icon icon="mdi:youtube" class="text-sm"></iconify-icon> YouTube</a><a href="#" class="text-[10px] sm:text-xs text-slate-500 hover:text-white transition-colors py-0.5 flex items-center gap-1.5"><iconify-icon icon="mdi:twitter" class="text-sm"></iconify-icon> Twitter</a></div>
+                </div>
+            </div>
+            <div class="border-t border-white/[0.04] pt-4 flex flex-col sm:flex-row items-center justify-between gap-1.5">
+                <span class="font-mono text-[7px] sm:text-[9px] text-neutral-700">&copy; 2025 CEPEDIT. Dibuat dengan obsesi dan teh manis.</span>
+                <span class="font-mono text-[7px] sm:text-[9px] text-neutral-800">SYS::ONLINE</span>
+            </div>
+        </div>
+    </footer>
 
-        /* ─── LOADER ─── */
-        var loader=document.getElementById('loader');
-        var barFill=document.getElementById('loaderBarFill');
-        var barPercent=document.getElementById('loaderBarPercent');
-        var statusText=document.getElementById('loaderStatusText');
-        var mainContent=document.getElementById('mainContent');
-        var statusMsgs=['AWAITING SIGNAL...','INITIALIZING TIMELINE...','LOADING ASSETS...','COMPILING EFFECTS...','SYNCING AUDIO...','RENDERING UI...','CALIBRATING COLOR...','FINALIZING...'];
-        var progress=0,msgIdx=0;
-        var li=setInterval(function(){
-            progress=Math.min(progress+Math.random()*2.5+0.3,100);
-            barFill.style.width=progress+'%';
-            barPercent.textContent=Math.floor(progress)+'%';
-            var tm=Math.floor((progress/100)*statusMsgs.length);
-            if(tm!==msgIdx&&tm<statusMsgs.length){msgIdx=tm;statusText.textContent=statusMsgs[msgIdx]}
-            if(progress>=100){
-                clearInterval(li);barFill.style.width='100%';barPercent.textContent='100%';statusText.textContent='READY.';
-                setTimeout(function(){
-                    loader.classList.add('hidden');mainContent.classList.add('visible');
-                    requestAnimationFrame(function(){document.querySelectorAll('.fade-up').forEach(function(el){el.classList.add('show')})});
-                },400);
-            }
-        },30);
+</div>
 
-        /* ─── NAV ─── */
-        window.nav=function(page){
-            document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
-            var t=document.getElementById('pg-'+page);
-            if(t){t.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
-            document.querySelectorAll('.nv').forEach(function(b){b.classList.remove('active');if(b.getAttribute('data-p')===page)b.classList.add('active')});
-            setTimeout(function(){t.querySelectorAll('.reveal').forEach(function(el){el.classList.remove('show');revObs.observe(el)})},100);
-            if(page==='beranda')setTimeout(animCounters,400);
-        };
+<script>
+(function(){
+'use strict';
+var ld=document.getElementById('loader'),bf=document.getElementById('lbf'),bp=document.getElementById('lbp'),st=document.getElementById('lst'),mc=document.getElementById('mainContent');
+var msgs=['AWAITING SIGNAL...','INITIALIZING TIMELINE...','LOADING ASSETS...','COMPILING EFFECTS...','SYNCING AUDIO...','RENDERING UI...','FINALIZING...'];
+var p=0,mi=0;
+var li=setInterval(function(){
+    p=Math.min(p+Math.random()*2.8+0.4,100);
+    bf.style.width=p+'%';bp.textContent=Math.floor(p)+'%';
+    var t=Math.floor(p/100*msgs.length);
+    if(t!==mi&&t<msgs.length){mi=t;st.textContent=msgs[mi]}
+    if(p>=100){clearInterval(li);bp.textContent='100%';st.textContent='READY.';
+    setTimeout(function(){ld.classList.add('out');mc.classList.add('vis');
+    requestAnimationFrame(function(){document.querySelectorAll('.fu').forEach(function(e){e.classList.add('sh')})})},350)}
+},28);
 
-        /* ─── MOBILE NAV ─── */
-        var mobOpen=false;
-        window.toggleMob=function(){
-            mobOpen=!mobOpen;
-            var n=document.getElementById('mobNav'),i=document.getElementById('mobIco');
-            if(mobOpen){n.classList.add('open');i.setAttribute('icon','mdi:close')}
-            else{n.classList.remove('open');i.setAttribute('icon','mdi:menu')}
-        };
-        window.closeMob=function(){
-            mobOpen=false;document.getElementById('mobNav').classList.remove('open');document.getElementById('mobIco').setAttribute('icon','mdi:menu');
-        };
+window.go=function(pg){
+    document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on')});
+    var t=document.getElementById('pg-'+pg);
+    if(t){t.classList.add('on');window.scrollTo({top:0,behavior:'smooth'})}
+    document.querySelectorAll('.nv').forEach(function(b){b.classList.remove('act');if(b.getAttribute('data-p')===pg)b.classList.add('act')});
+    setTimeout(function(){t.querySelectorAll('.rv').forEach(function(e){e.classList.remove('sh');ro.observe(e)})},80);
+    if(pg==='beranda')setTimeout(ac,350);
+};
 
-        /* ─── TOAST ─── */
-        var tt=null;
-        window.toast=function(msg){
-            var t=document.getElementById('toast'),m=document.getElementById('toastMsg');
-            m.textContent=msg;t.classList.add('show');
-            if(tt)clearTimeout(tt);
-            tt=setTimeout(function(){t.classList.remove('show')},2500);
-        };
+var mo=false;
+window.tmob=function(){mo=!mo;var n=document.getElementById('mnav'),i=document.getElementById('mico');
+if(mo){n.classList.add('op');i.setAttribute('icon','mdi:close')}else{cmob()}};
+window.cmob=function(){mo=false;document.getElementById('mnav').classList.remove('op');document.getElementById('mico').setAttribute('icon','mdi:menu')};
 
-        /* ─── COUNTERS ─── */
-        function animC(el,target,dur){
-            var st=performance.now();
-            function up(now){
-                var p=Math.min((now-st)/dur,1);
-                var e=1-Math.pow(1-p,3);
-                el.textContent=Math.floor(target*e);
-                if(p<1)requestAnimationFrame(up);
-            }
-            requestAnimationFrame(up);
-        }
-        var counted=false;
-        function animCounters(){
-            if(counted)return;counted=true;
-            animC(document.getElementById('c1'),98,1200);
-            animC(document.getElementById('c2'),95,1400);
-            animC(document.getElementById('c3'),92,1600);
-            animC(document.getElementById('c4'),847,2000);
-            animC(document.getElementById('c5'),63,1800);
-            animC(document.getElementById('c6'),312,2200);
-            animC(document.getElementById('c7'),189,2000);
-        }
+var tt=null;
+window.toast=function(m){var t=document.getElementById('toast'),s=document.getElementById('tmsg');s.textContent=m;t.classList.add('on');if(tt)clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('on')},2200)};
 
-        /* ─── REVEAL OBSERVER ─── */
-        var revObs=new IntersectionObserver(function(entries){
-            entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('show');revObs.unobserve(e.target)}});
-        },{threshold:0.08,rootMargin:'0px 0px -30px 0px'});
-        document.querySelectorAll('.reveal').forEach(function(el){revObs.observe(el)});
+function ac2(el,tg,dur){var s=performance.now();function u(n){var p=Math.min((n-s)/dur,1),e=1-Math.pow(1-p,3);el.textContent=Math.floor(tg*e);if(p<1)requestAnimationFrame(u)}requestAnimationFrame(u)}
+var cd=false;
+function ac(){if(cd)return;cd=true;
+ac2(document.getElementById('c1'),98,1100);ac2(document.getElementById('c2'),95,1300);ac2(document.getElementById('c3'),92,1500);
+ac2(document.getElementById('c4'),847,1800);ac2(document.getElementById('c5'),63,1600);ac2(document.getElementById('c6'),312,2000);ac2(document.getElementById('c7'),189,1800)}
 
-        /* ─── COUNTER OBSERVER ─── */
-        var s4=document.getElementById('c4');
-        if(s4){
-            var cObs=new IntersectionObserver(function(entries){
-                entries.forEach(function(e){if(e.isIntersecting){animCounters();cObs.unobserve(e.target)}});
-            },{threshold:0.2});
-            cObs.observe(s4.closest('section'));
-        }
+var ro=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('sh');ro.unobserve(e.target)}})},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv').forEach(function(e){ro.observe(e)});
 
-        /* ─── TOOLS FILTER ─── */
-        window.filtT=function(type,btn){
-            document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on')});
-            btn.classList.add('on');
-            document.querySelectorAll('.tc').forEach(function(c){
-                var tags=c.getAttribute('data-t')||'';
-                if(type==='all'||tags.indexOf(type)!==-1){
-                    c.style.display='';c.style.opacity='0';c.style.transform='translateY(10px)';
-                    requestAnimationFrame(function(){c.style.transition='opacity .3s,transform .3s';c.style.opacity='1';c.style.transform='translateY(0)'});
-                }else{c.style.display='none'}
-            });
-        };
+var s4=document.getElementById('c4');
+if(s4){var co=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){ac();co.unobserve(e.target)}})},{threshold:0.15});co.observe(s4.closest('section'))}
 
-        /* ─── CLOSE MOBILE NAV ON RESIZE ─── */
-        window.addEventListener('resize',function(){if(window.innerWidth>=768)closeMob()});
+window.fT=function(type,btn){
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on')});btn.classList.add('on');
+    document.querySelectorAll('.tc').forEach(function(c){var tags=c.getAttribute('data-t')||'';
+    if(type==='all'||tags.indexOf(type)!==-1){c.style.display='';c.style.opacity='0';c.style.transform='translateY(8px)';
+    requestAnimationFrame(function(){c.style.transition='opacity .25s,transform .25s';c.style.opacity='1';c.style.transform='translateY(0)'})}
+    else{c.style.display='none'}});
+};
 
-    })();
-    </script>
-
+window.addEventListener('resize',function(){if(window.innerWidth>=768)cmob()});
+})();
+</script>
 </body>
 </html>
