@@ -388,7 +388,153 @@
         setTimeout(fireComboGlitch, 15000);
     }
 
+    // ———————————————
+    // HOBI PAGE — GLITCH DEEP DIVE EFFECTS
+    // ———————————————
+    function initHobiEffects() {
+        var hobiCards = document.querySelectorAll('.hobi-card');
+        var corruptedDeco = document.querySelector('.hobi-corrupted-deco span');
+        var corruptTicker = document.querySelector('.hobi-corrupt-ticker');
 
+        // A) Corrupted ticker — randomize text periodically
+        if (corruptTicker) {
+            var corruptTexts = [
+                'DEEP_DIVE_COMPLETE // DATA_INTEGRITY: 97.3% // SIGNAL_LOSS: MINIMAL',
+                '0x4F2A // FRAME_BUFFER_OVERFLOW // RECOVERING...',
+                'SYNC_RATE: 99.7% // PACKET_LOSS: 0.3% // NOMINAL',
+                'LAYER_04:DECODED // NARRATIVE_COHERENCE: HIGH',
+                'TEMPORAL_DRIFT: 0.002ms // CHRONO_SYNC: LOCKED',
+                'MEMORY_LEAK_DETECTED // GARBAGE_COLLECT: RUNNING...',
+                'NEURAL_PATHWAY: STABLE // CREATIVITY_INDEX: 98.7%',
+                'DATA_STREAM::ACTIVE // INTEGRITY::VERIFIED'
+            ];
+
+            function tickCorruptText() {
+                var hobi = document.getElementById('pg-hobi');
+                if (!hobi || !hobi.classList.contains('on')) {
+                    setTimeout(tickCorruptText, 3000);
+                    return;
+                }
+                var newText = corruptTexts[Math.floor(Math.random() * corruptTexts.length)];
+                corruptTicker.style.opacity = '0';
+                setTimeout(function() {
+                    corruptTicker.textContent = newText;
+                    corruptTicker.style.opacity = '1';
+                }, 150);
+                setTimeout(tickCorruptText, 3000 + Math.random() * 4000);
+            }
+            setTimeout(tickCorruptText, 2000);
+        }
+
+        // B) Corrupted decoration — random text flash
+        if (corruptedDeco) {
+            var decoTexts = [
+                'SYS::DEEP_DIVE // LAYER_01 // ACTIVE',
+                'SYS::DEEP_DIVE // LAYER_02 // PARSING',
+                'SYS::DEEP_DIVE // LAYER_01 // COMPLETE',
+                'ERR::0x004F // BUFFER_OVERFLOW',
+                'SYS::DEEP_DIVE // INTEGRITY: 99.1%',
+                'WARN::SIGNAL_DEGRADATION // 0.02dB'
+            ];
+
+            function flashDecoText() {
+                var hobi = document.getElementById('pg-hobi');
+                if (!hobi || !hobi.classList.contains('on')) {
+                    setTimeout(flashDecoText, 4000);
+                    return;
+                }
+                // Flash to different text
+                corruptedDeco.style.color = 'rgba(239, 68, 68, 0.3)';
+                corruptedDeco.textContent = decoTexts[Math.floor(Math.random() * decoTexts.length)];
+                setTimeout(function() {
+                    corruptedDeco.style.color = 'rgba(16, 185, 129, 0.15)';
+                }, 200);
+                setTimeout(flashDecoText, 5000 + Math.random() * 8000);
+            }
+            setTimeout(flashDecoText, 5000);
+        }
+
+        // C) Image glitch on scroll — random chromatic shift
+        var hobiImgObserver = new IntersectionObserver(function(entries) {
+            for (var i = 0; i < entries.length; i++) {
+                if (entries[i].isIntersecting) {
+                    var card = entries[i].target;
+                    var img = card.querySelector('.hobi-img-glitch img');
+                    if (img && Math.random() < 0.3) {
+                        // Random chromatic burst
+                        img.style.filter = 'hue-rotate(' + (Math.random() * 30 - 15) + 'deg) saturate(1.3)';
+                        setTimeout(function() {
+                            img.style.filter = '';
+                        }, 300);
+                    }
+                }
+            }
+        }, { threshold: 0.5 });
+
+        for (var i = 0; i < hobiCards.length; i++) {
+            hobiImgObserver.observe(hobiCards[i]);
+        }
+
+        // D) Occasional screen-wide glitch on hobi page
+        function fireHobiGlitchBurst() {
+            var hobi = document.getElementById('pg-hobi');
+            if (!hobi || !hobi.classList.contains('on')) {
+                setTimeout(fireHobiGlitchBurst, 8000);
+                return;
+            }
+
+            // Random glitch line
+            var line = document.createElement('div');
+            line.style.cssText = 'position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(16,185,129,.2),rgba(6,182,212,.1),transparent);pointer-events:none;z-index:5;opacity:0;';
+            line.style.top = (10 + Math.random() * 80) + '%';
+            hobi.appendChild(line);
+            requestAnimationFrame(function() {
+                line.style.opacity = '1';
+                line.style.transition = 'opacity .3s';
+            });
+            setTimeout(function() {
+                line.style.opacity = '0';
+                setTimeout(function() { if (line.parentNode) line.parentNode.removeChild(line); }, 400);
+            }, 200);
+
+            // Sometimes add a second line close by
+            if (Math.random() > 0.5) {
+                setTimeout(function() {
+                    var line2 = document.createElement('div');
+                    line2.style.cssText = 'position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(239,68,68,.1),transparent);pointer-events:none;z-index:5;opacity:0;';
+                    line2.style.top = (parseFloat(line.style.top) + 2 + Math.random() * 3) + '%';
+                    hobi.appendChild(line2);
+                    requestAnimationFrame(function() {
+                        line2.style.opacity = '1';
+                        line2.style.transition = 'opacity .2s';
+                    });
+                    setTimeout(function() {
+                        line2.style.opacity = '0';
+                        setTimeout(function() { if (line2.parentNode) line2.parentNode.removeChild(line2); }, 300);
+                    }, 150);
+                }, 100);
+            }
+
+            setTimeout(fireHobiGlitchBurst, 6000 + Math.random() * 12000);
+        }
+        setTimeout(fireHobiGlitchBurst, 8000);
+
+        // E) Trigger hobi effects when page becomes active
+        var origGo = window.go;
+        window.go = function(page) {
+            origGo(page);
+            if (page === 'hobi') {
+                setTimeout(function() {
+                    initHobiEffects();
+                }, 500);
+            }
+        };
+    }
+
+    // Call hobi init after page load too
+    setTimeout(function() {
+        initHobiEffects();
+    }, 2000);
     // ———————————————
     // TOAST
     // ———————————————

@@ -395,56 +395,112 @@
     </div>
 
 
-    <!-- ===== HOBI ===== -->
+        <!-- ===== HOBI ===== -->
     <div id="pg-hobi" class="page">
-        <section class="pt-16 sm:pt-20 md:pt-24 pb-10 sm:pb-16 md:pb-24">
-            <div class="max-w-[1300px] mx-auto px-4 md:px-8">
-                <div class="rv max-w-2xl mb-8 sm:mb-14">
-                    <div class="inline-flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04] mb-4">
+        <!-- Data leak background -->
+        <div class="hobi-data-leak"></div>
+        <!-- Scan overlay -->
+        <div class="hobi-scan-overlay"></div>
+
+        <section class="pt-16 sm:pt-20 md:pt-24 pb-10 sm:pb-16 md:pb-24 relative">
+            <div class="max-w-[1300px] mx-auto px-4 md:px-8 relative z-10">
+
+                <!-- Glitch header -->
+                <div class="rv mb-8 sm:mb-14">
+                    <div class="inline-flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04] mb-4 hobi-border-pulse">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" style="animation:pr 1.5s ease infinite"></span>
                         <span class="font-mono text-[8px] sm:text-[10px] font-bold text-emerald-400/70 uppercase tracking-[.1em]">Deep Dive</span>
                     </div>
-                    <h1 class="font-space text-[1.6rem] sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-4 leading-[1.05]">Apa Itu Hobi<br><span class="text-emerald-400">Video Editing</span> Sesungguhnya?</h1>
-                    <p class="text-slate-400 text-[12px] sm:text-sm md:text-[15px] leading-relaxed">Banyak orang mengira video editing hanya tentang software. Padahal, yang paling penting bukan alat yang digunakan, melainkan bagaimana kamu melihat dunia dan <span class="text-white">mengubahnya menjadi cerita</span>.</p>
+                    <h1 class="font-space text-[1.6rem] sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-4 leading-[1.05] hobi-title-glitch" data-text="Apa Itu Hobi Video Editing Sesungguhnya?">Apa Itu Hobi<br><span class="text-emerald-400">Video Editing</span> Sesungguhnya?</h1>
+                    <p class="text-slate-400 text-[12px] sm:text-sm md:text-[15px] leading-relaxed max-w-2xl">Banyak orang mengira video editing hanya tentang software. Padahal, yang paling penting bukan alat yang digunakan, melainkan bagaimana kamu melihat dunia dan <span class="text-white hobi-word-reveal">mengubahnya menjadi cerita</span>.</p>
+                    <!-- Corrupted data decoration -->
+                    <div class="hobi-corrupted-deco mt-6">
+                        <span class="font-mono text-[7px] text-emerald-500/15">SYS::DEEP_DIVE // LAYER_01 // ACTIVE</span>
+                    </div>
                 </div>
+
+                <!-- Content cards -->
                 <div class="space-y-3 sm:space-y-5 md:space-y-6 mb-10 sm:mb-16">
-                    <div class="rv cd rounded-xl bg-[#0A0B0E] overflow-hidden">
+
+                    <div class="rv hobi-card cd rounded-xl bg-[#0A0B0E] overflow-hidden hobi-border-pulse">
                         <div class="grid md:grid-cols-5">
-                            <div class="md:col-span-2 relative overflow-hidden"><img src="https://picsum.photos/seed/hobcraft01/500/400.jpg" class="w-full himg object-cover" alt=""><div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#0A0B0E] hidden md:block"></div><div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div></div>
+                            <div class="md:col-span-2 relative overflow-hidden hobi-img-glitch">
+                                <img src="https://picsum.photos/seed/hobcraft01/500/400.jpg" class="w-full himg object-cover" alt="">
+                                <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#0A0B0E] hidden md:block"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div>
+                                <!-- Corner brackets -->
+                                <div class="absolute top-2 left-2 w-4 h-4 border-t border-l border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="absolute top-2 right-2 w-4 h-4 border-t border-r border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <!-- Glitch bar on image -->
+                                <div class="hobi-img-glitch-bar"></div>
+                            </div>
                             <div class="md:col-span-3 p-4 sm:p-5 md:p-8 flex flex-col justify-center">
-                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[.1em] mb-1.5">01 // Narasi</div>
+                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[.1em] mb-1.5 hobi-label-glitch">01 // Narasi</div>
                                 <h2 class="font-space text-[15px] sm:text-lg md:text-xl lg:text-2xl font-semibold mb-2">Kamu Belajar Bercerita Tanpa Kata</h2>
                                 <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed mb-3">Editing mengajarkan bahwa cerita bukan cuma dialog. Pilihan shot, durasi, transisi, musik — semuanya bahasa. <span class="text-white">Pace menentukan emosi</span>.</p>
                                 <div class="font-mono text-[7px] sm:text-[8px] text-neutral-700">NARRATIVE_LAYER // ACTIVE</div>
                             </div>
                         </div>
                     </div>
-                    <div class="rv cd rounded-xl bg-[#0A0B0E] overflow-hidden">
+
+                    <div class="rv hobi-card cd rounded-xl bg-[#0A0B0E] overflow-hidden hobi-border-pulse">
                         <div class="grid md:grid-cols-5">
-                            <div class="md:col-span-2 relative overflow-hidden md:order-2"><img src="https://picsum.photos/seed/hobcraft02/500/400.jpg" class="w-full himg object-cover" alt=""><div class="absolute inset-0 bg-gradient-to-l from-transparent to-[#0A0B0E] hidden md:block"></div><div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div></div>
+                            <div class="md:col-span-2 relative overflow-hidden md:order-2 hobi-img-glitch">
+                                <img src="https://picsum.photos/seed/hobcraft02/500/400.jpg" class="w-full himg object-cover" alt="">
+                                <div class="absolute inset-0 bg-gradient-to-l from-transparent to-[#0A0B0E] hidden md:block"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div>
+                                <div class="absolute top-2 left-2 w-4 h-4 border-t border-l border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="absolute top-2 right-2 w-4 h-4 border-t border-r border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="hobi-img-glitch-bar"></div>
+                            </div>
                             <div class="md:col-span-3 p-4 sm:p-5 md:p-8 flex flex-col justify-center md:order-1">
-                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[.1em] mb-1.5">02 // Waktu</div>
+                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[.1em] mb-1.5 hobi-label-glitch">02 // Waktu</div>
                                 <h2 class="font-space text-[15px] sm:text-lg md:text-xl lg:text-2xl font-semibold mb-2">Flow State Itu Nyata</h2>
                                 <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed mb-3">Mulai edit jam 8 malam, tiba-tiba sudah jam 3 pagi. Waktu terasa berbeda saat kamu di <span class="text-white">zona konsentrasi penuh</span>. Itu bukan kerja — itu meditasi.</p>
                                 <div class="font-mono text-[7px] sm:text-[8px] text-neutral-700">TIME_DISTORTION // CONFIRMED</div>
                             </div>
                         </div>
                     </div>
-                    <div class="rv cd rounded-xl bg-[#0A0B0E] overflow-hidden">
+
+                    <div class="rv hobi-card cd rounded-xl bg-[#0A0B0E] overflow-hidden hobi-border-pulse">
                         <div class="grid md:grid-cols-5">
-                            <div class="md:col-span-2 relative overflow-hidden"><img src="https://picsum.photos/seed/hobcraft03/500/400.jpg" class="w-full himg object-cover" alt=""><div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#0A0B0E] hidden md:block"></div><div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div></div>
+                            <div class="md:col-span-2 relative overflow-hidden hobi-img-glitch">
+                                <img src="https://picsum.photos/seed/hobcraft03/500/400.jpg" class="w-full himg object-cover" alt="">
+                                <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#0A0B0E] hidden md:block"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div>
+                                <div class="absolute top-2 left-2 w-4 h-4 border-t border-l border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="absolute top-2 right-2 w-4 h-4 border-t border-r border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="hobi-img-glitch-bar"></div>
+                            </div>
                             <div class="md:col-span-3 p-4 sm:p-5 md:p-8 flex flex-col justify-center">
-                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[.1em] mb-1.5">03 // Detail</div>
+                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[.1em] mb-1.5 hobi-label-glitch">03 // Detail</div>
                                 <h2 class="font-space text-[15px] sm:text-lg md:text-xl lg:text-2xl font-semibold mb-2">Mata Kamu Jadi Super Tajam</h2>
                                 <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed mb-3">Tiba-tiba kamu notice frame yang nggak sinkron 0.5 detik. Colour shift yang nggak kasat mata. Audio yang gap 2 frame. <span class="text-white">Kamu jadi perfeksionis — dengan cara yang fun</span>.</p>
                                 <div class="font-mono text-[7px] sm:text-[8px] text-neutral-700">DETAIL_PERCEPTION // OVERCLOCKED</div>
                             </div>
                         </div>
                     </div>
-                    <div class="rv cd rounded-xl bg-[#0A0B0E] overflow-hidden">
+
+                    <div class="rv hobi-card cd rounded-xl bg-[#0A0B0E] overflow-hidden hobi-border-pulse">
                         <div class="grid md:grid-cols-5">
-                            <div class="md:col-span-2 relative overflow-hidden md:order-2"><img src="https://picsum.photos/seed/hobcraft04/500/400.jpg" class="w-full himg object-cover" alt=""><div class="absolute inset-0 bg-gradient-to-l from-transparent to-[#0A0B0E] hidden md:block"></div><div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div></div>
+                            <div class="md:col-span-2 relative overflow-hidden md:order-2 hobi-img-glitch">
+                                <img src="https://picsum.photos/seed/hobcraft04/500/400.jpg" class="w-full himg object-cover" alt="">
+                                <div class="absolute inset-0 bg-gradient-to-l from-transparent to-[#0A0B0E] hidden md:block"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#0A0B0E] to-transparent md:hidden"></div>
+                                <div class="absolute top-2 left-2 w-4 h-4 border-t border-l border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="absolute top-2 right-2 w-4 h-4 border-t border-r border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-emerald-500/30 opacity-0 transition-opacity duration-300 hobi-bracket"></div>
+                                <div class="hobi-img-glitch-bar"></div>
+                            </div>
                             <div class="md:col-span-3 p-4 sm:p-5 md:p-8 flex flex-col justify-center md:order-1">
-                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[.1em] mb-1.5">04 // Ekspresi</div>
+                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/70 uppercase tracking-[.1em] mb-1.5 hobi-label-glitch">04 // Ekspresi</div>
                                 <h2 class="font-space text-[15px] sm:text-lg md:text-xl lg:text-2xl font-semibold mb-2">Setiap Cut Punya Makna</h2>
                                 <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed mb-3">Cut bukan sekadar menghapus bagian yang nggak penting. Setiap potongan adalah keputusan kreatif. <span class="text-white">Kamu adalah sutradara invisible</span> di balik layar.</p>
                                 <div class="font-mono text-[7px] sm:text-[8px] text-neutral-700">CREATIVE_CONTROL // MAXIMUM</div>
@@ -452,10 +508,42 @@
                         </div>
                     </div>
                 </div>
-                <div class="rv max-w-2xl mx-auto text-center py-8 sm:py-12 border-t border-white/[0.04]">
-                    <iconify-icon icon="mdi:format-quote-open" class="text-emerald-500/20 text-3xl sm:text-4xl mb-4"></iconify-icon>
-                    <p class="font-space text-base sm:text-lg md:text-xl font-light leading-relaxed text-slate-300 mb-4">"Video editing bukan tentang software yang kamu pakai. Ini tentang <span class="text-emerald-400">bagaimana kamu melihat dunia</span> dan memutuskan bagian mana yang layak diceritakan."</p>
+
+                <!-- Glitch divider -->
+                <div class="hobi-glitch-divider relative my-12 sm:my-16">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent"></div>
+                    </div>
+                    <div class="relative flex justify-center">
+                        <div class="hobi-divider-icon bg-[#050506] border border-emerald-500/15 rounded-full px-4 py-2 flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 bg-emerald-500/40 rounded-full" style="animation:pr 2s ease infinite"></div>
+                            <span class="font-mono text-[7px] text-emerald-500/30 uppercase tracking-[.2em]">End of Transmission</span>
+                            <div class="w-1.5 h-1.5 bg-emerald-500/40 rounded-full" style="animation:pr 2s ease infinite .5s"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quote with glitch -->
+                <div class="rv max-w-2xl mx-auto text-center py-8 sm:py-12 relative">
+                    <!-- Floating corrupted text around quote -->
+                    <div class="hobi-float-text top-0 left-0 font-mono text-[7px] text-emerald-500/10 absolute">0x4F2A // CORRUPTED</div>
+                    <div class="hobi-float-text top-4 right-0 font-mono text-[7px] text-cyan-500/10 absolute">ERR_0x0031 // SEGFAULT</div>
+                    <div class="hobi-float-text bottom-4 left-8 font-mono text-[7px] text-emerald-500/10 absolute">MEM_LEAK // 0xFF21</div>
+
+                    <iconify-icon icon="mdi:format-quote-open" class="text-emerald-500/20 text-3xl sm:text-4xl mb-4 hobi-quote-icon"></iconify-icon>
+                    <p class="font-space text-base sm:text-lg md:text-xl font-light leading-relaxed text-slate-300 mb-4 hobi-quote-text">
+                        "Video editing bukan tentang software yang kamu pakai. Ini tentang <span class="text-emerald-400">bagaimana kamu melihat dunia</span> dan memutuskan bagian mana yang layak diceritakan."
+                    </p>
                     <div class="font-mono text-[8px] sm:text-[9px] text-neutral-600 uppercase tracking-[.15em]">— Seorang Editor Yang Sudah Tidur Jam 5 Pagi</div>
+                </div>
+
+                <!-- Bottom corrupted data decoration -->
+                <div class="hobi-bottom-deco max-w-2xl mx-auto mt-8">
+                    <div class="flex items-center gap-3 justify-center">
+                        <div class="h-px flex-1 bg-gradient-to-r from-transparent to-emerald-500/10"></div>
+                        <span class="font-mono text-[6px] text-emerald-500/15 hobi-corrupt-ticker">DEEP_DIVE_COMPLETE // DATA_INTEGRITY: 97.3% // SIGNAL_LOSS: MINIMAL</span>
+                        <div class="h-px flex-1 bg-gradient-to-l from-transparent to-emerald-500/10"></div>
+                    </div>
                 </div>
             </div>
         </section>

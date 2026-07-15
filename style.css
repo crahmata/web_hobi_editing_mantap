@@ -232,6 +232,256 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
 .marquee-glitch-line.fire{animation:ghStaticBurst .2s steps(2) infinite}
 
 /* ============================================
+   HOBI PAGE — GLITCH DEEP DIVE EFFECTS
+   ============================================ */
+
+/* Data leak background — diagonal corrupted lines */
+.hobi-data-leak{
+    position:absolute;inset:0;
+    pointer-events:none;z-index:1;
+    opacity:0;
+    background:
+        repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 40px,
+            rgba(16,185,129,.015) 40px,
+            rgba(16,185,129,.015) 41px
+        ),
+        repeating-linear-gradient(
+            135deg,
+            transparent,
+            transparent 60px,
+            rgba(6,182,212,.01) 60px,
+            rgba(6,182,212,.01) 61px
+        );
+    transition:opacity 1.5s ease;
+}
+#pg-hobi.on .hobi-data-leak{opacity:1}
+
+/* Scan overlay — slow vertical scan */
+.hobi-scan-overlay{
+    position:absolute;inset:0;
+    pointer-events:none;z-index:2;
+    opacity:0;
+    transition:opacity 2s ease .5s;
+}
+.hobi-scan-overlay::before{
+    content:'';position:absolute;left:0;right:0;
+    height:3px;
+    background:linear-gradient(90deg,transparent,rgba(16,185,129,.06),rgba(6,182,212,.04),transparent);
+    animation:hobiScanSlow 12s linear infinite;
+}
+.hobi-scan-overlay::after{
+    content:'';position:absolute;left:0;right:0;
+    height:1px;top:50px;
+    background:linear-gradient(90deg,transparent,rgba(239,68,68,.04),transparent);
+    animation:hobiScanSlow 8s linear infinite 4s;
+}
+#pg-hobi.on .hobi-scan-overlay{opacity:1}
+
+@keyframes hobiScanSlow{0%{top:-5%}100%{top:105%}}
+
+/* Card border pulse */
+.hobi-border-pulse{position:relative}
+.hobi-border-pulse::before{
+    content:'';position:absolute;inset:0;
+    border-radius:inherit;
+    pointer-events:none;z-index:0;
+    opacity:0;
+    box-shadow:inset 0 0 0 1px rgba(16,185,129,0);
+    transition:box-shadow .3s ease, opacity .3s ease;
+}
+.hobi-card:hover::before{
+    opacity:1;
+    box-shadow:inset 0 0 0 1px rgba(16,185,129,.15);
+    animation:hobiBorderPulse 1.5s ease-out;
+}
+
+@keyframes hobiBorderPulse{
+    0%{box-shadow:inset 0 0 0 1px rgba(16,185,129,.15)}
+    30%{box-shadow:inset 0 0 0 1px rgba(6,182,212,.12)}
+    60%{box-shadow:inset 0 0 0 1px rgba(16,185,129,.1)}
+    100%{box-shadow:inset 0 0 0 1px rgba(16,185,129,.15)}
+}
+
+/* Image glitch on hover */
+.hobi-img-glitch{position:relative;overflow:hidden}
+.hobi-img-glitch img{transition:transform .6s ease, filter .4s ease}
+.hobi-card:hover .hobi-img-glitch img{
+    transform:scale(1.05);
+    filter:brightness(1.1) contrast(1.05) saturate(1.1);
+}
+
+/* Glitch bar that sweeps across image */
+.hobi-img-glitch-bar{
+    position:absolute;top:0;left:-100%;width:50%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(16,185,129,.08),transparent);
+    pointer-events:none;z-index:2;
+    opacity:0;
+    transition:opacity .2s;
+}
+.hobi-card:hover .hobi-img-glitch-bar{
+    opacity:1;
+    animation:hobiImgSweep .8s ease-out forwards;
+}
+
+@keyframes hobiImgSweep{0%{left:-50%}100%{left:150%}}
+
+/* Corner brackets appear on hover */
+.hobi-card:hover .hobi-bracket{opacity:1!important}
+
+/* Label glitch — subtle flicker */
+.hobi-label-glitch{position:relative;display:inline-block}
+.hobi-label-glitch::after{
+    content:attr(data-text);
+    position:absolute;top:0;left:2px;
+    color:rgba(6,182,212,.3);
+    clip-path:polygon(0 0,100% 0,100% 50%,0 50%);
+    opacity:0;
+    pointer-events:none;
+}
+.hobi-card:hover .hobi-label-glitch::after{
+    opacity:1;
+    animation:hobiLabelFlicker .4s steps(3) forwards;
+}
+
+@keyframes hobiLabelFlicker{
+    0%{opacity:0;transform:translateX(0)}
+    20%{opacity:.5;transform:translateX(-1px)}
+    40%{opacity:0;transform:translateX(1px)}
+    60%{opacity:.3;transform:translateX(0)}
+    80%{opacity:0;transform:translateX(-1px)}
+    100%{opacity:0;transform:translateX(0)}
+}
+
+/* Title glitch — subtle persistent */
+.hobi-title-glitch{
+    position:relative;
+}
+.hobi-title-glitch::after{
+    content:attr(data-text);
+    position:absolute;top:0;left:0;
+    width:100%;height:100%;
+    pointer-events:none;
+    opacity:0;
+    color:rgba(16,185,129,.15);
+    clip-path:polygon(0 0,100% 0,100% 40%,0 40%);
+    animation:hobiTitleGlitch 8s ease-in-out infinite;
+}
+
+@keyframes hobiTitleGlitch{
+    0%,100%{opacity:0;transform:translate(0)}
+    2%{opacity:.5;transform:translate(-3px,1px)}
+    4%{opacity:0;transform:translate(0)}
+    30%{opacity:0;transform:translate(0)}
+    32%{opacity:.4;transform:translate(2px,-1px)}
+    34%{opacity:0;transform:translate(0)}
+    60%{opacity:0;transform:translate(0)}
+    62%{opacity:.3;transform:translate(-2px,0)}
+    64%{opacity:0;transform:translate(0)}
+    85%{opacity:0;transform:translate(0)}
+    87%{opacity:.5;transform:translate(1px,1px)}
+    89%{opacity:0;transform:translate(0)}
+}
+
+/* Word reveal — "mengubahnya menjadi cerita" */
+.hobi-word-reveal{
+    position:relative;
+    display:inline;
+}
+.hobi-word-reveal::after{
+    content:'';
+    position:absolute;
+    left:0;top:0;bottom:0;
+    width:0;
+    background:rgba(16,185,129,.1);
+    pointer-events:none;
+    z-index:-1;
+    transition:none;
+}
+#pg-hobi.on .hobi-word-reveal::after{
+    animation:hobiWordReveal 2s ease-out .8s forwards;
+}
+
+@keyframes hobiWordReveal{
+    0%{width:0;opacity:1}
+    60%{width:100%;opacity:1}
+    100%{width:100%;opacity:0}
+}
+
+/* Corrupted data decoration */
+.hobi-corrupted-deco{
+    overflow:hidden;
+    position:relative;
+}
+.hobi-corrupted-deco span{
+    display:inline-block;
+    transition:all .1s;
+}
+
+/* Glitch divider */
+.hobi-glitch-divider{position:relative}
+
+.hobi-divider-icon{
+    transition:all .4s ease;
+}
+.hobi-glitch-divider:hover .hobi-divider-icon{
+    border-color:rgba(16,185,129,.3);
+    box-shadow:0 0 20px rgba(16,185,129,.08);
+}
+
+/* Floating corrupted text */
+.hobi-float-text{
+    opacity:0;
+    transition:opacity 1s ease;
+}
+#pg-hobi.on .hobi-float-text{
+    opacity:1;
+    animation:hobiFloatText 6s ease-in-out infinite;
+}
+.hobi-float-text:nth-child(2){animation-delay:2s!important}
+.hobi-float-text:nth-child(3){animation-delay:4s!important}
+
+@keyframes hobiFloatText{
+    0%,100%{opacity:.1;transform:translateY(0)}
+    30%{opacity:.3;transform:translateY(-3px)}
+    50%{opacity:.15;transform:translateY(0)}
+    70%{opacity:.25;transform:translateY(2px)}
+}
+
+/* Quote icon glitch */
+.hobi-quote-icon{
+    transition:all .3s ease;
+}
+.hobi-quote-text:hover ~ .hobi-quote-icon,
+.hobi-glitch-divider:hover ~ .rv .hobi-quote-icon{
+    color:rgba(16,185,129,.4)!important;
+    transform:scale(1.1) rotate(-5deg);
+}
+
+/* Quote text subtle glitch on hover */
+.hobi-quote-text{
+    position:relative;
+    transition:all .3s ease;
+}
+.hobi-quote-text:hover{
+    text-shadow:0 0 30px rgba(16,185,129,.05);
+}
+
+/* Bottom corrupt ticker */
+.hobi-corrupt-ticker{
+    display:inline-block;
+    min-width:200px;
+    transition:all .2s;
+}
+
+/* Header badge pulse */
+.hobi-border-pulse{
+    transition:border-color .3s ease;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media(min-width:480px){.lt{font-size:2.2rem}.lvf{width:100px;height:100px}.vtl,.vtr,.vbl,.vbr{width:20px;height:20px}.lbw{width:190px}.lsub{font-size:9px;letter-spacing:.22em}.lrec-t{font-size:9px}}
