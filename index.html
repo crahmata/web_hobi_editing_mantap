@@ -4,19 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CEPEDIT — Video Editing Studio</title>
-
-    <!-- External CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Tailwind Config -->
     <script>
     tailwind.config={theme:{extend:{fontFamily:{space:['Space Grotesk','sans-serif'],mono:['JetBrains Mono','monospace']}}}}
     </script>
-
-    <!-- LINK KE CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -80,11 +74,25 @@
 
     <!-- ===== BERANDA ===== -->
     <div id="pg-beranda" class="page on">
-        <section class="relative min-h-screen flex items-center pt-12 md:pt-14 scanl">
+
+        <!-- Data Rain Canvas -->
+        <canvas id="dataRain" class="data-rain-canvas"></canvas>
+
+        <section class="hero-section relative min-h-screen flex items-center pt-12 md:pt-14 scanl">
+            <!-- Static noise overlay -->
+            <div class="gh-static"></div>
+            <!-- Grid pulse overlay -->
+            <div class="gh-grid-pulse"></div>
+            <!-- Vignette stronger -->
+            <div class="gh-vignette-strong"></div>
+
             <div class="absolute top-1/4 left-1/4 w-[280px] h-[280px] sm:w-[450px] sm:h-[450px] bg-emerald-500/[0.05] rounded-full blur-[90px] sm:blur-[110px]"></div>
             <div class="absolute bottom-1/3 right-1/5 w-[200px] h-[200px] sm:w-[280px] sm:h-[280px] bg-emerald-600/[0.03] rounded-full blur-[60px] sm:blur-[70px]"></div>
+            <!-- Extra glow orbs for drama -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-emerald-500/[0.02] rounded-full blur-[120px] gh-pulse-orb"></div>
+            <div class="absolute top-1/3 right-1/4 w-[150px] h-[150px] bg-cyan-500/[0.02] rounded-full blur-[80px] gh-pulse-orb" style="animation-delay:2s"></div>
 
-            <div class="max-w-[1300px] mx-auto px-4 md:px-8 w-full py-8 md:py-24">
+            <div class="max-w-[1300px] mx-auto px-4 md:px-8 w-full py-8 md:py-24 relative z-10">
                 <div class="grid lg:grid-cols-12 gap-6 lg:gap-10 items-center">
                     <div class="lg:col-span-7 flex flex-col gap-4 md:gap-6">
                         <div class="fu d1 inline-flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04]">
@@ -94,7 +102,7 @@
 
                         <h1 class="fu d2 font-space text-[clamp(1.6rem,7vw,4.2rem)] font-light leading-[.95] tracking-tight">
                             Mengedit Video<br>
-                            Itu <span class="gh text-emerald-400 font-medium cursor-default">Menghidupkan Imajinasi</span>,<br>
+                            Itu <span class="gh text-emerald-400 font-medium cursor-default" data-text="Menghidupkan Imajinasi">Menghidupkan Imajinasi</span>,<br>
                             <span class="text-neutral-500">Bukan Sekadar Memotong Video</span>
                         </h1>
 
@@ -102,7 +110,7 @@
                             Bayangkan punya kekuatan untuk mengubah footage mentah jadi sesuatu yang bikin orang merinding. Ini bukan tugas — ini <span class="text-white">obsesi yang menyenangkan</span>.
                         </p>
 
-                        <div class="fu d4 bg-[#08090b] border border-white/[0.05] rounded-lg p-3 md:p-4 max-w-sm font-mono text-[10px] md:text-[12px] overflow-x-auto">
+                        <div class="fu d4 bg-[#08090b] border border-white/[0.05] rounded-lg p-3 md:p-4 max-w-sm font-mono text-[10px] md:text-[12px] overflow-x-auto gh-border-flash">
                             <div class="flex items-center gap-1.5 mb-2">
                                 <span class="w-2 h-2 rounded-full bg-red-500/50 flex-shrink-0"></span>
                                 <span class="w-2 h-2 rounded-full bg-yellow-500/50 flex-shrink-0"></span>
@@ -119,20 +127,21 @@
                         </div>
 
                         <div class="fu d5 flex flex-wrap gap-2.5">
-                            <button onclick="go('hobi')" class="gbtn text-[12px] sm:text-[14px] font-medium text-emerald-400 px-5 sm:px-7 py-2.5 sm:py-3">Pelajari Hobiku</button>
-                            <button onclick="go('karya')" class="text-[12px] sm:text-[14px] font-medium text-slate-400 hover:text-white px-5 sm:px-7 py-2.5 sm:py-3 rounded-full border border-white/10 hover:border-white/20 transition-all cursor-pointer min-h-[42px]">Lihat Hasilnya</button>
+                            <button onclick="go('hobi')" class="gbtn gbtn-glitch text-[12px] sm:text-[14px] font-medium text-emerald-400 px-5 sm:px-7 py-2.5 sm:py-3">Pelajari Hobiku</button>
+                            <button onclick="go('karya')" class="gbtn gbtn-glitch text-[12px] sm:text-[14px] font-medium text-slate-400 hover:text-white px-5 sm:px-7 py-2.5 sm:py-3 rounded-full border border-white/10 hover:border-white/20 transition-all cursor-pointer min-h-[42px]">Lihat Hasilnya</button>
                         </div>
                     </div>
 
                     <div class="lg:col-span-5 fu d5 relative flex justify-center mt-2 lg:mt-0">
                         <div class="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[420px]">
-                            <div class="relative rounded-xl overflow-hidden border border-white/[0.08] bg-[#0A0B0E]">
+                            <div class="relative rounded-xl overflow-hidden border border-white/[0.08] bg-[#0A0B0E] gh-scanline gh-scanline-dual gh-chroma-intense gh-border-flash">
                                 <img src="https://picsum.photos/seed/vidhero77/600/450.jpg" alt="" class="w-full h-[200px] sm:h-[260px] md:h-[370px] object-cover">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                                <div class="absolute top-2 left-2 sm:top-3 sm:left-3 w-4 h-4 sm:w-5 sm:h-5 border-t-2 border-l-2 border-emerald-500/50"></div>
-                                <div class="absolute top-2 right-2 sm:top-3 sm:right-3 w-4 h-4 sm:w-5 sm:h-5 border-t-2 border-r-2 border-emerald-500/50"></div>
-                                <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 w-4 h-4 sm:w-5 sm:h-5 border-b-2 border-l-2 border-emerald-500/50"></div>
-                                <div class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 w-4 h-4 sm:w-5 sm:h-5 border-b-2 border-r-2 border-emerald-500/50"></div>
+                                <!-- Triple corner brackets with glow -->
+                                <div class="absolute top-2 left-2 sm:top-3 sm:left-3 w-5 h-5 sm:w-6 sm:h-6 border-t-2 border-l-2 border-emerald-500/50 shadow-[0_0_6px_rgba(16,185,129,.3)]"></div>
+                                <div class="absolute top-2 right-2 sm:top-3 sm:right-3 w-5 h-5 sm:w-6 sm:h-6 border-t-2 border-r-2 border-emerald-500/50 shadow-[0_0_6px_rgba(16,185,129,.3)]"></div>
+                                <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 w-5 h-5 sm:w-6 sm:h-6 border-b-2 border-l-2 border-emerald-500/50 shadow-[0_0_6px_rgba(16,185,129,.3)]"></div>
+                                <div class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 w-5 h-5 sm:w-6 sm:h-6 border-b-2 border-r-2 border-emerald-500/50 shadow-[0_0_6px_rgba(16,185,129,.3)]"></div>
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <button onclick="toast('Video demo segera!')" class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-emerald-500/10 backdrop-blur border border-emerald-500/25 flex items-center justify-center hover:bg-emerald-500/20 hover:scale-110 transition-all cursor-pointer" style="animation:pr 3s ease infinite">
                                         <iconify-icon icon="mdi:play" class="text-emerald-400 text-lg sm:text-xl md:text-2xl ml-0.5"></iconify-icon>
@@ -143,22 +152,30 @@
                                     <div class="text-[11px] sm:text-sm font-medium">Cinematic Night Edit</div>
                                 </div>
                             </div>
-                            <div class="absolute -top-1.5 -left-1.5 sm:-top-2.5 sm:-left-2.5 bg-[#08090b]/90 backdrop-blur border border-emerald-500/15 rounded-lg p-1.5 sm:p-2.5 fu d6">
+                            <!-- Floating badges with glitch -->
+                            <div class="absolute -top-1.5 -left-1.5 sm:-top-2.5 sm:-left-2.5 bg-[#08090b]/90 backdrop-blur border border-emerald-500/15 rounded-lg p-1.5 sm:p-2.5 fu d6 gh-border-flash">
                                 <div class="flex items-center gap-1 sm:gap-1.5">
                                     <iconify-icon icon="mdi:scissors-cutting" class="text-emerald-400 text-[11px] sm:text-sm"></iconify-icon>
                                     <span class="font-mono text-[8px] sm:text-[10px] font-semibold">CUT</span>
                                 </div>
                             </div>
-                            <div class="absolute -bottom-1.5 -right-1.5 sm:-bottom-2.5 sm:-right-2.5 bg-[#08090b]/90 backdrop-blur border border-emerald-500/15 rounded-lg p-1.5 sm:p-2.5 fu d6">
+                            <div class="absolute -bottom-1.5 -right-1.5 sm:-bottom-2.5 sm:-right-2.5 bg-[#08090b]/90 backdrop-blur border border-emerald-500/15 rounded-lg p-1.5 sm:p-2.5 fu d6 gh-border-flash">
                                 <div class="flex items-center gap-1 sm:gap-1.5">
                                     <iconify-icon icon="mdi:palette-outline" class="text-emerald-400 text-[11px] sm:text-sm"></iconify-icon>
                                     <span class="font-mono text-[8px] sm:text-[10px] font-semibold">GRADE</span>
                                 </div>
                             </div>
-                            <div class="hfx absolute -top-1.5 right-8 sm:-top-2.5 right-10 bg-[#08090b]/90 backdrop-blur border border-white/[0.06] rounded-lg p-1.5 sm:p-2.5 fu d6" style="animation:fl 3.5s ease-in-out infinite .8s">
+                            <div class="hfx absolute -top-1.5 right-8 sm:-top-2.5 right-10 bg-[#08090b]/90 backdrop-blur border border-white/[0.06] rounded-lg p-1.5 sm:p-2.5 fu d6 gh-border-flash" style="animation:fl 3.5s ease-in-out infinite .8s">
                                 <div class="flex items-center gap-1 sm:gap-1.5">
                                     <iconify-icon icon="mdi:lightning-bolt" class="text-amber-400 text-[11px] sm:text-sm"></iconify-icon>
                                     <span class="font-mono text-[8px] sm:text-[10px] font-semibold text-zinc-400">FX</span>
+                                </div>
+                            </div>
+                            <!-- Extra floating element -->
+                            <div class="hfx absolute -bottom-1.5 left-6 sm:-bottom-2.5 left-8 bg-[#08090b]/90 backdrop-blur border border-cyan-500/10 rounded-lg p-1.5 sm:p-2.5 fu d6 gh-border-flash" style="animation:fl 4s ease-in-out infinite 1.5s">
+                                <div class="flex items-center gap-1 sm:gap-1.5">
+                                    <iconify-icon icon="mdi:speedometer" class="text-cyan-400 text-[11px] sm:text-sm"></iconify-icon>
+                                    <span class="font-mono text-[8px] sm:text-[10px] font-semibold text-zinc-400">60fps</span>
                                 </div>
                             </div>
                         </div>
@@ -174,8 +191,9 @@
             </div>
         </section>
 
-        <!-- Marquee -->
-        <div class="border-y border-white/[0.04] py-2.5 sm:py-3 overflow-hidden relative z-10 bg-black/40">
+        <!-- Marquee with glitch -->
+        <div class="marquee-section border-y border-white/[0.04] py-2.5 sm:py-3 overflow-hidden relative z-10 bg-black/40">
+            <div class="marquee-glitch-line"></div>
             <div class="flex whitespace-nowrap" style="animation:mq 22s linear infinite">
                 <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">Premiere Pro</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
                 <span class="font-mono text-[8px] sm:text-[10px] text-neutral-600 uppercase tracking-[.12em] mx-4 sm:mx-6">DaVinci Resolve</span><span class="text-emerald-500/20 mx-2 sm:mx-3">◆</span>
@@ -333,19 +351,19 @@
             <div class="relative border-t border-white/[0.04]">
                 <div class="max-w-[1300px] mx-auto px-4 md:px-8">
                     <div class="rv grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-5 py-10 sm:py-16 md:py-24">
-                        <div class="cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5 md:p-6">
+                        <div class="cd glitch-block glitch-shift glitch-border-flash rounded-xl bg-[#0A0B0E] p-4 sm:p-5 md:p-6">
                             <div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-3"><iconify-icon icon="mdi:brain" class="text-emerald-400 text-base sm:text-lg"></iconify-icon></div>
                             <h3 class="font-space text-[13px] sm:text-sm md:text-base font-semibold mb-1.5">Kreativitas Yang Terus Mengalir</h3>
                             <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed">Setiap inspirasi menjadi awal dari sebuah karya yang tercipta melalui proses dan imajinasi</p>
                             <div class="mt-3 pt-2.5 border-t border-white/5 font-mono text-[7px] sm:text-[8px] md:text-[9px] text-neutral-700">STATUS // FLOW_ACTIVE</div>
                         </div>
-                        <div class="cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5 md:p-6">
+                        <div class="cd glitch-block glitch-shift glitch-border-flash rounded-xl bg-[#0A0B0E] p-4 sm:p-5 md:p-6">
                             <div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-3"><iconify-icon icon="mdi:trending-up" class="text-emerald-400 text-base sm:text-lg"></iconify-icon></div>
                             <h3 class="font-space text-[13px] sm:text-sm md:text-base font-semibold mb-1.5">Skill Yang Nggak Pernah Berhenti</h3>
                             <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed">Setiap proyek baru adalah level baru. Selalu ada teknik baru yang bisa dipelajari.</p>
                             <div class="mt-3 pt-2.5 border-t border-white/5 font-mono text-[7px] sm:text-[8px] md:text-[9px] text-neutral-700">PROGRESS // ALWAYS_UP</div>
                         </div>
-                        <div class="cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5 md:p-6 sm:col-span-2 md:col-span-1">
+                        <div class="cd glitch-block glitch-shift glitch-border-flash rounded-xl bg-[#0A0B0E] p-4 sm:p-5 md:p-6 sm:col-span-2 md:col-span-1">
                             <div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-3"><iconify-icon icon="mdi:share-variant-outline" class="text-emerald-400 text-base sm:text-lg"></iconify-icon></div>
                             <h3 class="font-space text-[13px] sm:text-sm md:text-base font-semibold mb-1.5">Karya Yang Bisa Dibanggakan</h3>
                             <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed">Hasil edit yang dibuat dengan sabar dan penuh proses akan terasa lebih berharga</p>
@@ -356,7 +374,7 @@
             </div>
             <div class="relative">
                 <div class="max-w-[1300px] mx-auto px-4 md:px-8 pb-10 sm:pb-16 md:pb-24">
-                    <div class="rv rounded-xl sm:rounded-2xl border border-emerald-500/10 bg-[#0A0B0E] overflow-hidden">
+                    <div class="rv rounded-xl sm:rounded-2xl border border-emerald-500/10 bg-[#0A0B0E] overflow-hidden glitch-border-flash">
                         <div class="relative p-4 sm:p-6 md:p-12 flex flex-col md:flex-row items-center gap-5 sm:gap-8 bcta">
                             <div class="flex-1 text-center md:text-left">
                                 <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[.1em] mb-2">Kenapa ini berbeda?</div>
@@ -366,7 +384,7 @@
                                 <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed max-w-lg mx-auto md:mx-0">Yang sebenarnya terjadi jauh lebih dalam. Yuk masuk lebih dalam.</p>
                             </div>
                             <div class="flex-shrink-0 bcta-r">
-                                <button onclick="go('hobi')" class="gbtn text-[12px] sm:text-[14px] md:text-[15px] font-medium text-emerald-400 px-6 sm:px-8 py-2.5 sm:py-4 w-full sm:w-auto">Masuk Kedalaman <iconify-icon icon="mdi:arrow-right" class="ml-1 text-sm sm:text-base align-middle"></iconify-icon></button>
+                                <button onclick="go('hobi')" class="gbtn gbtn-glitch text-[12px] sm:text-[14px] md:text-[15px] font-medium text-emerald-400 px-6 sm:px-8 py-2.5 sm:py-4 w-full sm:w-auto">Masuk Kedalaman <iconify-icon icon="mdi:arrow-right" class="ml-1 text-sm sm:text-base align-middle"></iconify-icon></button>
                                 <div class="font-mono text-[7px] sm:text-[8px] text-neutral-700 text-center mt-2">ATAU LANJUT SCROLL</div>
                             </div>
                         </div>
@@ -465,50 +483,32 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4" id="toolGrid">
                     <div class="rv tc cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="editor">
-                        <div class="flex items-start gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="simple-icons:adobepremierepro" class="text-[#9999FF] text-lg"></iconify-icon></div>
-                            <div><h3 class="text-sm font-semibold">Premiere Pro</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Primary Editor</span></div>
-                        </div>
+                        <div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="simple-icons:adobepremierepro" class="text-[#9999FF] text-lg"></iconify-icon></div><div><h3 class="text-sm font-semibold">Premiere Pro</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Primary Editor</span></div></div>
                         <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Workhorse utama. Timeline-based, ecosystem Adobe, plugin melimpah.</p>
                         <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">NLE</span><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">PRO</span></div>
                     </div>
                     <div class="rv tc cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="color">
-                        <div class="flex items-start gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="simple-icons:davinciresolve" class="text-[#E44C30] text-lg"></iconify-icon></div>
-                            <div><h3 class="text-sm font-semibold">DaVinci Resolve</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Color Suite</span></div>
-                        </div>
+                        <div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="simple-icons:davinciresolve" class="text-[#E44C30] text-lg"></iconify-icon></div><div><h3 class="text-sm font-semibold">DaVinci Resolve</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Color Suite</span></div></div>
                         <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Raja color grading. Node-based, free version sudah powerful.</p>
                         <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">COLOR</span><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">FREE</span></div>
                     </div>
                     <div class="rv tc cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="editor">
-                        <div class="flex items-start gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="simple-icons:capcut" class="text-white text-lg"></iconify-icon></div>
-                            <div><h3 class="text-sm font-semibold">CapCut</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Quick Edit</span></div>
-                        </div>
+                        <div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="simple-icons:capcut" class="text-white text-lg"></iconify-icon></div><div><h3 class="text-sm font-semibold">CapCut</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Quick Edit</span></div></div>
                         <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Untuk konten cepat. Auto-caption bagus, template banyak.</p>
                         <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">MOBILE</span><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">FAST</span></div>
                     </div>
                     <div class="rv tc cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="motion">
-                        <div class="flex items-start gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="simple-icons:adobeaftereffects" class="text-[#9999FF] text-lg"></iconify-icon></div>
-                            <div><h3 class="text-sm font-semibold">After Effects</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Motion & VFX</span></div>
-                        </div>
+                        <div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="simple-icons:adobeaftereffects" class="text-[#9999FF] text-lg"></iconify-icon></div><div><h3 class="text-sm font-semibold">After Effects</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Motion & VFX</span></div></div>
                         <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Untuk motion graphics, title animation, dan VFX kompositing.</p>
                         <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">MOTION</span><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">VFX</span></div>
                     </div>
                     <div class="rv tc cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="audio">
-                        <div class="flex items-start gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:waveform" class="text-emerald-400 text-lg"></iconify-icon></div>
-                            <div><h3 class="text-sm font-semibold">Audition</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Audio Post</span></div>
-                        </div>
+                        <div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:waveform" class="text-emerald-400 text-lg"></iconify-icon></div><div><h3 class="text-sm font-semibold">Audition</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Audio Post</span></div></div>
                         <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Noise removal, EQ, compression. Audio bersih = video profesional.</p>
                         <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">AUDIO</span><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">CLEAN</span></div>
                     </div>
                     <div class="rv tc cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="util">
-                        <div class="flex items-start gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:folder-zip-outline" class="text-amber-400 text-lg"></iconify-icon></div>
-                            <div><h3 class="text-sm font-semibold">Media Encoder</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Render Engine</span></div>
-                        </div>
+                        <div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:folder-zip-outline" class="text-amber-400 text-lg"></iconify-icon></div><div><h3 class="text-sm font-semibold">Media Encoder</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Render Engine</span></div></div>
                         <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Queue rendering, preset format, batch export.</p>
                         <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">RENDER</span><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">BATCH</span></div>
                     </div>
@@ -530,70 +530,16 @@
                     <p class="text-slate-400 text-[12px] sm:text-sm md:text-[15px] leading-relaxed">Setiap proyek punya cerita. Ini beberapa yang <span class="text-white">layak ditampilkan</span>.</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                    <div class="rv kc group relative">
-                        <div class="brk brk-tl"></div><div class="brk brk-tr"></div><div class="brk brk-bl"></div><div class="brk brk-br"></div>
-                        <img src="https://picsum.photos/seed/karya01/600/400.jpg" class="w-full kimg object-cover" alt="">
-                        <div class="ko">
-                            <div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/60 uppercase tracking-wider mb-1">Cinematic</div>
-                            <h3 class="text-sm sm:text-base font-semibold mb-1">Night City Walk</h3>
-                            <p class="text-[10px] sm:text-xs text-slate-400">Color grading teal & orange, slow motion</p>
-                            <div class="font-mono text-[7px] text-neutral-700 mt-2">00:02:34 // 4K // 24fps</div>
-                        </div>
-                    </div>
-                    <div class="rv kc group relative">
-                        <div class="brk brk-tl"></div><div class="brk brk-tr"></div><div class="brk brk-bl"></div><div class="brk brk-br"></div>
-                        <img src="https://picsum.photos/seed/karya02/600/400.jpg" class="w-full kimg object-cover" alt="">
-                        <div class="ko">
-                            <div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/60 uppercase tracking-wider mb-1">Documentary</div>
-                            <h3 class="text-sm sm:text-base font-semibold mb-1">Behind The Kitchen</h3>
-                            <p class="text-[10px] sm:text-xs text-slate-400">Mini doc tentang dapur restoran lokal</p>
-                            <div class="font-mono text-[7px] text-neutral-700 mt-2">00:05:12 // 1080p // 30fps</div>
-                        </div>
-                    </div>
-                    <div class="rv kc group relative">
-                        <div class="brk brk-tl"></div><div class="brk brk-tr"></div><div class="brk brk-bl"></div><div class="brk brk-br"></div>
-                        <img src="https://picsum.photos/seed/karya03/600/400.jpg" class="w-full kimg object-cover" alt="">
-                        <div class="ko">
-                            <div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/60 uppercase tracking-wider mb-1">Music Video</div>
-                            <h3 class="text-sm sm:text-base font-semibold mb-1">Midnight Loops</h3>
-                            <p class="text-[10px] sm:text-xs text-slate-400">Beat-synced edit, VFX particles</p>
-                            <div class="font-mono text-[7px] text-neutral-700 mt-2">00:03:45 // 4K // 60fps</div>
-                        </div>
-                    </div>
-                    <div class="rv kc group relative">
-                        <div class="brk brk-tl"></div><div class="brk brk-tr"></div><div class="brk brk-bl"></div><div class="brk brk-br"></div>
-                        <img src="https://picsum.photos/seed/karya04/600/400.jpg" class="w-full kimg object-cover" alt="">
-                        <div class="ko">
-                            <div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/60 uppercase tracking-wider mb-1">Travel</div>
-                            <h3 class="text-sm sm:text-base font-semibold mb-1">Java in Frames</h3>
-                            <p class="text-[10px] sm:text-xs text-slate-400">Travel montage, warm color palette</p>
-                            <div class="font-mono text-[7px] text-neutral-700 mt-2">00:01:58 // 1080p // 24fps</div>
-                        </div>
-                    </div>
-                    <div class="rv kc group relative">
-                        <div class="brk brk-tl"></div><div class="brk brk-tr"></div><div class="brk brk-bl"></div><div class="brk brk-br"></div>
-                        <img src="https://picsum.photos/seed/karya05/600/400.jpg" class="w-full kimg object-cover" alt="">
-                        <div class="ko">
-                            <div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/60 uppercase tracking-wider mb-1">Short Film</div>
-                            <h3 class="text-sm sm:text-base font-semibold mb-1">The Last Frame</h3>
-                            <p class="text-[10px] sm:text-xs text-slate-400">Narasi pendek, cinematic grading</p>
-                            <div class="font-mono text-[7px] text-neutral-700 mt-2">00:08:20 // 4K // 24fps</div>
-                        </div>
-                    </div>
-                    <div class="rv kc group relative">
-                        <div class="brk brk-tl"></div><div class="brk brk-tr"></div><div class="brk brk-bl"></div><div class="brk brk-br"></div>
-                        <img src="https://picsum.photos/seed/karya06/600/400.jpg" class="w-full kimg object-cover" alt="">
-                        <div class="ko">
-                            <div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/60 uppercase tracking-wider mb-1">Social Content</div>
-                            <h3 class="text-sm sm:text-base font-semibold mb-1">Product Showcase Reel</h3>
-                            <p class="text-[10px] sm:text-xs text-slate-400">Clean transitions, product focus</p>
-                            <div class="font-mono text-[7px] text-neutral-700 mt-2">00:00:30 // 1080p // 30fps</div>
-                        </div>
-                    </div>
+                    <div class="rv kc group relative"><div class="brk brk-tl"></div><div class="brk brk-tr"></div><div class="brk brk-bl"></div><div class="brk brk-br"></div><img src="https://picsum.photos/seed/karya01/600/400.jpg" class="w-full kimg object-cover" alt=""><div class="ko"><div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/60 uppercase tracking-wider mb-1">Cinematic</div><h3 class="text-sm sm:text-base font-semibold mb-1">Night City Walk</h3><p class="text-[10px] sm:text-xs text-slate-400">Color grading teal & orange, slow motion</p><div class="font-mono text-[7px] text-neutral-700 mt-2">00:02:34 // 4K // 24fps</div></div></div>
+                    <div class="rv kc group relative"><div class="brk brk-tl"></div><div class="brk brk-tr"></div><div class="brk brk-bl"></div><div class="brk brk-br"></div><img src="https://picsum.photos/seed/karya02/600/400.jpg" class="w-full kimg object-cover" alt=""><div class="ko"><div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/60 uppercase tracking-wider mb-1">Documentary</div><h3 class="text-sm sm:text-base font-semibold mb-1">Behind The Kitchen</h3><p class="text-[10px] sm:text-xs text-slate-400">Mini doc tentang dapur restoran lokal</p><div class="font-mono text-[7px] text-neutral-700 mt-2">00:05:12 // 1080p // 30fps</div></div></div>
+                    <div class="rv kc group relative"><div class="brk brk-tl"></div><div class="brk brk-tr"></div><div class="brk brk-bl"></div><div class="brk brk-br"></div><img src="https://picsum.photos/seed/karya03/600/400.jpg" class="w-full kimg object-cover" alt=""><div class="ko"><div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/60 uppercase tracking-wider mb-1">Music Video</div><h3 class="text-sm sm:text-base font-semibold mb-1">Midnight Loops</h3><p class="text-[10px] sm:text-xs text-slate-400">Beat-synced edit, VFX particles</p><div class="font-mono text-[7px] text-neutral-700 mt-2">00:03:45 // 4K // 60fps</div></div></div>
+                    <div class="rv kc group relative"><div class="brk brk-tl"></div><div class="brk brk-tr"></div><div class="brk brk-bl"></div><div class="brk brk-br"></div><img src="https://picsum.photos/seed/karya04/600/400.jpg" class="w-full kimg object-cover" alt=""><div class="ko"><div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/60 uppercase tracking-wider mb-1">Travel</div><h3 class="text-sm sm:text-base font-semibold mb-1">Java in Frames</h3><p class="text-[10px] sm:text-xs text-slate-400">Travel montage, warm color palette</p><div class="font-mono text-[7px] text-neutral-700 mt-2">00:01:58 // 1080p // 24fps</div></div></div>
+                    <div class="rv kc group relative"><div class="brk brk-tl"></div><div class="brk brk-tr"></div><div class="brk brk-bl"></div><div class="brk brk-br"></div><img src="https://picsum.photos/seed/karya05/600/400.jpg" class="w-full kimg object-cover" alt=""><div class="ko"><div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/60 uppercase tracking-wider mb-1">Short Film</div><h3 class="text-sm sm:text-base font-semibold mb-1">The Last Frame</h3><p class="text-[10px] sm:text-xs text-slate-400">Narasi pendek, cinematic grading</p><div class="font-mono text-[7px] text-neutral-700 mt-2">00:08:20 // 4K // 24fps</div></div></div>
+                    <div class="rv kc group relative"><div class="brk brk-tl"></div><div class="brk brk-tr"></div><div class="brk brk-bl"></div><div class="brk brk-br"></div><img src="https://picsum.photos/seed/karya06/600/400.jpg" class="w-full kimg object-cover" alt=""><div class="ko"><div class="font-mono text-[7px] sm:text-[8px] text-emerald-500/60 uppercase tracking-wider mb-1">Social Content</div><h3 class="text-sm sm:text-base font-semibold mb-1">Product Showcase Reel</h3><p class="text-[10px] sm:text-xs text-slate-400">Clean transitions, product focus</p><div class="font-mono text-[7px] text-neutral-700 mt-2">00:00:30 // 1080p // 30fps</div></div></div>
                 </div>
                 <div class="rv text-center mt-8 sm:mt-12">
                     <p class="font-mono text-[8px] sm:text-[9px] text-neutral-700 mb-3">DAN MASIH BANYAK LAGI YANG NGGAK KEUPLOAD...</p>
-                    <button onclick="toast('Full portfolio coming soon!')" class="gbtn text-[12px] sm:text-[14px] font-medium text-emerald-400 px-6 sm:px-8 py-2.5 sm:py-3">Lihat Semua <iconify-icon icon="mdi:arrow-right" class="ml-1 text-sm align-middle"></iconify-icon></button>
+                    <button onclick="toast('Full portfolio coming soon!')" class="gbtn gbtn-glitch text-[12px] sm:text-[14px] font-medium text-emerald-400 px-6 sm:px-8 py-2.5 sm:py-3">Lihat Semua <iconify-icon icon="mdi:arrow-right" class="ml-1 text-sm align-middle"></iconify-icon></button>
                 </div>
             </div>
         </section>
@@ -609,7 +555,7 @@
                         <img src="https://z-cdn-media.chatglm.cn/files/673527df-e761-4e9a-956e-1a37c62585a5.jpeg?auth_key=1884015929-40618e49287c4f9ba3b74eae48a36097-0-d700f49054296bb95350c8dbb53e51b2" alt="" class="h-6 w-6 rounded object-cover">
                         <span class="font-space font-bold text-xs">CEP<span class="text-emerald-400">EDIT</span></span>
                     </div>
-                    <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed">Mengubah footage mentah jadi cerita yang bikin merinding. Satu frame per satu frame.</p>
+                    <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed">Mengubah footage mentah jadi cerita yang bikin merinding.</p>
                 </div>
                 <div>
                     <h4 class="font-mono text-[9px] text-emerald-400/60 uppercase tracking-wider mb-3">Navigasi</h4>
@@ -633,7 +579,7 @@
                     <p class="text-[11px] sm:text-xs text-slate-500 mb-3">Update terbaru langsung ke inbox.</p>
                     <div class="flex gap-1.5">
                         <input id="emIn" type="email" placeholder="email@kamu.com" class="flex-1 min-w-0 bg-[#08090b] border border-white/5 rounded-lg px-3 py-2 text-[11px] text-white placeholder-neutral-700 outline-none focus:border-emerald-500/20 transition-colors">
-                        <button onclick="subEm()" class="gbtn text-[11px] font-medium text-emerald-400 px-3 py-2">Go</button>
+                        <button onclick="subEm()" class="gbtn gbtn-glitch text-[11px] font-medium text-emerald-400 px-3 py-2">Go</button>
                     </div>
                 </div>
             </div>
@@ -644,10 +590,8 @@
         </div>
     </footer>
 
-</div><!-- /mainContent -->
+</div>
 
-<!-- LINK KE JS — diletakkan di akhir body agar DOM sudah siap -->
 <script src="script.js"></script>
-
 </body>
 </html>
