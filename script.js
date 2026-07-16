@@ -534,7 +534,202 @@
         initHobiEffects();
     }, 2000);
 
+    // ———————————————
+    // TOOLS PAGE — Arsenal Effects
+    // ———————————————
+    function initToolsEffects() {
+        var toolsPage = document.getElementById('pg-tools');
+        if (!toolsPage) return;
 
+        var cards = toolsPage.querySelectorAll('.tools-card');
+        var decoText = toolsPage.querySelector('.tools-deco-text');
+        var toolCountEl = document.getElementById('toolCount');
+
+        // Count tools and update display
+        var totalTools = cards.length;
+        var primaryCount = 0;
+        var secondaryCount = 0;
+        var supportCount = 0;
+
+        for (var t = 0; t < cards.length; t++) {
+            var status = cards[t].querySelector('.tools-status');
+            if (status) {
+                if (status.textContent.trim() === 'PRIMARY') primaryCount++;
+                else if (status.textContent.trim() === 'SECONDARY') secondaryCount++;
+                else if (status.textContent.trim() === 'SUPPORT') supportCount++;
+            }
+        }
+
+        // Animate summary numbers when visible
+        var summaryObs = new IntersectionObserver(function(entries) {
+            for (var i = 0; i < entries.length; i++) {
+                if (entries[i].isIntersecting) {
+                    animateToolNum('toolTotal', totalTools, '');
+                    animateToolNum('toolPrimary', primaryCount, '');
+                    animateToolNum('toolSecondary', secondaryCount, '');
+                    animateToolNum('toolSupport', supportCount, '');
+                    summaryObs.disconnect();
+                }
+            }
+        }, { threshold: 0.5 });
+
+        var summaryEl = document.getElementById('toolTotal');
+        if (summaryEl) summaryObs.observe(summaryEl);
+
+        function animateToolNum(id, target, suffix) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            var startTime = performance.now();
+            function tick(now) {
+                var p = Math.min((now - startTime) / 1500, 1);
+                el.textContent = Math.floor((1 - Math.pow(1 - p, 3)) * target) + suffix;
+                if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        // Update tool count decoration
+        function updateToolCount() {
+            if (toolCountEl) {
+                var visible = 0;
+                for (var v = 0; v < cards.length; v++) {
+                    if (cards[v].style.display !== 'none') visible++;
+                }
+                toolCountEl.textContent = visible + ' TOOLS_LOADED';
+            }
+        }
+        updateToolCount();
+
+        // Watch for filter changes
+        var origFiltT = window.filtT;
+        window.filtT = function(cat, btn) {
+            origFiltT(cat, btn);
+            setTimeout(updateToolCount, 50);
+        };
+
+        // A) Decoration text cycling
+        if (decoText) {
+            var decoTexts = [
+                'SYS::TOOLS_ARSENAL // SCANNING...',
+                'SYS::TOOLS_ARSENAL // ALL_MODULES_LOADED',
+                'SYS::TOOLS_ARSENAL // INTEGRITY: 100%',
+                'SYS::TOOLS_ARSENAL // SYNC: COMPLETE',
+                'SYS::TOOLS_ARSENAL // STATUS: NOMINAL',
+                'WARN::TOOL_UPDATE_AVAILABLE // CHECKING...'
+            ];
+
+            function cycleDecoText() {
+                var pg = document.getElementById('pg-tools');
+                if (!pg || !pg.classList.contains('on')) {
+                    setTimeout(cycleDecoText, 3000);
+                    return;
+                }
+                var newText = decoTexts[Math.floor(Math.random() * decoTexts.length)];
+                decoText.style.opacity = '0';
+                setTimeout(function() {
+                    decoText.textContent = newText;
+                    decoText.style.opacity = '1';
+                }, 200);
+                setTimeout(cycleDecoText, 3000 + Math.random() * 4000);
+            }
+            setTimeout(cycleDecoText, 2000);
+        }
+
+        // B) Random card border flash
+        function flashCardBorder() {
+            var pg = document.getElementById('pg-tools');
+            if (!pg || !pg.classList.contains('on')) {
+                setTimeout(flashCardBorder, 3000);
+                return;
+            }
+
+            var visibleCards = [];
+            for (var i = 0; i < cards.length; i++) {
+                if (cards[i].style.display !== 'none' && cards[i].offsetParent !== null) {
+                    visibleCards.push(cards[i]);
+                }
+            }
+
+            if (visibleCards.length > 0) {
+                var target = visibleCards[Math.floor(Math.random() * visibleCards.length)];
+                target.classList.add('flash-border');
+                setTimeout(function() {
+                    target.classList.remove('flash-border');
+                }, 300);
+            }
+
+            setTimeout(flashCardBorder, 2000 + Math.random() * 3000);
+        }
+        setTimeout(flashCardBorder, 2000);
+
+        // C) Glitch line across random card
+        function fireCardGlitchLine() {
+            var pg = document.getElementById('pg-tools');
+            if (!pg || !pg.classList.contains('on')) {
+                setTimeout(fireCardGlitchLine, 4000);
+                return;
+            }
+
+            var visibleCards = [];
+            for (var i = 0; i < cards.length; i++) {
+                if (cards[i].style.display !== 'none' && cards[i].offsetParent !== null) {
+                    visibleCards.push(cards[i]);
+                }
+            }
+
+            if (visibleCards.length > 0) {
+                var target = visibleCards[Math.floor(Math.random() * visibleCards.length)];
+                var line = document.createElement('div');
+                line.className = 'tools-glitch-line';
+                line.style.top = (15 + Math.random() * 70) + '%';
+                target.appendChild(line);
+                requestAnimationFrame(function() { line.classList.add('fire'); });
+                setTimeout(function() {
+                    if (line.parentNode) line.parentNode.removeChild(line);
+                }, 600);
+            }
+
+            setTimeout(fireCardGlitchLine, 3000 + Math.random() * 5000);
+        }
+        setTimeout(fireCardGlitchLine, 3000);
+
+        // D) Page-wide scan glitch
+        function fireToolsPageGlitch() {
+            var pg = document.getElementById('pg-tools');
+            if (!pg || !pg.classList.contains('on')) {
+                setTimeout(fireToolsPageGlitch, 6000);
+                return;
+            }
+
+            var line = document.createElement('div');
+            line.style.cssText = 'position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(16,185,129,.15),rgba(6,182,212,.08),transparent);pointer-events:none;z-index:5;opacity:0;';
+            line.style.top = (10 + Math.random() * 80) + '%';
+            pg.appendChild(line);
+            requestAnimationFrame(function() {
+                line.style.opacity = '1';
+                line.style.transition = 'opacity .2s';
+            });
+            setTimeout(function() {
+                line.style.opacity = '0';
+                setTimeout(function() { if (line.parentNode) line.parentNode.removeChild(line); }, 300);
+            }, 180);
+
+            setTimeout(fireToolsPageGlitch, 5000 + Math.random() * 10000);
+        }
+        setTimeout(fireToolsPageGlitch, 5000);
+    }
+
+    // Init tools effects
+    setTimeout(initToolsEffects, 2000);
+
+    // Also trigger when navigating to tools
+    var origGoForTools = window.go;
+    window.go = function(page) {
+        origGoForTools(page);
+        if (page === 'tools') {
+            setTimeout(initToolsEffects, 500);
+        }
+    };
     // ———————————————
     // TOAST
     // ———————————————

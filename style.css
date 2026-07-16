@@ -775,6 +775,183 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
     100% { opacity: 0; }
 }
 /* ============================================
+   TOOLS PAGE — Glitch Arsenal Effects
+   ============================================ */
+
+/* Background effects */
+.tools-data-leak{
+    position:absolute;inset:0;
+    pointer-events:none;z-index:1;
+    opacity:0;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 60px,
+            rgba(16,185,129,.012) 60px,
+            rgba(16,185,129,.012) 61px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 80px,
+            rgba(6,182,212,.008) 80px,
+            rgba(6,182,212,.008) 81px
+        );
+    transition:opacity 1.5s ease;
+}
+#pg-tools.on .tools-data-leak{opacity:1}
+
+.tools-scan-overlay{
+    position:absolute;inset:0;
+    pointer-events:none;z-index:2;
+    opacity:0;
+    transition:opacity 2s ease .5s;
+}
+.tools-scan-overlay::before{
+    content:'';position:absolute;left:0;right:0;
+    height:2px;
+    background:linear-gradient(90deg,transparent,rgba(16,185,129,.05),rgba(6,182,212,.03),transparent);
+    animation:toolsScanSlow 15s linear infinite;
+}
+#pg-tools.on .tools-scan-overlay{opacity:1}
+
+@keyframes toolsScanSlow{0%{top:-5%}100%{top:105%}}
+
+/* Title glitch */
+.tools-title-glitch{
+    position:relative;
+}
+.tools-title-glitch::after{
+    content:attr(data-text);
+    position:absolute;top:0;left:0;
+    width:100%;height:100%;
+    pointer-events:none;
+    opacity:0;
+    color:rgba(16,185,129,.12);
+    clip-path:polygon(0 0,100% 0,100% 45%,0 45%);
+    animation:toolsTitleGlitch 10s ease-in-out infinite;
+}
+
+@keyframes toolsTitleGlitch{
+    0%,100%{opacity:0;transform:translate(0)}
+    3%{opacity:.4;transform:translate(-2px,1px)}
+    5%{opacity:0;transform:translate(0)}
+    50%{opacity:0;transform:translate(0)}
+    52%{opacity:.3;transform:translate(1px,-1px)}
+    54%{opacity:0;transform:translate(0)}
+}
+
+/* Badge pulse */
+.tools-badge-pulse{position:relative}
+.tools-badge-pulse::before{
+    content:'';position:absolute;inset:0;
+    border-radius:inherit;
+    pointer-events:none;z-index:0;
+    opacity:0;
+    box-shadow:inset 0 0 0 1px rgba(16,185,129,0);
+    transition:box-shadow .3s ease,opacity .3s ease;
+}
+#pg-tools.on .tools-badge-pulse::before{
+    opacity:1;
+    animation:toolsBadgePulse 2s ease-in-out 1s infinite;
+}
+
+@keyframes toolsBadgePulse{
+    0%,100%{box-shadow:inset 0 0 0 1px rgba(16,185,129,.15)}
+    50%{box-shadow:inset 0 0 0 1px rgba(6,182,212,.2)}
+}
+
+/* Decoration text */
+.tools-deco-text{transition:color .2s}
+
+/* Tool card */
+.tools-card{
+    position:relative;
+    transition:border-color .3s,transform .3s,box-shadow .3s;
+}
+.tools-card:hover{
+    border-color:rgba(16,185,129,.15);
+    transform:translateY(-2px);
+    box-shadow:0 8px 30px rgba(0,0,0,.3),0 0 0 1px rgba(16,185,129,.08);
+}
+
+/* Card sweep on hover */
+.tools-card-sweep{
+    position:absolute;top:0;left:-100%;width:60%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(16,185,129,.06),transparent);
+    pointer-events:none;z-index:2;
+    opacity:0;
+    transition:opacity .2s;
+}
+.tools-card:hover .tools-card-sweep{
+    opacity:1;
+    animation:toolsCardSweep .7s ease-out forwards;
+}
+
+@keyframes toolsCardSweep{0%{left:-60%}100%{left:160%}}
+
+/* Icon glow on hover */
+.tools-icon-wrap{
+    transition:all .3s ease;
+}
+.tools-card:hover .tools-icon-wrap{
+    border-color:rgba(16,185,129,.3);
+    box-shadow:0 0 12px rgba(16,185,129,.1);
+    background:rgba(16,185,129,.15);
+}
+
+/* Status badge subtle animation */
+.tools-status{
+    transition:all .3s ease;
+}
+.tools-card:hover .tools-status{
+    box-shadow:0 0 8px rgba(16,185,129,.08);
+}
+
+/* Summary box */
+.tools-summary-box{
+    position:relative;
+    overflow:hidden;
+}
+.tools-summary-sweep{
+    position:absolute;top:0;left:-100%;width:40%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(16,185,129,.04),transparent);
+    pointer-events:none;z-index:2;
+}
+#pg-tools.on .tools-summary-sweep{
+    animation:toolsSummarySweep 6s ease-in-out 2s infinite;
+}
+
+@keyframes toolsSummarySweep{
+    0%{left:-40%;opacity:0}
+    10%{opacity:1}
+    90%{opacity:1}
+    100%{left:140%;opacity:0}
+}
+
+/* Card glitch line (injected by JS) */
+.tools-glitch-line{
+    position:absolute;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(16,185,129,.3),rgba(6,182,212,.15),transparent);
+    pointer-events:none;z-index:5;opacity:0;
+}
+.tools-glitch-line.fire{
+    animation:toolsLineFire .5s ease-out forwards;
+}
+
+@keyframes toolsLineFire{
+    0%{opacity:0;transform:scaleX(.2)}
+    10%{opacity:.8;transform:scaleX(1)}
+    100%{opacity:0;transform:scaleX(1.05)}
+}
+
+/* Card border flash (injected by JS) */
+.tools-card.flash-border{
+    border-color:rgba(16,185,129,.35)!important;
+    box-shadow:0 0 15px rgba(16,185,129,.1)!important;
+}
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media(min-width:480px){.lt{font-size:2.2rem}.lvf{width:100px;height:100px}.vtl,.vtr,.vbl,.vbr{width:20px;height:20px}.lbw{width:190px}.lsub{font-size:9px;letter-spacing:.22em}.lrec-t{font-size:9px}}

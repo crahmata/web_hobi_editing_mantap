@@ -550,61 +550,285 @@
     </div>
 
 
-    <!-- ===== TOOLS ===== -->
+        <!-- ===== TOOLS ===== -->
     <div id="pg-tools" class="page">
-        <section class="pt-16 sm:pt-20 md:pt-24 pb-10 sm:pb-16 md:pb-24">
-            <div class="max-w-[1300px] mx-auto px-4 md:px-8">
-                <div class="rv max-w-2xl mb-6 sm:mb-10">
-                    <div class="inline-flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04] mb-4">
+        <div class="tools-data-leak"></div>
+        <div class="tools-scan-overlay"></div>
+
+        <section class="pt-16 sm:pt-20 md:pt-24 pb-10 sm:pb-16 md:pb-24 relative">
+            <div class="max-w-[1300px] mx-auto px-4 md:px-8 relative z-10">
+
+                <!-- Header -->
+                <div class="rv mb-8 sm:mb-12">
+                    <div class="inline-flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full border border-emerald-500/15 bg-emerald-500/[0.04] mb-4 tools-badge-pulse">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" style="animation:pr 1.5s ease infinite"></span>
                         <span class="font-mono text-[8px] sm:text-[10px] font-bold text-emerald-400/70 uppercase tracking-[.1em]">Arsenal</span>
                     </div>
-                    <h1 class="font-space text-[1.6rem] sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-4 leading-[1.05]">Tools yang <span class="text-emerald-400">Digunakan</span></h1>
-                    <p class="text-slate-400 text-[12px] sm:text-sm md:text-[15px] leading-relaxed">Bukan soal mahal atau murah. Soal <span class="text-white">pilih yang pas</span> dengan workflow kamu.</p>
-                </div>
-                <div class="rv flex flex-wrap gap-1.5 sm:gap-2 mb-6 sm:mb-8">
-                    <button onclick="filtT('all',this)" class="tab on text-[11px] sm:text-xs font-medium text-slate-500 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-white/5 transition-all">Semua</button>
-                    <button onclick="filtT('editor',this)" class="tab text-[11px] sm:text-xs font-medium text-slate-500 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-white/5 transition-all">Editor</button>
-                    <button onclick="filtT('color',this)" class="tab text-[11px] sm:text-xs font-medium text-slate-500 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-white/5 transition-all">Color</button>
-                    <button onclick="filtT('motion',this)" class="tab text-[11px] sm:text-xs font-medium text-slate-500 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-white/5 transition-all">Motion</button>
-                    <button onclick="filtT('audio',this)" class="tab text-[11px] sm:text-xs font-medium text-slate-500 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-white/5 transition-all">Audio</button>
-                    <button onclick="filtT('util',this)" class="tab text-[11px] sm:text-xs font-medium text-slate-500 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-white/5 transition-all">Utility</button>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4" id="toolGrid">
-                    <div class="rv tc cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="editor">
-                        <div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="simple-icons:adobepremierepro" class="text-[#9999FF] text-lg"></iconify-icon></div><div><h3 class="text-sm font-semibold">Premiere Pro</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Primary Editor</span></div></div>
-                        <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Workhorse utama. Timeline-based, ecosystem Adobe, plugin melimpah.</p>
-                        <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">NLE</span><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">PRO</span></div>
-                    </div>
-                    <div class="rv tc cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="color">
-                        <div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="simple-icons:davinciresolve" class="text-[#E44C30] text-lg"></iconify-icon></div><div><h3 class="text-sm font-semibold">DaVinci Resolve</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Color Suite</span></div></div>
-                        <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Raja color grading. Node-based, free version sudah powerful.</p>
-                        <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">COLOR</span><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">FREE</span></div>
-                    </div>
-                    <div class="rv tc cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="editor">
-                        <div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="simple-icons:capcut" class="text-white text-lg"></iconify-icon></div><div><h3 class="text-sm font-semibold">CapCut</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Quick Edit</span></div></div>
-                        <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Untuk konten cepat. Auto-caption bagus, template banyak.</p>
-                        <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">MOBILE</span><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">FAST</span></div>
-                    </div>
-                    <div class="rv tc cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="motion">
-                        <div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="simple-icons:adobeaftereffects" class="text-[#9999FF] text-lg"></iconify-icon></div><div><h3 class="text-sm font-semibold">After Effects</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Motion & VFX</span></div></div>
-                        <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Untuk motion graphics, title animation, dan VFX kompositing.</p>
-                        <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">MOTION</span><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">VFX</span></div>
-                    </div>
-                    <div class="rv tc cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="audio">
-                        <div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:waveform" class="text-emerald-400 text-lg"></iconify-icon></div><div><h3 class="text-sm font-semibold">Audition</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Audio Post</span></div></div>
-                        <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Noise removal, EQ, compression. Audio bersih = video profesional.</p>
-                        <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">AUDIO</span><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">CLEAN</span></div>
-                    </div>
-                    <div class="rv tc cd rounded-xl bg-[#0A0B0E] p-4 sm:p-5" data-t="util">
-                        <div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 rounded-lg bg-[#1a1a2e] flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:folder-zip-outline" class="text-amber-400 text-lg"></iconify-icon></div><div><h3 class="text-sm font-semibold">Media Encoder</h3><span class="font-mono text-[8px] text-emerald-500/50 uppercase">Render Engine</span></div></div>
-                        <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed mb-3">Queue rendering, preset format, batch export.</p>
-                        <div class="flex flex-wrap gap-1"><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">RENDER</span><span class="font-mono text-[7px] text-neutral-600 px-1.5 py-0.5 border border-white/5 rounded">BATCH</span></div>
+                    <h1 class="font-space text-[1.6rem] sm:text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-4 leading-[1.05] tools-title-glitch" data-text="Tools of the Trade">Tools of the<br><span class="text-emerald-400">Trade</span></h1>
+                    <p class="text-slate-400 text-[12px] sm:text-sm md:text-[15px] leading-relaxed max-w-2xl">Setiap tools punya peran berbeda. Dari rough cut sampai final render — ini senjata yang dipakai di setiap proyek.</p>
+                    <div class="tools-sys-deco mt-6 flex items-center gap-3">
+                        <span class="font-mono text-[7px] text-emerald-500/15 tools-deco-text">SYS::TOOLS_ARSENAL // SCANNING...</span>
+                        <span class="tools-deco-bar w-12 h-[1px] bg-emerald-500/10"></span>
+                        <span class="font-mono text-[7px] text-emerald-500/15" id="toolCount">0 TOOLS_LOADED</span>
                     </div>
                 </div>
+
+                <!-- Filter Tabs -->
+                <div class="rv flex items-center gap-1 sm:gap-2 mb-6 sm:mb-8 overflow-x-auto pb-2 -mb-2">
+                    <button onclick="filtT('all',this)" class="tab on text-[10px] sm:text-[11px] font-mono font-medium text-slate-400 px-3 py-1.5 rounded-lg border border-white/5 whitespace-nowrap transition-all">ALL</button>
+                    <button onclick="filtT('edit',this)" class="tab text-[10px] sm:text-[11px] font-mono font-medium text-slate-500 px-3 py-1.5 rounded-lg border border-white/5 whitespace-nowrap transition-all">EDITING</button>
+                    <button onclick="filtT('grade',this)" class="tab text-[10px] sm:text-[11px] font-mono font-medium text-slate-500 px-3 py-1.5 rounded-lg border border-white/5 whitespace-nowrap transition-all">GRADING</button>
+                    <button onclick="filtT('fx',this)" class="tab text-[10px] sm:text-[11px] font-mono font-medium text-slate-500 px-3 py-1.5 rounded-lg border border-white/5 whitespace-nowrap transition-all">VFX</button>
+                    <button onclick="filtT('audio',this)" class="tab text-[10px] sm:text-[11px] font-mono font-medium text-slate-500 px-3 py-1.5 rounded-lg border border-white/5 whitespace-nowrap transition-all">AUDIO</button>
+                    <button onclick="filtT('util',this)" class="tab text-[10px] sm:text-[11px] font-mono font-medium text-slate-500 px-3 py-1.5 rounded-lg border border-white/5 whitespace-nowrap transition-all">UTILS</button>
+                </div>
+
+                <!-- Tool Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5 mb-10 sm:mb-14" id="toolsGrid">
+
+                    <div class="tc rv tools-card cd rounded-xl bg-[#0A0B0E] overflow-hidden" data-t="edit">
+                        <div class="p-4 sm:p-5">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center tools-icon-wrap">
+                                    <iconify-icon icon="simple-icons:adobepremierepro" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon>
+                                </div>
+                                <span class="tools-status font-mono text-[7px] sm:text-[8px] text-emerald-400/70 bg-emerald-500/10 border border-emerald-500/15 px-2 py-0.5 rounded-full">PRIMARY</span>
+                            </div>
+                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1.5">Premiere Pro</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed mb-3">Editor utama untuk cutting, arranging, dan basic effects. Ini base camp semua proyek.</p>
+                            <div class="flex items-center justify-between pt-2.5 border-t border-white/5">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/60" style="animation:pr 2s ease infinite"></span>
+                                    <span class="font-mono text-[7px] text-neutral-700">ACTIVE</span>
+                                </div>
+                                <span class="font-mono text-[7px] text-neutral-800">v2024</span>
+                            </div>
+                        </div>
+                        <div class="tools-card-sweep"></div>
+                    </div>
+
+                    <div class="tc rv tools-card cd rounded-xl bg-[#0A0B0E] overflow-hidden" data-t="grade">
+                        <div class="p-4 sm:p-5">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center tools-icon-wrap">
+                                    <iconify-icon icon="simple-icons:davinciresolve" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon>
+                                </div>
+                                <span class="tools-status font-mono text-[7px] sm:text-[8px] text-emerald-400/70 bg-emerald-500/10 border border-emerald-500/15 px-2 py-0.5 rounded-full">PRIMARY</span>
+                            </div>
+                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1.5">DaVinci Resolve</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed mb-3">Color grading powerhouse. Node-based grading yang nggak ada tandingannya di harga free.</p>
+                            <div class="flex items-center justify-between pt-2.5 border-t border-white/5">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/60" style="animation:pr 2s ease infinite"></span>
+                                    <span class="font-mono text-[7px] text-neutral-700">ACTIVE</span>
+                                </div>
+                                <span class="font-mono text-[7px] text-neutral-800">v19</span>
+                            </div>
+                        </div>
+                        <div class="tools-card-sweep"></div>
+                    </div>
+
+                    <div class="tc rv tools-card cd rounded-xl bg-[#0A0B0E] overflow-hidden" data-t="fx">
+                        <div class="p-4 sm:p-5">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center tools-icon-wrap">
+                                    <iconify-icon icon="simple-icons:adobeaftereffects" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon>
+                                </div>
+                                <span class="tools-status font-mono text-[7px] sm:text-[8px] text-cyan-400/70 bg-cyan-500/10 border border-cyan-500/15 px-2 py-0.5 rounded-full">SECONDARY</span>
+                            </div>
+                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1.5">After Effects</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed mb-3">Motion graphics, compositing, dan VFX. Dipakai buat intro, lower third, dan efek khusus.</p>
+                            <div class="flex items-center justify-between pt-2.5 border-t border-white/5">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/60" style="animation:pr 2s ease infinite"></span>
+                                    <span class="font-mono text-[7px] text-neutral-700">ACTIVE</span>
+                                </div>
+                                <span class="font-mono text-[7px] text-neutral-800">v2024</span>
+                            </div>
+                        </div>
+                        <div class="tools-card-sweep"></div>
+                    </div>
+
+                    <div class="tc rv tools-card cd rounded-xl bg-[#0A0B0E] overflow-hidden" data-t="edit">
+                        <div class="p-4 sm:p-5">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center tools-icon-wrap">
+                                    <iconify-icon icon="simple-icons:capcut" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon>
+                                </div>
+                                <span class="tools-status font-mono text-[7px] sm:text-[8px] text-emerald-400/70 bg-emerald-500/10 border border-emerald-500/15 px-2 py-0.5 rounded-full">PRIMARY</span>
+                            </div>
+                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1.5">CapCut</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed mb-3">Quick edits di HP/laptop. Auto-caption, preset transitions, dan AI features yang surprisingly useful.</p>
+                            <div class="flex items-center justify-between pt-2.5 border-t border-white/5">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/60" style="animation:pr 2s ease infinite"></span>
+                                    <span class="font-mono text-[7px] text-neutral-700">ACTIVE</span>
+                                </div>
+                                <span class="font-mono text-[7px] text-neutral-800">MOBILE</span>
+                            </div>
+                        </div>
+                        <div class="tools-card-sweep"></div>
+                    </div>
+
+                    <div class="tc rv tools-card cd rounded-xl bg-[#0A0B0E] overflow-hidden" data-t="audio">
+                        <div class="p-4 sm:p-5">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center tools-icon-wrap">
+                                    <iconify-icon icon="simple-icons:adobeaudition" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon>
+                                </div>
+                                <span class="tools-status font-mono text-[7px] sm:text-[8px] text-cyan-400/70 bg-cyan-500/10 border border-cyan-500/15 px-2 py-0.5 rounded-full">SECONDARY</span>
+                            </div>
+                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1.5">Audition</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed mb-3">Audio editing dan noise reduction. Dipakai buat clean up voiceover dan mixing SFX.</p>
+                            <div class="flex items-center justify-between pt-2.5 border-t border-white/5">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/40"></span>
+                                    <span class="font-mono text-[7px] text-neutral-700">STANDBY</span>
+                                </div>
+                                <span class="font-mono text-[7px] text-neutral-800">v2024</span>
+                            </div>
+                        </div>
+                        <div class="tools-card-sweep"></div>
+                    </div>
+
+                    <div class="tc rv tools-card cd rounded-xl bg-[#0A0B0E] overflow-hidden" data-t="util">
+                        <div class="p-4 sm:p-5">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center tools-icon-wrap">
+                                    <iconify-icon icon="mdi:file-video-outline" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon>
+                                </div>
+                                <span class="tools-status font-mono text-[7px] sm:text-[8px] text-amber-400/70 bg-amber-500/10 border border-amber-500/15 px-2 py-0.5 rounded-full">SUPPORT</span>
+                            </div>
+                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1.5">Media Encoder</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed mb-3">Queue-based rendering. Dipakai buat batch export dalam berbagai format sekaligus.</p>
+                            <div class="flex items-center justify-between pt-2.5 border-t border-white/5">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/40"></span>
+                                    <span class="font-mono text-[7px] text-neutral-700">STANDBY</span>
+                                </div>
+                                <span class="font-mono text-[7px] text-neutral-800">v2024</span>
+                            </div>
+                        </div>
+                        <div class="tools-card-sweep"></div>
+                    </div>
+
+                    <div class="tc rv tools-card cd rounded-xl bg-[#0A0B0E] overflow-hidden" data-t="fx">
+                        <div class="p-4 sm:p-5">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center tools-icon-wrap">
+                                    <iconify-icon icon="simple-icons:blender" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon>
+                                </div>
+                                <span class="tools-status font-mono text-[7px] sm:text-[8px] text-cyan-400/70 bg-cyan-500/10 border border-cyan-500/15 px-2 py-0.5 rounded-full">SECONDARY</span>
+                            </div>
+                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1.5">Blender</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed mb-3">3D modeling dan rendering buat elemen 3D yang di-composite ke dalam video.</p>
+                            <div class="flex items-center justify-between pt-2.5 border-t border-white/5">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/60" style="animation:pr 2s ease infinite"></span>
+                                    <span class="font-mono text-[7px] text-neutral-700">LEARNING</span>
+                                </div>
+                                <span class="font-mono text-[7px] text-neutral-800">v4.x</span>
+                            </div>
+                        </div>
+                        <div class="tools-card-sweep"></div>
+                    </div>
+
+                    <div class="tc rv tools-card cd rounded-xl bg-[#0A0B0E] overflow-hidden" data-t="util">
+                        <div class="p-4 sm:p-5">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center tools-icon-wrap">
+                                    <iconify-icon icon="mdi:image-filter-hdr" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon>
+                                </div>
+                                <span class="tools-status font-mono text-[7px] sm:text-[8px] text-amber-400/70 bg-amber-500/10 border border-amber-500/15 px-2 py-0.5 rounded-full">SUPPORT</span>
+                            </div>
+                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1.5">Photoshop</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed mb-3">Thumbnail design, mockup, dan text overlay yang dipakai di beberapa proyek.</p>
+                            <div class="flex items-center justify-between pt-2.5 border-t border-white/5">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/40"></span>
+                                    <span class="font-mono text-[7px] text-neutral-700">STANDBY</span>
+                                </div>
+                                <span class="font-mono text-[7px] text-neutral-800">v2024</span>
+                            </div>
+                        </div>
+                        <div class="tools-card-sweep"></div>
+                    </div>
+
+                    <div class="tc rv tools-card cd rounded-xl bg-[#0A0B0E] overflow-hidden" data-t="audio util">
+                        <div class="p-4 sm:p-5">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center tools-icon-wrap">
+                                    <iconify-icon icon="mdi:music-box-multiple-outline" class="text-emerald-400 text-lg sm:text-xl"></iconify-icon>
+                                </div>
+                                <span class="tools-status font-mono text-[7px] sm:text-[8px] text-amber-400/70 bg-amber-500/10 border border-amber-500/15 px-2 py-0.5 rounded-full">SUPPORT</span>
+                            </div>
+                            <h3 class="font-space text-sm sm:text-[15px] font-semibold mb-1.5">Epidemic Sound</h3>
+                            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed mb-3">Library musik dan SFX berlisensi. Satu-satunya sumber audio yang legal dan lengkap.</p>
+                            <div class="flex items-center justify-between pt-2.5 border-t border-white/5">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/60" style="animation:pr 2s ease infinite"></span>
+                                    <span class="font-mono text-[7px] text-neutral-700">SUBSCRIBED</span>
+                                </div>
+                                <span class="font-mono text-[7px] text-neutral-800">WEB</span>
+                            </div>
+                        </div>
+                        <div class="tools-card-sweep"></div>
+                    </div>
+
+                </div>
+
+                <!-- Tools Summary -->
+                <div class="rv mb-10 sm:mb-14">
+                    <div class="rounded-xl border border-emerald-500/10 bg-[#0A0B0E] overflow-hidden tools-summary-box">
+                        <div class="p-4 sm:p-6 md:p-8">
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400" style="animation:pr 2s ease infinite"></span>
+                                <span class="font-mono text-[8px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[.12em]">System Overview</span>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                                <div class="text-center p-3 rounded-lg bg-white/[0.02] border border-white/[0.03]">
+                                    <div class="font-mono text-xl sm:text-2xl font-bold text-emerald-400 mb-0.5" id="toolTotal">0</div>
+                                    <div class="font-mono text-[7px] sm:text-[8px] text-neutral-700 uppercase">Total Tools</div>
+                                </div>
+                                <div class="text-center p-3 rounded-lg bg-white/[0.02] border border-white/[0.03]">
+                                    <div class="font-mono text-xl sm:text-2xl font-bold text-emerald-400 mb-0.5" id="toolPrimary">0</div>
+                                    <div class="font-mono text-[7px] sm:text-[8px] text-neutral-700 uppercase">Primary</div>
+                                </div>
+                                <div class="text-center p-3 rounded-lg bg-white/[0.02] border border-white/[0.03]">
+                                    <div class="font-mono text-xl sm:text-2xl font-bold text-cyan-400 mb-0.5" id="toolSecondary">0</div>
+                                    <div class="font-mono text-[7px] sm:text-[8px] text-neutral-700 uppercase">Secondary</div>
+                                </div>
+                                <div class="text-center p-3 rounded-lg bg-white/[0.02] border border-white/[0.03]">
+                                    <div class="font-mono text-xl sm:text-2xl font-bold text-amber-400 mb-0.5" id="toolSupport">0</div>
+                                    <div class="font-mono text-[7px] sm:text-[8px] text-neutral-700 uppercase">Support</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tools-summary-sweep"></div>
+                    </div>
+                </div>
+
+                <!-- Bottom CTA -->
+                <div class="rv">
+                    <div class="rounded-xl sm:rounded-2xl border border-emerald-500/10 bg-[#0A0B0E] overflow-hidden glitch-border-flash">
+                        <div class="relative p-4 sm:p-6 md:p-10 flex flex-col md:flex-row items-center gap-5 sm:gap-8 bcta">
+                            <div class="flex-1 text-center md:text-left">
+                                <div class="font-mono text-[8px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[.1em] mb-2">Next Step</div>
+                                <h2 class="font-space text-base sm:text-xl md:text-2xl font-light tracking-tight mb-2 leading-tight">
+                                    Tools hanya alat.<br><span class="text-emerald-400">Yang penting cara memakainya.</span>
+                                </h2>
+                                <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed max-w-lg mx-auto md:mx-0">Lihat bagaimana semua tools ini bergabung jadi satu karya.</p>
+                            </div>
+                            <div class="flex-shrink-0 bcta-r">
+                                <button onclick="go('karya')" class="gbtn gbtn-glitch text-[12px] sm:text-[14px] font-medium text-emerald-400 px-6 sm:px-8 py-2.5 sm:py-4 w-full sm:w-auto">Lihat Karya <iconify-icon icon="mdi:arrow-right" class="ml-1 text-sm sm:text-base align-middle"></iconify-icon></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
     </div>
-
 
     <!-- ===== KARYA ===== -->
     <div id="pg-karya" class="page">
