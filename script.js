@@ -107,10 +107,8 @@
             for (var i = 0; i < cols; i++) {
                 if (drops[i] > 0) {
                     var char = chars[Math.floor(Math.random() * chars.length)];
-                    // Brighter head
                     ctx.fillStyle = 'rgba(16, 185, 129, 0.12)';
                     ctx.fillText(char, i * 14, drops[i] * 14);
-                    // Dimmer trail
                     if (drops[i] > 1) {
                         ctx.fillStyle = 'rgba(16, 185, 129, 0.04)';
                         ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 14, (drops[i] - 1) * 14);
@@ -130,17 +128,22 @@
     // ———————————————
     // GLITCH EFFECTS — MAXIMUM CHAOS
     // ———————————————
+
+    // Variabel ini di luar biar bisa diakses combo glitch
+    var glitchTextEl = null;
+    var glitchRunning = false;
+    var originalText = '';
+
     function initGlitchEffects() {
         var heroSection = document.querySelector('.hero-section');
         var marqueeSection = document.querySelector('.marquee-section');
         if (!heroSection) return;
 
-        // A) AGGRESSIVE text scramble
-        var glitchTextEl = document.querySelector('.gh');
+        // A) TEXT GLOW PULSE on hover + scramble
+        glitchTextEl = document.querySelector('.gh');
         if (glitchTextEl) {
-            var originalText = glitchTextEl.getAttribute('data-text') || glitchTextEl.textContent;
-            var glitchChars = '0123456789!@#$%^&*_+-=<>?/|\\アイウエオカキクケコ';
-            var glitchRunning = false;
+            originalText = glitchTextEl.getAttribute('data-text') || glitchTextEl.textContent;
+            var glitchChars = '0123456789!@#$%^&*';
 
             function scrambleText() {
                 if (glitchRunning) return;
@@ -155,24 +158,24 @@
                         else result += glitchChars[Math.floor(Math.random() * glitchChars.length)];
                     }
                     glitchTextEl.childNodes[0].textContent = result;
-                    iterations += 1 / 1.5; // FASTER decode
+                    iterations += 1 / 1.5;
                     if (iterations >= maxIterations) {
                         clearInterval(interval);
                         glitchTextEl.childNodes[0].textContent = originalText;
                         glitchRunning = false;
                     }
-                }, 25); // FASTER typing
+                }, 25);
             }
 
             glitchTextEl.addEventListener('mouseenter', scrambleText);
 
-            // Auto glitch every 3-8 seconds (was 8-15)
+            // Auto scramble every 4-9 seconds
             function autoGlitch() {
                 setTimeout(function() {
                     var beranda = document.getElementById('pg-beranda');
                     if (beranda && beranda.classList.contains('on')) scrambleText();
                     autoGlitch();
-                }, 3000 + Math.random() * 5000);
+                }, 4000 + Math.random() * 5000);
             }
             autoGlitch();
         }
@@ -186,7 +189,7 @@
                 return;
             }
 
-            var count = 2 + Math.floor(Math.random() * 4); // 2-5 lines!
+            var count = 2 + Math.floor(Math.random() * 4);
             for (var b = 0; b < count; b++) {
                 (function(delay) {
                     setTimeout(function() {
@@ -198,17 +201,18 @@
                         requestAnimationFrame(function() { line.classList.add('fire'); });
                         setTimeout(function() { if (line.parentNode) line.parentNode.removeChild(line); }, 700);
                     }, delay);
-                })(b * 50); // Staggered by 50ms
+                })(b * 50);
             }
 
-            setTimeout(fireGlitchLineBurst, 2000 + Math.random() * 5000); // More frequent
+            setTimeout(fireGlitchLineBurst, 2000 + Math.random() * 5000);
         }
         setTimeout(fireGlitchLineBurst, 3000);
 
 
         // C) Glitch overlay — more frequent
+        var overlay = null;
         if (heroSection) {
-            var overlay = document.createElement('div');
+            overlay = document.createElement('div');
             overlay.className = 'gh-overlay';
             heroSection.appendChild(overlay);
 
@@ -368,7 +372,6 @@
                 return;
             }
 
-            // Trigger everything simultaneously
             fireGlitchLineBurst();
             if (overlay) {
                 overlay.classList.remove('fire');
@@ -387,6 +390,7 @@
         }
         setTimeout(fireComboGlitch, 15000);
     }
+
 
     // ———————————————
     // HOBI PAGE — GLITCH DEEP DIVE EFFECTS
@@ -443,7 +447,6 @@
                     setTimeout(flashDecoText, 4000);
                     return;
                 }
-                // Flash to different text
                 corruptedDeco.style.color = 'rgba(239, 68, 68, 0.3)';
                 corruptedDeco.textContent = decoTexts[Math.floor(Math.random() * decoTexts.length)];
                 setTimeout(function() {
@@ -461,11 +464,8 @@
                     var card = entries[i].target;
                     var img = card.querySelector('.hobi-img-glitch img');
                     if (img && Math.random() < 0.3) {
-                        // Random chromatic burst
                         img.style.filter = 'hue-rotate(' + (Math.random() * 30 - 15) + 'deg) saturate(1.3)';
-                        setTimeout(function() {
-                            img.style.filter = '';
-                        }, 300);
+                        setTimeout(function() { img.style.filter = ''; }, 300);
                     }
                 }
             }
@@ -483,7 +483,6 @@
                 return;
             }
 
-            // Random glitch line
             var line = document.createElement('div');
             line.style.cssText = 'position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(16,185,129,.2),rgba(6,182,212,.1),transparent);pointer-events:none;z-index:5;opacity:0;';
             line.style.top = (10 + Math.random() * 80) + '%';
@@ -497,7 +496,6 @@
                 setTimeout(function() { if (line.parentNode) line.parentNode.removeChild(line); }, 400);
             }, 200);
 
-            // Sometimes add a second line close by
             if (Math.random() > 0.5) {
                 setTimeout(function() {
                     var line2 = document.createElement('div');
@@ -535,6 +533,8 @@
     setTimeout(function() {
         initHobiEffects();
     }, 2000);
+
+
     // ———————————————
     // TOAST
     // ———————————————
@@ -677,7 +677,7 @@
                 for (var i = 0; i < text.length; i++) result += Math.random() < (1 - p) * 0.6 ? chars[Math.floor(Math.random() * chars.length)] : text[i];
                 el.textContent = result;
             } else el.textContent = Math.floor(target * p);
-            requestAnimationFrame(tick);
+            requestAnimationFrame(ttick);
         }
         requestAnimationFrame(tick);
     }

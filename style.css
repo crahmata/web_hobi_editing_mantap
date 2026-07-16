@@ -169,13 +169,66 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
 /* Pulse orbs */
 .gh-pulse-orb{animation:ghPulseOrb 8s ease-in-out infinite!important}
 
-/* Glitch text — MORE AGGRESSIVE */
-.gh{position:relative;display:inline-block}
-.gh::before,.gh::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .05s}
-.gh::before{color:#10b981;clip-path:polygon(0 0,100% 0,100% 35%,0 35%)}
-.gh::after{color:#06b6d4;clip-path:polygon(0 65%,100% 65%,100% 100%,0 100%)}
-.gh:hover::before{opacity:.8;animation:ghTop .3s ease infinite}
-.gh:hover::after{opacity:.8;animation:ghBot .25s ease infinite}
+/* Glitch text hover — judul hero (GLOW + GRAIN + SCAN) */
+.gh{
+    position:relative;
+    display:inline-block;
+    cursor:default;
+    transition:all .3s ease;
+}
+/* Grain noise overlay */
+.gh::before{
+    content:'';
+    position:absolute;
+    inset:-2px;
+    border-radius:4px;
+    pointer-events:none;
+    z-index:1;
+    opacity:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+    background-size:100px;
+    transition:opacity .3s ease;
+}
+/* Scan underline */
+.gh::after{
+    content:'';
+    position:absolute;
+    bottom:-2px;
+    left:0;
+    width:100%;
+    height:2px;
+    background:linear-gradient(90deg,transparent,rgba(16,185,129,.6),rgba(16,185,129,.1),transparent);
+    transform:scaleX(0);
+    transform-origin:left;
+    transition:transform .4s cubic-bezier(.16,1,.3,1), opacity .4s ease;
+    opacity:0;
+    z-index:2;
+}
+/* HOVER STATE */
+.gh:hover{
+    color:#34d399;
+    text-shadow:
+        0 0 10px rgba(16,185,129,.4),
+        0 0 30px rgba(16,185,129,.2),
+        0 0 60px rgba(16,185,129,.1),
+        0 0 100px rgba(16,185,129,.05);
+}
+.gh:hover::before{
+    opacity:1;
+    animation:ghGrainShift .15s steps(2) infinite;
+}
+.gh:hover::after{
+    transform:scaleX(1);
+    opacity:1;
+}
+
+@keyframes ghGrainShift{
+    0%{transform:translate(0,0)}
+    25%{transform:translate(-2%,2%)}
+    50%{transform:translate(2%,-1%)}
+    75%{transform:translate(-1%,-2%)}
+    100%{transform:translate(1%,1%)}
+}
 
 /* Glitch block — TRIPLE sweep */
 .glitch-block{position:relative;overflow:hidden}
