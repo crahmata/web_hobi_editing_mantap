@@ -831,28 +831,7 @@
     }
 
 
-    // ———————————————
-    // COUNTER (c1-c3)
-    // ———————————————
-    function countUp(id, target, suffix) {
-        suffix = suffix || '%';
-        var el = document.getElementById(id);
-        if (!el) return;
-        var startTime = performance.now();
-        function tick(now) {
-            var p = Math.min((now - startTime) / 2000, 1);
-            el.textContent = Math.floor((1 - Math.pow(1 - p, 4)) * target) + suffix;
-            if (p < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-    }
-    var counterObs = new IntersectionObserver(function(entries) {
-        for (var i = 0; i < entries.length; i++) {
-            if (entries[i].isIntersecting) { countUp('c1', 98); countUp('c2', 95); countUp('c3', 93); counterObs.disconnect(); }
-        }
-    }, { threshold: 0.5 });
-    var c1el = document.getElementById('c1');
-    if (c1el) counterObs.observe(c1el);
+   
 
 
     // ———————————————
