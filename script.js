@@ -699,5 +699,243 @@
         toast('Berlangganan berhasil! \uD83C\uDFAC');
         document.getElementById('emIn').value = '';
     };
+        // ———————————————
+    // CINEMATIC TEXT — Auto Glitch Loop
+    // ———————————————
+    function initCinemaText() {
+        var el = document.querySelector('.cinema-text');
+        if (!el || el.dataset.ctInit) return;
+        el.dataset.ctInit = '1';
 
-})();
+        var text = el.getAttribute('data-text') || el.textContent.trim();
+
+        // Bangun struktur
+        el.innerHTML = '';
+
+        var core = document.createElement('span');
+        core.style.position = 'relative';
+        core.style.zIndex = '1';
+        core.textContent = text;
+
+        var topLayer = document.createElement('div');
+        topLayer.className = 'ct-top';
+        var topSpan = document.createElement('span');
+        topSpan.textContent = text;
+        topLayer.appendChild(topSpan);
+
+        var botLayer = document.createElement('div');
+        botLayer.className = 'ct-bot';
+        var botSpan = document.createElement('span');
+        botSpan.textContent = text;
+        botLayer.appendChild(botSpan);
+
+        var scan = document.createElement('span');
+        scan.className = 'ct-scan';
+
+        el.appendChild(core);
+        el.appendChild(topLayer);
+        el.appendChild(botLayer);
+        el.appendChild(scan);
+
+        // Chrome layer selalu tersembunyi, muncul saat glitch
+        topLayer.style.opacity = '0';
+        botLayer.style.opacity = '0';
+
+        // A) Chromatic shift — muncul 1-2 detik, lalu hilang
+        function chromaGlitch() {
+            var dur = 80 + Math.random() * 150;
+            topLayer.style.opacity = '1';
+            botLayer.style.opacity = '1';
+            topSpan.style.animation = 'ctChromaTop ' + dur + 'ms steps(3) forwards';
+            botSpan.style.animation = 'ctChromaBot ' + dur + 'ms steps(3) forwards';
+            setTimeout(function() {
+                topLayer.style.opacity = '0';
+                botLayer.style.opacity = '0';
+                topSpan.style.animation = '';
+                botSpan.style.animation = '';
+            }, dur);
+        }
+
+        // B) Garis horizontal melintas
+        function lineGlitch() {
+            var line = document.createElement('div');
+            line.className = 'ct-line';
+            line.style.top = (10 + Math.random() * 80) + '%';
+            var dur = 200 + Math.random() * 300;
+            line.style.animation = 'ctLineFlash ' + dur + 'ms ease-out forwards';
+            el.appendChild(line);
+            setTimeout(function() {
+                if (line.parentNode) line.parentNode.removeChild(line);
+            }, dur + 50);
+        }
+
+        // C) Jitter — teks bergeser sebentar
+        function jitterGlitch() {
+            var dur = 60 + Math.random() * 100;
+            core.style.animation = 'ctJitter ' + dur + 'ms steps(2) forwards';
+            setTimeout(function() {
+                core.style.animation = '';
+                core.style.transform = '';
+            }, dur);
+        }
+
+        // D) Text scramble ringan
+        function scrambleGlitch() {
+            var pool = '0123456789';
+            var step = 0;
+            var maxStep = 2 + Math.floor(Math.random() * 4);
+            var iv = setInterval(function() {
+                var out = '';
+                for (var i = 0; i < text.length; i++) {
+                    if (text[i] === ' ') { out += ' '; continue; }
+                    if (i < step) { out += text[i]; continue; }
+                    out += pool[Math.floor(Math.random() * pool.length)];
+                }
+                core.textContent = out;
+                step++;
+                if (step > maxStep) {
+                    clearInterval(iv);
+                    core.textContent = text;
+                }
+            }, 40);
+        }
+
+        // Scheduler — tiap efek punya interval sendiri, acak
+        function scheduleChroma() {
+            setTimeout(function() {
+                var pg = document.getElementById('pg-beranda');
+                if (pg && pg.classList.contains('on')) chromaGlitch();
+                scheduleChroma();
+            }, 3000 + Math.random() * 5000);
+        }
+
+        function scheduleLine() {
+            setTimeout(function() {
+                var pg = document.getElementById('pg-beranda');
+                if (pg && pg.classList.contains('on')) lineGlitch();
+                scheduleLine();
+            }, 2000 + Math.random() * 4000);
+        }
+
+        function scheduleJitter() {
+            setTimeout(function() {
+                var pg = document.getElementById('pg-beranda');
+                if (pg && pg.classList.contains('on')) jitterGlitch();
+                scheduleJitter();
+            }, 4000 + Math.random() * 6000);
+        }
+
+        function scheduleScramble() {
+            setTimeout(function() {
+                var pg = document.getElementById('pg-beranda');
+                if (pg && pg.classList.contains('on')) scrambleGlitch();
+                scheduleScramble();
+            }, 5000 + Math.random() * 8000);
+        }
+
+        // Mulai semua scheduler
+        scheduleChroma();
+        scheduleLine();
+        scheduleJitter();
+        scheduleScramble();
+
+        // Combo — semua efek bareng, jarang terjadi
+        function comboGlitch() {
+            setTimeout(function() {
+                var pg = document.getElementById('pg-beranda');
+                if (pg && pg.classList.contains('on')) {
+                    chromaGlitch();
+                    lineGlitch();
+                    lineGlitch();
+                    jitterGlitch();
+                    scrambleGlitch();
+                }
+                comboGlitch();
+            }, 12000 + Math.random() * 18000);
+        }
+        comboGlitch();
+    }
+
+    setTimeout(initCinemaText, 150);
+
+        // Aktifkan animasi setelah halaman terlihat
+        function activate() {
+            var m = document.getElementById('mainContent');
+            if (!m || !m.classList.contains('vis')) {
+                setTimeout(activate, 200);
+                return;
+            }
+            setTimeout(function () { el.classList.add('ct-grade'); }, 200);
+            setTimeout(function () { el.classList.add('ct-sweep'); }, 1800);
+            setTimeout(function () { el.classList.add('ct-bar-on'); }, 1000);
+        }
+        activate();
+
+        // Text scramble
+        function scramble() {
+            if (busy) return;
+            busy = true;
+            var pool = 'アイウエオ0123456789';
+            var step = 0;
+            var iv = setInterval(function () {
+                var out = '';
+                for (var i = 0; i < text.length; i++) {
+                    out += (text[i] === ' ' || i < step)
+                        ? text[i]
+                        : pool[Math.floor(Math.random() * pool.length)];
+                }
+                core.textContent = out;
+                step += 0.6;
+                if (step >= text.length) {
+                    clearInterval(iv);
+                    core.textContent = text;
+                    busy = false;
+                }
+            }, 25);
+        }
+
+        el.addEventListener('mouseenter', scramble);
+
+        // Auto scramble
+        (function autoLoop() {
+            setTimeout(function () {
+                var pg = document.getElementById('pg-beranda');
+                if (pg && pg.classList.contains('on')) scramble();
+                autoLoop();
+            }, 6000 + Math.random() * 7000);
+        })();
+
+        // Render flash periodik
+        (function flashLoop() {
+            setTimeout(function () {
+                var pg = document.getElementById('pg-beranda');
+                if (pg && pg.classList.contains('on')) {
+                    flash.style.animation = 'none';
+                    void flash.offsetWidth;
+                    flash.style.animation = 'ctFlashPop 0.4s ease-out forwards';
+                }
+                flashLoop();
+            }, 8000 + Math.random() * 12000);
+        })();
+
+        // Mouse → chromatic aberration parallax
+        el.addEventListener('mousemove', function (e) {
+            var r = el.getBoundingClientRect();
+            var x = ((e.clientX - r.left) / r.width - 0.5) * 2;
+            var rx = (x * -2.5).toFixed(1);
+            var bx = (x * 2.5).toFixed(1);
+            core.style.textShadow =
+                rx + 'px 0 rgba(239,68,68,0.2), ' +
+                bx + 'px 0 rgba(96,165,250,0.2), ' +
+                '0 0 14px rgba(52,211,153,0.12)';
+        });
+
+        el.addEventListener('mouseleave', function () {
+            core.style.textShadow =
+                '-1px 0 rgba(239,68,68,0.1), ' +
+                '1px 0 rgba(96,165,250,0.1)';
+        });
+    }
+
+    
+)();
