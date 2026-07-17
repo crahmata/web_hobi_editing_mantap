@@ -1,7 +1,3 @@
-/* ============================================
-   CEPEDIT — style.css (MAXIMUM GLITCH EDITION)
-   ============================================ */
-
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;overflow-x:hidden}
 body{background:#050506;color:#e2e8f0;font-family:'Space Grotesk',sans-serif;overflow-x:hidden;-webkit-overflow-scrolling:touch}
@@ -9,13 +5,9 @@ body{background:#050506;color:#e2e8f0;font-family:'Space Grotesk',sans-serif;ove
 ::-webkit-scrollbar-track{background:#050506}
 ::-webkit-scrollbar-thumb{background:rgba(16,185,129,.2);border-radius:3px}
 
-/* Grid background — PULSE version */
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0;animation:gridPulse 8s ease-in-out infinite}
 @keyframes gridPulse{0%,100%{opacity:.6}50%{opacity:1}}
 
-/* ============================================
-   ALL KEYFRAMES
-   ============================================ */
 @keyframes lFlash{0%{opacity:0}5%{opacity:.9}15%{opacity:0}20%{opacity:.6}25%{opacity:0}100%{opacity:0}}
 @keyframes vfp{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.02)}}
 @keyframes rb{0%,100%{opacity:1}50%{opacity:.15}}
@@ -34,11 +26,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 @property --ga{syntax:"<angle>";initial-value:0deg;inherits:false}
 @keyframes gspin{to{--ga:360deg}}
 
-/* ============================================
-   GLITCH KEYFRAMES — INTENSE
-   ============================================ */
-@keyframes ghTop{0%,100%{transform:translate(0)}10%{transform:translate(-5px,-2px)}20%{transform:translate(3px,1px)}30%{transform:translate(-2px,0)}40%{transform:translate(4px,-1px)}50%{transform:translate(-3px,2px)}60%{transform:translate(2px,0)}70%{transform:translate(-4px,-1px)}80%{transform:translate(1px,2px)}90%{transform:translate(-2px,-1px)}}
-@keyframes ghBot{0%,100%{transform:translate(0)}15%{transform:translate(3px,2px)}30%{transform:translate(-4px,-2px)}45%{transform:translate(2px,1px)}60%{transform:translate(-3px,-1px)}75%{transform:translate(4px,0)}90%{transform:translate(-2px,2px)}}
 @keyframes ghSweep{0%{left:-60%}100%{left:160%}}
 @keyframes ghLineFire{0%{opacity:0;transform:scaleX(.2)}10%{opacity:1;transform:scaleX(1.1)}20%{opacity:.6;transform:scaleX(.95)}100%{opacity:0;transform:scaleX(1.1)}}
 @keyframes ghShift{0%{transform:translateY(-1px)}15%{transform:translate(-3px,2px)}30%{transform:translate(3px,-2px)}45%{transform:translate(-2px,1px)}60%{transform:translate(2px,-1px)}75%{transform:translate(-1px,0)}100%{transform:translateY(-1px)}}
@@ -46,17 +33,12 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 @keyframes ghOverlayFire{0%{opacity:0;clip-path:inset(20% 0 60% 0)}15%{opacity:.08;clip-path:inset(45% 0 30% 0)}30%{opacity:0;clip-path:inset(10% 0 70% 0)}45%{opacity:.06;clip-path:inset(60% 0 15% 0)}60%{opacity:0;clip-path:inset(35% 0 40% 0)}75%{opacity:.04;clip-path:inset(5% 0 50% 0)}100%{opacity:0;clip-path:inset(0)}}
 @keyframes ghScan{0%{top:-10%}100%{top:110%}}
 @keyframes ghScan2{0%{bottom:-10%}100%{bottom:110%}}
-@keyframes ghBorderFlash{0%,100%{border-color:inherit}10%{border-color:rgba(16,185,129,.4)}20%{border-color:inherit}30%{border-color:rgba(6,182,212,.3)}40%{border-color:inherit}}
 @keyframes ghStaticBurst{0%{opacity:0}5%{opacity:.04}10%{opacity:0}15%{opacity:.03}20%{opacity:0}100%{opacity:0}}
 @keyframes ghBlockCorrupt{0%{opacity:0;transform:scaleX(0)}10%{opacity:.08;transform:scaleX(1)}20%{opacity:.04;transform:scaleX(.8)}30%{opacity:.06;transform:scaleX(1.1)}100%{opacity:0;transform:scaleX(0)}}
 @keyframes ghPulseOrb{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.7;transform:scale(1.3)}}
 @keyframes ghScreenTear{0%{clip-path:inset(0)}15%{clip-path:inset(30% 0 0 0)}30%{clip-path:inset(0)}45%{clip-path:inset(0 0 25% 0)}60%{clip-path:inset(0)}75%{clip-path:inset(15% 0 0 0)}90%{clip-path:inset(0)}100%{clip-path:inset(0)}}
-@keyframes ghTextExplode{0%{text-shadow:0 0 0 transparent}15%{text-shadow:3px 0 0 #10b981,-3px 0 0 #06b6d4,0 3px 0 #f59e0b,0 -3px 0 #ec4899}30%{text-shadow:-2px 0 0 #10b981,2px 0 0 #06b6d4,0 -2px 0 #f59e0b,0 2px 0 #ec4899}50%{text-shadow:4px 0 0 #10b981,-4px 0 0 #06b6d4,0 4px 0 #f59e0b,0 -4px 0 #ec4899}70%{text-shadow:1px 0 0 #10b981,-1px 0 0 #06b6d4}100%{text-shadow:0 0 0 transparent}}
 @keyframes ghElectrical{0%{opacity:0;clip-path:inset(0 100% 0 0)}20%{opacity:1;clip-path:inset(20% 0 0 0)}40%{opacity:.5;clip-path:inset(40% 0 10% 0)}60%{opacity:1;clip-path:inset(10% 0 0 20%)}80%{opacity:.3;clip-path:inset(30% 0 0 40%)}100%{opacity:0;clip-path:inset(0 100% 0 0)}}
 
-/* ============================================
-   LOADER
-   ============================================ */
 #loader{position:fixed;inset:0;z-index:9999;background:#050506;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .7s,visibility .7s}
 #loader.out{opacity:0;visibility:hidden;pointer-events:none}
 #loaderFlash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:10}
@@ -95,16 +77,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .lst span{font-family:'JetBrains Mono',monospace;font-size:7px;color:rgba(148,163,184,.18);letter-spacing:.04em}
 .bk{animation:bl 1s step-end infinite}
 
-/* ============================================
-   MAIN
-   ============================================ */
 #mainContent{opacity:0;transition:opacity .7s ease .15s}
 #mainContent.vis{opacity:1}
 .page{display:none}.page.on{display:block}
 
-/* ============================================
-   COMPONENTS
-   ============================================ */
 .toast{opacity:0;transform:translate(-50%,-16px);transition:opacity .25s,transform .25s;pointer-events:none}
 .toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 .mobnav{max-height:0;overflow:hidden;transition:max-height .3s ease}
@@ -149,811 +125,141 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .brk-br{bottom:8px;right:8px;border-bottom:2px solid rgba(16,185,129,.5);border-right:2px solid rgba(16,185,129,.5)}
 footer a{transition:color .2s}footer a:hover{color:#10b981}
 
-/* ============================================
-   GLITCH EFFECTS — INTENSE EDITION
-   ============================================ */
-
-/* Data rain canvas */
 .data-rain-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:.4}
-
-/* Static noise overlay */
 .gh-static{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");background-size:100px;animation:ghStaticBurst 6s ease-in-out infinite}
 .gh-static.fire{animation:ghStaticBurst .3s steps(2) infinite}
-
-/* Grid pulse overlay */
 .gh-grid-pulse{position:absolute;inset:0;pointer-events:none;z-index:2;background:radial-gradient(ellipse at center,rgba(16,185,129,.03) 0%,transparent 70%);opacity:0;animation:ghPulseOrb 10s ease-in-out infinite}
-
-/* Strong vignette */
 .gh-vignette-strong{position:absolute;inset:0;pointer-events:none;z-index:2;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.5) 100%)}
-
-/* Pulse orbs */
 .gh-pulse-orb{animation:ghPulseOrb 8s ease-in-out infinite!important}
-
-/* Glitch text hover — judul hero (GLOW + GRAIN + SCAN) */
-.gh{
-    position:relative;
-    display:inline-block;
-    cursor:default;
-    transition:all .3s ease;
-}
-/* Grain noise overlay */
-.gh::before{
-    content:'';
-    position:absolute;
-    inset:-2px;
-    border-radius:4px;
-    pointer-events:none;
-    z-index:1;
-    opacity:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
-    background-size:100px;
-    transition:opacity .3s ease;
-}
-/* Scan underline */
-.gh::after{
-    content:'';
-    position:absolute;
-    bottom:-2px;
-    left:0;
-    width:100%;
-    height:2px;
-    background:linear-gradient(90deg,transparent,rgba(16,185,129,.6),rgba(16,185,129,.1),transparent);
-    transform:scaleX(0);
-    transform-origin:left;
-    transition:transform .4s cubic-bezier(.16,1,.3,1), opacity .4s ease;
-    opacity:0;
-    z-index:2;
-}
-/* HOVER STATE */
-.gh:hover{
-    color:#34d399;
-    text-shadow:
-        0 0 10px rgba(16,185,129,.4),
-        0 0 30px rgba(16,185,129,.2),
-        0 0 60px rgba(16,185,129,.1),
-        0 0 100px rgba(16,185,129,.05);
-}
-.gh:hover::before{
-    opacity:1;
-    animation:ghGrainShift .15s steps(2) infinite;
-}
-.gh:hover::after{
-    transform:scaleX(1);
-    opacity:1;
-}
-
-@keyframes ghGrainShift{
-    0%{transform:translate(0,0)}
-    25%{transform:translate(-2%,2%)}
-    50%{transform:translate(2%,-1%)}
-    75%{transform:translate(-1%,-2%)}
-    100%{transform:translate(1%,1%)}
-}
-
-/* Glitch block — TRIPLE sweep */
 .glitch-block{position:relative;overflow:hidden}
 .glitch-block::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,rgba(16,185,129,.04) 30%,transparent 50%,rgba(6,182,212,.03) 70%,transparent 100%);opacity:0;transition:opacity .3s;pointer-events:none;z-index:1}
 .glitch-block:hover::before{opacity:1}
 .glitch-block::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(16,185,129,.08),rgba(6,182,212,.05),transparent);pointer-events:none;z-index:2}
 .glitch-block:hover::after{animation:ghSweep .5s ease-out forwards}
-
-/* Glitch shift — MORE violent */
 .glitch-shift{transition:transform .35s ease,box-shadow .35s ease}
 .glitch-shift:hover{animation:ghShift .35s ease}
-
-/* Button glitch — MORE skew */
 .gbtn-glitch{position:relative}
 .gbtn-glitch:active{animation:ghSkew .2s ease}
-
-/* Glitch line — BRIGHTER */
 .gh-line{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(16,185,129,.25),rgba(6,182,212,.15),transparent);opacity:0;pointer-events:none;z-index:5}
 .gh-line.fire{animation:ghLineFire .6s ease-out forwards}
-
-/* Glitch overlay — MORE clips */
 .gh-overlay{position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0;mix-blend-mode:screen}
 .gh-overlay.fire{animation:ghOverlayFire .4s steps(3) forwards}
-
-/* Dual scanlines */
 .gh-scanline{position:relative;overflow:hidden}
 .gh-scanline::before{content:'';position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(16,185,129,.1),transparent);animation:ghScan 3.5s linear infinite;pointer-events:none;z-index:2}
 .gh-scanline-dual::after{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(6,182,212,.06),transparent);animation:ghScan2 5s linear infinite;pointer-events:none;z-index:2}
-
-/* Intense chromatic aberration — 3 channels */
 .gh-chroma-intense{transition:filter .4s ease}
 .gh-chroma-intense:hover{filter:drop-shadow(3px 0 0 rgba(16,185,129,.2)) drop-shadow(-3px 0 0 rgba(6,182,212,.15)) drop-shadow(0 2px 0 rgba(245,158,11,.08))}
-
-/* Border flash — periodic random flash */
 .gh-border-flash{transition:border-color .15s ease}
-
-/* Block corruption — rectangles that flash */
 .gh-block{position:absolute;pointer-events:none;z-index:4;opacity:0;background:linear-gradient(90deg,rgba(16,185,129,.06),rgba(6,182,212,.04));height:2px}
 .gh-block.fire{animation:ghBlockCorrupt .5s ease-out forwards}
-
-/* Screen tear */
 .gh-screen-tear{position:absolute;inset:0;pointer-events:none;z-index:6;opacity:0}
 .gh-screen-tear.fire{animation:ghScreenTear .3s steps(2) forwards}
-
-/* Text explode on hover */
-.gh-text-explode:hover{animation:ghTextExplode .6s ease}
-
-/* Electrical arc */
 .gh-electrical{position:absolute;top:0;left:0;right:0;height:100%;pointer-events:none;z-index:5;opacity:0;background:linear-gradient(90deg,transparent 49%,rgba(16,185,129,.12) 49.5%,rgba(16,185,129,.12) 50.5%,transparent 51%)}
 .gh-electrical.fire{animation:ghElectrical .4s ease-out forwards}
-
-/* Marquee glitch line */
 .marquee-glitch-line{position:absolute;top:0;left:0;right:0;height:100%;pointer-events:none;z-index:2;opacity:0}
 .marquee-glitch-line.fire{animation:ghStaticBurst .2s steps(2) infinite}
 
-/* ============================================
-   HOBI PAGE — GLITCH DEEP DIVE EFFECTS
-   ============================================ */
+.cinema-text{position:relative;display:inline-block;cursor:default;color:#34d399}
+.cinema-text .ct-top{position:absolute;top:0;left:0;width:100%;height:50%;overflow:hidden;pointer-events:none;z-index:3;color:rgba(239,68,68,.6)}
+.cinema-text .ct-top span{display:block;transform:translateY(0)}
+.cinema-text .ct-bot{position:absolute;bottom:0;left:0;width:100%;height:50%;overflow:hidden;pointer-events:none;z-index:3;color:rgba(96,165,250,.6)}
+.cinema-text .ct-bot span{display:block;transform:translateY(-100%)}
+.cinema-text .ct-line{position:absolute;left:-5%;right:-5%;height:1px;background:rgba(52,211,153,.4);pointer-events:none;z-index:4;opacity:0;box-shadow:0 0 6px rgba(52,211,153,.3)}
+.cinema-text .ct-scan{position:absolute;inset:-1px;z-index:2;pointer-events:none;border-radius:2px;background:repeating-linear-gradient(0deg,transparent 0px,transparent 3px,rgba(0,0,0,.05) 3px,rgba(0,0,0,.05) 4px);opacity:0;transition:opacity .4s ease}
+.cinema-text:hover .ct-scan{opacity:1}
+@keyframes ctChromaTop{0%,100%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(2px)}60%{transform:translateX(-1px)}80%{transform:translateX(1px)}}
+@keyframes ctChromaBot{0%,100%{transform:translateX(0) translateY(-100%)}20%{transform:translateX(3px) translateY(-100%)}40%{transform:translateX(-2px) translateY(-100%)}60%{transform:translateX(1px) translateY(-100%)}80%{transform:translateX(-1px) translateY(-100%)}}
+@keyframes ctLineFlash{0%{opacity:0;transform:scaleX(.3)}10%{opacity:.8;transform:scaleX(1)}100%{opacity:0;transform:scaleX(1.1)}}
+@keyframes ctJitter{0%,100%{transform:translate(0)}15%{transform:translate(-2px,1px)}30%{transform:translate(1px,-1px)}45%{transform:translate(0)}60%{transform:translate(-1px,0)}75%{transform:translate(0)}}
 
-/* Data leak background — diagonal corrupted lines */
-.hobi-data-leak{
-    position:absolute;inset:0;
-    pointer-events:none;z-index:1;
-    opacity:0;
-    background:
-        repeating-linear-gradient(
-            -45deg,
-            transparent,
-            transparent 40px,
-            rgba(16,185,129,.015) 40px,
-            rgba(16,185,129,.015) 41px
-        ),
-        repeating-linear-gradient(
-            135deg,
-            transparent,
-            transparent 60px,
-            rgba(6,182,212,.01) 60px,
-            rgba(6,182,212,.01) 61px
-        );
-    transition:opacity 1.5s ease;
-}
-#pg-hobi.on .hobi-data-leak{opacity:1}
+/* ========== HOBI PAGE — EDITORIAL LAYOUT ========== */
+.hobi-hero{position:relative;min-height:70vh;display:flex;align-items:flex-end;overflow:hidden}
+.hobi-hero-img{position:absolute;inset:0;z-index:1}
+.hobi-hero-img img{width:100%;height:100%;object-fit:cover;filter:brightness(0.35) contrast(1.1) saturate(0.8)}
+.hobi-hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,6,.95) 0%,rgba(5,5,6,.6) 35%,rgba(5,5,6,.3) 60%,rgba(5,5,6,.85) 100%);z-index:2}
+.hobi-hero-noise{position:absolute;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");background-size:150px 150px;pointer-events:none;z-index:3;animation:grainShift .6s steps(1) infinite}
+.hobi-hero-scanline{position:absolute;inset:0;pointer-events:none;z-index:4;opacity:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(16,185,129,.03) 3px,rgba(0,0,0,.02) 3px);animation:hobiScanSlow 10s linear infinite}
+@keyframes hobiScanSlow{0%{top:-10%}100%{top:110%}}
+.hobi-hero-content{position:relative;z-index:5;padding-bottom:4rem;padding-top:8rem}
+@media(min-width:768px){.hobi-hero{min-height:80vh}.hobi-hero-content{padding-top:10rem;padding-bottom:6rem}}
+@media(min-width:1024px){.hobi-hero{min-height:90vh}.hobi-hero-content{padding-top:12rem;padding-bottom:8rem}}
 
-/* Scan overlay — slow vertical scan */
-.hobi-scan-overlay{
-    position:absolute;inset:0;
-    pointer-events:none;z-index:2;
-    opacity:0;
-    transition:opacity 2s ease .5s;
-}
-.hobi-scan-overlay::before{
-    content:'';position:absolute;left:0;right:0;
-    height:3px;
-    background:linear-gradient(90deg,transparent,rgba(16,185,129,.06),rgba(6,182,212,.04),transparent);
-    animation:hobiScanSlow 12s linear infinite;
-}
-.hobi-scan-overlay::after{
-    content:'';position:absolute;left:0;right:0;
-    height:1px;top:50px;
-    background:linear-gradient(90deg,transparent,rgba(239,68,68,.04),transparent);
-    animation:hobiScanSlow 8s linear infinite 4s;
-}
-#pg-hobi.on .hobi-scan-overlay{opacity:1}
+.hobi-hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid rgba(16,185,129,.12);background:rgba(16,185,129,.04);backdrop-filter:blur(8px);border-radius:4px;margin-bottom:1.5rem}
+.hobi-hero-title{color:#fff;line-height:1.05;letter-spacing:-.02em;text-shadow:0 2px 40px rgba(0,0,0,.5)}
+.hobi-hero-desc{color:rgba(203,213,225,.7);line-height:1.7}
+.hobi-hero-meta{opacity:.4}
 
-@keyframes hobiScanSlow{0%{top:-5%}100%{top:105%}}
+/* Hobi Layer Sections */
+.hobi-layer{padding:3rem 0;border-top:1px solid rgba(255,255,255,.04);display:grid;grid-template-columns:1fr 60px 1fr;gap:0 0 2.5rem;align-items:start}
+@media(min-width:768px){.hobi-layer{gap:0 0 3.5rem;padding:4rem 0}}
+.hobi-layer-reverse{direction:rtl}
+.hobi-layer-reverse .hobi-layer-body{direction:ltr}
 
-/* Card border pulse */
-.hobi-border-pulse{position:relative}
-.hobi-border-pulse::before{
-    content:'';position:absolute;inset:0;
-    border-radius:inherit;
-    pointer-events:none;z-index:0;
-    opacity:0;
-    box-shadow:inset 0 0 0 1px rgba(16,185,129,0);
-    transition:box-shadow .3s ease, opacity .3s ease;
-}
-.hobi-card:hover::before{
-    opacity:1;
-    box-shadow:inset 0 0 0 1px rgba(16,185,129,.15);
-    animation:hobiBorderPulse 1.5s ease-out;
-}
+.hobi-layer-num{display:flex;flex-direction:column;align-items:flex-start;gap:0;padding-top:1rem;position:sticky;top:0;z-index:2}
+.hobi-layer-reverse .hobi-layer-num{align-items:flex-end}
+.hobi-layer-digit{font-family:'JetBrains Mono',monospace;font-size:clamp(2rem,4vw,3.5rem);font-weight:700;color:rgba(16,185,129,.08);line-height:1;transition:color .4s ease}
+.hobi-layer:hover .hobi-layer-digit{color:rgba(16,185,129,.25)}
+.hobi-layer-line{width:100%;height:1px;background:linear-gradient(90deg,rgba(16,185,129,.15),rgba(16,185,129,.02));margin-top:8px}
 
-@keyframes hobiBorderPulse{
-    0%{box-shadow:inset 0 0 0 1px rgba(16,185,129,.15)}
-    30%{box-shadow:inset 0 0 0 1px rgba(6,182,212,.12)}
-    60%{box-shadow:inset 0 0 0 1px rgba(16,185,129,.1)}
-    100%{box-shadow:inset 0 0 0 1px rgba(16,185,129,.15)}
-}
+.hobi-layer-body{display:flex;flex-direction:column;gap:2rem}
+@media(min-width:768px){.hobi-layer-body{flex-direction:row;gap:2.5rem;align-items:stretch}}
+.hobi-layer-reverse .hobi-layer-body{flex-direction:row-reverse}
 
-/* Image glitch on hover */
-.hobi-img-glitch{position:relative;overflow:hidden}
-.hobi-img-glitch img{transition:transform .6s ease, filter .4s ease}
-.hobi-card:hover .hobi-img-glitch img{
-    transform:scale(1.05);
-    filter:brightness(1.1) contrast(1.05) saturate(1.1);
-}
+.hobi-layer-label{font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.15em;color:rgba(16,185,129,.4);margin-bottom:.5rem}
 
-/* Glitch bar that sweeps across image */
-.hobi-img-glitch-bar{
-    position:absolute;top:0;left:-100%;width:50%;height:100%;
-    background:linear-gradient(90deg,transparent,rgba(16,185,129,.08),transparent);
-    pointer-events:none;z-index:2;
-    opacity:0;
-    transition:opacity .2s;
-}
-.hobi-card:hover .hobi-img-glitch-bar{
-    opacity:1;
-    animation:hobiImgSweep .8s ease-out forwards;
-}
+.hobi-layer-text{display:flex;flex-direction:column;justify-content:center}
+@media(min-width:768px){.hobi-layer-text{justify-content:flex-start;flex:1}}
+.hobi-layer-reverse .hobi-layer-text{justify-content:flex-end}
 
-@keyframes hobiImgSweep{0%{left:-50%}100%{left:150%}}
+.hobi-layer-img-wrap{position:relative;overflow:hidden;border-radius:8px;flex-shrink:0}
+@media(max-width:767px){.hobi-layer-img-wrap{order:-1;margin:0 -1rem;aspect-ratio:16/10}}
+@media(min-width:768px){.hobi-layer-img-wrap{flex:0 0 45%}}
+.hobi-layer-reverse .hobi-layer-img-wrap{order:2}
 
-/* Corner brackets appear on hover */
-.hobi-card:hover .hobi-bracket{opacity:1!important}
+.hobi-layer-img{position:relative;overflow:hidden}
+.hobi-layer-img img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.25,.46,.45,.94),filter .8s ease}
+.hobi-layer:hover .hobi-layer-img img{transform:scale(1.05);filter:brightness(1.1) contrast(1.05) saturate(1.1)}
+.hobi-layer-img-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(16,185,129,.08) 0%,transparent 60%);opacity:0;transition:opacity .6s ease;pointer-events:none}
+.hobi-layer:hover .hobi-layer-img-overlay{opacity:1}
+.hobi-layer-img-corner{position:absolute;width:12px;height:12px;opacity:0;transition:opacity .4s ease}
+.hobi-layer:hover .hobi-layer-img-corner{opacity:1}
+.hobi-layer-img-corner.tl{top:10px;left:10px;border-top:1.5px solid rgba(16,185,129,.3);border-left:1.5px solid rgba(16,185,129,.3)}
+.hobi-layer-img-corner.tr{top:10px;right:10px;border-top:1.5px solid rgba(16,185,129,.3);border-right:1.5px solid rgba(16,185,129,.3)}
+.hobi-layer-img-corner.bl{bottom:10px;left:10px;border-bottom:1.5px solid rgba(16,185,129,.3);border-left:1.5px solid rgba(16,185,129,.3)}
+.hobi-layer-img-corner.br{bottom:10px;right:10px;border-bottom:1.5px solid rgba(16,185,129,.3);border-right:1.5px solid rgba(16,185,129,.3)}
+.hobi-layer-img-tag{position:absolute;bottom:12px;left:12px;font-family:'JetBrains Mono',monospace;font-size:7px;color:rgba(16,185,129,.2);letter-spacing:.08em;background:rgba(0,0,0,.7);padding:3px 8px;border-radius:3px;backdrop-filter:blur(4px);border:1px solid rgba(16,185,129,.1)}
 
-/* Label glitch — subtle flicker */
-.hobi-label-glitch{position:relative;display:inline-block}
-.hobi-label-glitch::after{
-    content:attr(data-text);
-    position:absolute;top:0;left:2px;
-    color:rgba(6,182,212,.3);
-    clip-path:polygon(0 0,100% 0,100% 50%,0 50%);
-    opacity:0;
-    pointer-events:none;
-}
-.hobi-card:hover .hobi-label-glitch::after{
-    opacity:1;
-    animation:hobiLabelFlicker .4s steps(3) forwards;
-}
+.karya-title-glitch{position:relative}
+.karya-title-glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:0;color:rgba(16,185,129,.12);clip-path:polygon(0 0,100% 0,100% 45%,0 45%);animation:toolsTitleGlitch 10s ease-in-out infinite}
 
-@keyframes hobiLabelFlicker{
-    0%{opacity:0;transform:translateX(0)}
-    20%{opacity:.5;transform:translateX(-1px)}
-    40%{opacity:0;transform:translateX(1px)}
-    60%{opacity:.3;transform:translateX(0)}
-    80%{opacity:0;transform:translateX(-1px)}
-    100%{opacity:0;transform:translateX(0)}
-}
-
-/* Title glitch — subtle persistent */
-.hobi-title-glitch{
-    position:relative;
-}
-.hobi-title-glitch::after{
-    content:attr(data-text);
-    position:absolute;top:0;left:0;
-    width:100%;height:100%;
-    pointer-events:none;
-    opacity:0;
-    color:rgba(16,185,129,.15);
-    clip-path:polygon(0 0,100% 0,100% 40%,0 40%);
-    animation:hobiTitleGlitch 8s ease-in-out infinite;
-}
-
-@keyframes hobiTitleGlitch{
-    0%,100%{opacity:0;transform:translate(0)}
-    2%{opacity:.5;transform:translate(-3px,1px)}
-    4%{opacity:0;transform:translate(0)}
-    30%{opacity:0;transform:translate(0)}
-    32%{opacity:.4;transform:translate(2px,-1px)}
-    34%{opacity:0;transform:translate(0)}
-    60%{opacity:0;transform:translate(0)}
-    62%{opacity:.3;transform:translate(-2px,0)}
-    64%{opacity:0;transform:translate(0)}
-    85%{opacity:0;transform:translate(0)}
-    87%{opacity:.5;transform:translate(1px,1px)}
-    89%{opacity:0;transform:translate(0)}
-}
-
-/* Word reveal — "mengubahnya menjadi cerita" */
-.hobi-word-reveal{
-    position:relative;
-    display:inline;
-}
-.hobi-word-reveal::after{
-    content:'';
-    position:absolute;
-    left:0;top:0;bottom:0;
-    width:0;
-    background:rgba(16,185,129,.1);
-    pointer-events:none;
-    z-index:-1;
-    transition:none;
-}
-#pg-hobi.on .hobi-word-reveal::after{
-    animation:hobiWordReveal 2s ease-out .8s forwards;
-}
-
-@keyframes hobiWordReveal{
-    0%{width:0;opacity:1}
-    60%{width:100%;opacity:1}
-    100%{width:100%;opacity:0}
-}
-
-/* Corrupted data decoration */
-.hobi-corrupted-deco{
-    overflow:hidden;
-    position:relative;
-}
-.hobi-corrupted-deco span{
-    display:inline-block;
-    transition:all .1s;
-}
-
-/* Glitch divider */
-.hobi-glitch-divider{position:relative}
-
-.hobi-divider-icon{
-    transition:all .4s ease;
-}
-.hobi-glitch-divider:hover .hobi-divider-icon{
-    border-color:rgba(16,185,129,.3);
-    box-shadow:0 0 20px rgba(16,185,129,.08);
-}
-
-/* Floating corrupted text */
-.hobi-float-text{
-    opacity:0;
-    transition:opacity 1s ease;
-}
-#pg-hobi.on .hobi-float-text{
-    opacity:1;
-    animation:hobiFloatText 6s ease-in-out infinite;
-}
-.hobi-float-text:nth-child(2){animation-delay:2s!important}
-.hobi-float-text:nth-child(3){animation-delay:4s!important}
-
-@keyframes hobiFloatText{
-    0%,100%{opacity:.1;transform:translateY(0)}
-    30%{opacity:.3;transform:translateY(-3px)}
-    50%{opacity:.15;transform:translateY(0)}
-    70%{opacity:.25;transform:translateY(2px)}
-}
-
-/* Quote icon glitch */
-.hobi-quote-icon{
-    transition:all .3s ease;
-}
-.hobi-quote-text:hover ~ .hobi-quote-icon,
-.hobi-glitch-divider:hover ~ .rv .hobi-quote-icon{
-    color:rgba(16,185,129,.4)!important;
-    transform:scale(1.1) rotate(-5deg);
-}
-
-/* Quote text subtle glitch on hover */
-.hobi-quote-text{
-    position:relative;
-    transition:all .3s ease;
-}
-.hobi-quote-text:hover{
-    text-shadow:0 0 30px rgba(16,185,129,.05);
-}
-
-/* Bottom corrupt ticker */
-.hobi-corrupt-ticker{
-    display:inline-block;
-    min-width:200px;
-    transition:all .2s;
-}
-
-/* Header badge pulse */
-.hobi-border-pulse{
-    transition:border-color .3s ease;
-}
-/* ============================================
-   CINEMATIC TEXT — Auto Glitch (no error)
-   ============================================ */
-
-.cinema-text {
-    position: relative;
-    display: inline-block;
-    cursor: default;
-    color: #34d399;
-}
-
-/* Layer chromatic — top half merah */
-.cinema-text .ct-top {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 50%;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 3;
-    color: rgba(239, 68, 68, 0.6);
-}
-
-.cinema-text .ct-top span {
-    display: block;
-    transform: translateY(0);
-}
-
-/* Layer chromatic — bottom half biru */
-.cinema-text .ct-bot {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 50%;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 3;
-    color: rgba(96, 165, 250, 0.6);
-}
-
-.cinema-text .ct-bot span {
-    display: block;
-    transform: translateY(-100%);
-}
-
-/* Garis glitch horizontal */
-.cinema-text .ct-line {
-    position: absolute;
-    left: -5%;
-    right: -5%;
-    height: 1px;
-    background: rgba(52, 211, 153, 0.4);
-    pointer-events: none;
-    z-index: 4;
-    opacity: 0;
-    box-shadow: 0 0 6px rgba(52, 211, 153, 0.3);
-}
-
-/* Scanlines */
-.cinema-text .ct-scan {
-    position: absolute;
-    inset: -1px;
-    z-index: 2;
-    pointer-events: none;
-    border-radius: 2px;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent 0px, transparent 3px,
-        rgba(0, 0, 0, 0.05) 3px, rgba(0, 0, 0, 0.05) 4px
-    );
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.cinema-text:hover .ct-scan {
-    opacity: 1;
-}
-
-/* Keyframes */
-@keyframes ctChromaTop {
-    0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-3px); }
-    40% { transform: translateX(2px); }
-    60% { transform: translateX(-1px); }
-    80% { transform: translateX(1px); }
-}
-
-@keyframes ctChromaBot {
-    0%, 100% { transform: translateX(0) translateY(-100%); }
-    20% { transform: translateX(3px) translateY(-100%); }
-    40% { transform: translateX(-2px) translateY(-100%); }
-    60% { transform: translateX(1px) translateY(-100%); }
-    80% { transform: translateX(-1px) translateY(-100%); }
-}
-
-@keyframes ctLineFlash {
-    0%   { opacity: 0; transform: scaleX(0.3); }
-    10%  { opacity: 0.8; transform: scaleX(1); }
-    100% { opacity: 0; transform: scaleX(1.1); }
-}
-
-@keyframes ctJitter {
-    0%, 100% { transform: translate(0); }
-    15% { transform: translate(-2px, 1px); }
-    30% { transform: translate(1px, -1px); }
-    45% { transform: translate(0); }
-    60% { transform: translate(-1px, 0); }
-    75% { transform: translate(0); }
-}
-
-/* Playhead — timeline cursor sweep */
-.cinema-text .ct-head {
-    position: absolute;
-    top: -8px;
-    bottom: -8px;
-    width: 1.5px;
-    z-index: 5;
-    pointer-events: none;
-    opacity: 0;
-    background: linear-gradient(180deg,
-        transparent 0%,
-        rgba(52, 211, 153, 0.4) 15%,
-        rgba(52, 211, 153, 0.7) 50%,
-        rgba(52, 211, 153, 0.4) 85%,
-        transparent 100%
-    );
-    box-shadow: 0 0 8px rgba(52, 211, 153, 0.35),
-                0 0 16px rgba(52, 211, 153, 0.1);
-}
-
-.cinema-text.ct-sweep .ct-head {
-    animation: ctSweep 5s ease-in-out infinite;
-}
-
-/* Render bar — bottom underline */
-.cinema-text .ct-bar {
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    height: 2px;
-    width: 0;
-    z-index: 5;
-    pointer-events: none;
-    border-radius: 1px;
-    background: linear-gradient(90deg, #10b981, #34d399, #22d3ee, #34d399, #10b981);
-    background-size: 200% 100%;
-    box-shadow: 0 0 8px rgba(52, 211, 153, 0.25);
-}
-
-.cinema-text.ct-bar-on .ct-bar {
-    animation:
-        ctBarIn 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
-        ctBarGlow 3.5s ease-in-out 1.8s infinite;
-}
-
-/* Scanlines — hover only */
-.cinema-text .ct-scan {
-    position: absolute;
-    inset: -1px;
-    z-index: 6;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    border-radius: 2px;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent 0px, transparent 3px,
-        rgba(0, 0, 0, 0.04) 3px, rgba(0, 0, 0, 0.04) 4px
-    );
-}
-
-/* Render flash */
-.cinema-text .ct-flash {
-    position: absolute;
-    inset: -4px;
-    z-index: 7;
-    pointer-events: none;
-    opacity: 0;
-    border-radius: 4px;
-    background: radial-gradient(ellipse at center,
-        rgba(52, 211, 153, 0.12), transparent 70%);
-}
-
-/* ---- HOVER ---- */
-.cinema-text:hover .ct-core {
-    filter: brightness(1.15) saturate(1.1);
-}
-
-.cinema-text.ct-grade:hover .ct-core {
-    animation-duration: 1.8s;
-}
-
-.cinema-text:hover .ct-scan {
-    opacity: 1;
-}
-
-.cinema-text:hover {
-    filter:
-        drop-shadow(0 0 12px rgba(52, 211, 153, 0.18))
-        drop-shadow(0 0 35px rgba(52, 211, 153, 0.06));
-}
-
-/* ---- KEYFRAMES ---- */
-@keyframes ctGrade {
-    0%, 100% { background-position: 0% 50%; }
-    33%      { background-position: 50% 100%; }
-    66%      { background-position: 100% 0%; }
-}
-
-@keyframes ctSweep {
-    0%   { left: -6%;  opacity: 0; }
-    4%   { opacity: 0.7; }
-    93%  { opacity: 0.7; }
-    98%  { left: 106%; opacity: 0; }
-    100% { left: 106%; opacity: 0; }
-}
-
-@keyframes ctBarIn {
-    0%   { width: 0;    opacity: 0; }
-    8%   { opacity: 1; }
-    100% { width: 100%; opacity: 1; }
-}
-
-@keyframes ctBarGlow {
-    0%, 100% {
-        background-position: 0% 50%;
-        box-shadow: 0 0 8px rgba(52, 211, 153, 0.25);
-    }
-    50% {
-        background-position: 100% 50%;
-        box-shadow: 0 0 12px rgba(52, 211, 153, 0.45),
-                    0 0 24px rgba(34, 211, 238, 0.12);
-    }
-}
-
-@keyframes ctFlashPop {
-    0%   { opacity: 0.7; }
-    100% { opacity: 0; }
-}
-/* ============================================
-   TOOLS PAGE — Glitch Arsenal Effects
-   ============================================ */
-
-/* Background effects */
-.tools-data-leak{
-    position:absolute;inset:0;
-    pointer-events:none;z-index:1;
-    opacity:0;
-    background:
-        repeating-linear-gradient(
-            90deg,
-            transparent,
-            transparent 60px,
-            rgba(16,185,129,.012) 60px,
-            rgba(16,185,129,.012) 61px
-        ),
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 80px,
-            rgba(6,182,212,.008) 80px,
-            rgba(6,182,212,.008) 81px
-        );
-    transition:opacity 1.5s ease;
-}
+.tools-data-leak{position:absolute;inset:0;pointer-events:none;z-index:1;opacity:0;background:repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(16,185,129,.012) 60px,rgba(16,185,129,.012) 61px),repeating-linear-gradient(0deg,transparent,transparent 80px,rgba(6,182,212,.008) 80px,rgba(6,182,212,.008) 81px);transition:opacity 1.5s ease}
 #pg-tools.on .tools-data-leak{opacity:1}
-
-.tools-scan-overlay{
-    position:absolute;inset:0;
-    pointer-events:none;z-index:2;
-    opacity:0;
-    transition:opacity 2s ease .5s;
-}
-.tools-scan-overlay::before{
-    content:'';position:absolute;left:0;right:0;
-    height:2px;
-    background:linear-gradient(90deg,transparent,rgba(16,185,129,.05),rgba(6,182,212,.03),transparent);
-    animation:toolsScanSlow 15s linear infinite;
-}
+.tools-scan-overlay{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;transition:opacity 2s ease .5s}
+.tools-scan-overlay::before{content:'';position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(16,185,129,.05),rgba(6,182,212,.03),transparent);animation:toolsScanSlow 15s linear infinite}
 #pg-tools.on .tools-scan-overlay{opacity:1}
-
 @keyframes toolsScanSlow{0%{top:-5%}100%{top:105%}}
-
-/* Title glitch */
-.tools-title-glitch{
-    position:relative;
-}
-.tools-title-glitch::after{
-    content:attr(data-text);
-    position:absolute;top:0;left:0;
-    width:100%;height:100%;
-    pointer-events:none;
-    opacity:0;
-    color:rgba(16,185,129,.12);
-    clip-path:polygon(0 0,100% 0,100% 45%,0 45%);
-    animation:toolsTitleGlitch 10s ease-in-out infinite;
-}
-
-@keyframes toolsTitleGlitch{
-    0%,100%{opacity:0;transform:translate(0)}
-    3%{opacity:.4;transform:translate(-2px,1px)}
-    5%{opacity:0;transform:translate(0)}
-    50%{opacity:0;transform:translate(0)}
-    52%{opacity:.3;transform:translate(1px,-1px)}
-    54%{opacity:0;transform:translate(0)}
-}
-
-/* Badge pulse */
+.tools-title-glitch{position:relative}
+.tools-title-glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:0;color:rgba(16,185,129,.12);clip-path:polygon(0 0,100% 0,100% 45%,0 45%);animation:toolsTitleGlitch 10s ease-in-out infinite}
+@keyframes toolsTitleGlitch{0%,100%{opacity:0;transform:translate(0)}3%{opacity:.4;transform:translate(-2px,1px)}5%{opacity:0;transform:translate(0)}50%{opacity:0;transform:translate(0)}52%{opacity:.3;transform:translate(1px,-1px)}54%{opacity:0;transform:translate(0)}}
 .tools-badge-pulse{position:relative}
-.tools-badge-pulse::before{
-    content:'';position:absolute;inset:0;
-    border-radius:inherit;
-    pointer-events:none;z-index:0;
-    opacity:0;
-    box-shadow:inset 0 0 0 1px rgba(16,185,129,0);
-    transition:box-shadow .3s ease,opacity .3s ease;
-}
-#pg-tools.on .tools-badge-pulse::before{
-    opacity:1;
-    animation:toolsBadgePulse 2s ease-in-out 1s infinite;
-}
-
-@keyframes toolsBadgePulse{
-    0%,100%{box-shadow:inset 0 0 0 1px rgba(16,185,129,.15)}
-    50%{box-shadow:inset 0 0 0 1px rgba(6,182,212,.2)}
-}
-
-/* Decoration text */
+.tools-badge-pulse::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;opacity:0;box-shadow:inset 0 0 0 1px rgba(16,185,129,0);transition:box-shadow .3s ease,opacity .3s ease}
+#pg-tools.on .tools-badge-pulse::before{opacity:1;animation:toolsBadgePulse 2s ease-in-out 1s infinite}
+@keyframes toolsBadgePulse{0%,100%{box-shadow:inset 0 0 0 1px rgba(16,185,129,.15)}50%{box-shadow:inset 0 0 0 1px rgba(6,182,212,.2)}}
 .tools-deco-text{transition:color .2s}
-
-/* Tool card */
-.tools-card{
-    position:relative;
-    transition:border-color .3s,transform .3s,box-shadow .3s;
-}
-.tools-card:hover{
-    border-color:rgba(16,185,129,.15);
-    transform:translateY(-2px);
-    box-shadow:0 8px 30px rgba(0,0,0,.3),0 0 0 1px rgba(16,185,129,.08);
-}
-
-/* Card sweep on hover */
-.tools-card-sweep{
-    position:absolute;top:0;left:-100%;width:60%;height:100%;
-    background:linear-gradient(90deg,transparent,rgba(16,185,129,.06),transparent);
-    pointer-events:none;z-index:2;
-    opacity:0;
-    transition:opacity .2s;
-}
-.tools-card:hover .tools-card-sweep{
-    opacity:1;
-    animation:toolsCardSweep .7s ease-out forwards;
-}
-
+.tools-card{position:relative;transition:border-color .3s,transform .3s,box-shadow .3s}
+.tools-card:hover{border-color:rgba(16,185,129,.15);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.3),0 0 0 1px rgba(16,185,129,.08)}
+.tools-card-sweep{position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(16,185,129,.06),transparent);pointer-events:none;z-index:2;opacity:0;transition:opacity .2s}
+.tools-card:hover .tools-card-sweep{opacity:1;animation:toolsCardSweep .7s ease-out forwards}
 @keyframes toolsCardSweep{0%{left:-60%}100%{left:160%}}
+.tools-icon-wrap{transition:all .3s ease}
+.tools-card:hover .tools-icon-wrap{border-color:rgba(16,185,129,.3);box-shadow:0 0 12px rgba(16,185,129,.1);background:rgba(16,185,129,.15)}
+.tools-status{transition:all .3s ease}
+.tools-card:hover .tools-status{box-shadow:0 0 8px rgba(16,185,129,.08)}
+.tools-glitch-line{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(16,185,129,.3),rgba(6,182,212,.15),transparent);pointer-events:none;z-index:5;opacity:0}
+.tools-glitch-line.fire{animation:toolsLineFire .5s ease-out forwards}
+@keyframes toolsLineFire{0%{opacity:0;transform:scaleX(.2)}10%{opacity:.8;transform:scaleX(1)}100%{opacity:0;transform:scaleX(1.05)}}
+.tools-card.flash-border{border-color:rgba(16,185,129,.35)!important;box-shadow:0 0 15px rgba(16,185,129,.1)!important}
 
-/* Icon glow on hover */
-.tools-icon-wrap{
-    transition:all .3s ease;
-}
-.tools-card:hover .tools-icon-wrap{
-    border-color:rgba(16,185,129,.3);
-    box-shadow:0 0 12px rgba(16,185,129,.1);
-    background:rgba(16,185,129,.15);
-}
-
-/* Status badge subtle animation */
-.tools-status{
-    transition:all .3s ease;
-}
-.tools-card:hover .tools-status{
-    box-shadow:0 0 8px rgba(16,185,129,.08);
-}
-
-/* Summary box */
-.tools-summary-box{
-    position:relative;
-    overflow:hidden;
-}
-.tools-summary-sweep{
-    position:absolute;top:0;left:-100%;width:40%;height:100%;
-    background:linear-gradient(90deg,transparent,rgba(16,185,129,.04),transparent);
-    pointer-events:none;z-index:2;
-}
-#pg-tools.on .tools-summary-sweep{
-    animation:toolsSummarySweep 6s ease-in-out 2s infinite;
-}
-
-@keyframes toolsSummarySweep{
-    0%{left:-40%;opacity:0}
-    10%{opacity:1}
-    90%{opacity:1}
-    100%{left:140%;opacity:0}
-}
-
-/* Card glitch line (injected by JS) */
-.tools-glitch-line{
-    position:absolute;left:0;right:0;height:1px;
-    background:linear-gradient(90deg,transparent,rgba(16,185,129,.3),rgba(6,182,212,.15),transparent);
-    pointer-events:none;z-index:5;opacity:0;
-}
-.tools-glitch-line.fire{
-    animation:toolsLineFire .5s ease-out forwards;
-}
-
-@keyframes toolsLineFire{
-    0%{opacity:0;transform:scaleX(.2)}
-    10%{opacity:.8;transform:scaleX(1)}
-    100%{opacity:0;transform:scaleX(1.05)}
-}
-
-/* Card border flash (injected by JS) */
-.tools-card.flash-border{
-    border-color:rgba(16,185,129,.35)!important;
-    box-shadow:0 0 15px rgba(16,185,129,.1)!important;
-}
-/* ============================================
-   RESPONSIVE
-   ============================================ */
 @media(min-width:480px){.lt{font-size:2.2rem}.lvf{width:100px;height:100px}.vtl,.vtr,.vbl,.vbr{width:20px;height:20px}.lbw{width:190px}.lsub{font-size:9px;letter-spacing:.22em}.lrec-t{font-size:9px}}
 @media(min-width:768px){.lt{font-size:2.8rem}.lvf{width:110px;height:110px;margin-bottom:28px}}
 @media(max-width:767px){.si{border-right:none!important}.si+.si{border-left:1px solid rgba(16,185,129,.05)}}
@@ -962,9 +268,6 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
 .hfx{display:none}
 @media(min-width:640px){.hfx{display:block}}
 @media(max-width:767px){.bcta{flex-direction:column!important}.bcta .bcta-r{width:100%;display:flex;flex-direction:column;align-items:stretch}}
-.himg{height:160px}
-@media(min-width:640px){.himg{height:200px}}
-@media(min-width:768px){.himg{height:100%;min-height:280px}}
 .kimg{height:170px}
 @media(min-width:640px){.kimg{height:210px}}
 @media(min-width:1024px){.kimg{height:230px}}
