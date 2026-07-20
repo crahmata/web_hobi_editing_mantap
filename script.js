@@ -1,5 +1,5 @@
 /* ============================================
-   CEPEDIT — script.js (UNCHANGED)
+   CEPEDIT — script.js
    ============================================ */
 console.log('>>> CEPEDIT loaded');
 
@@ -77,6 +77,7 @@ function initAllEffects() {
     try { initToolsEffects(); } catch (e) {}
     try { initCounters(); } catch (e) {}
     try { initKaryaCount(); } catch (e) {}
+    try { initToolClicks(); } catch (e) {}
 }
 
 function initDataRain() {
@@ -170,7 +171,7 @@ window.go = function(page) {
     var nl = document.querySelectorAll('.nv'); for (var j = 0; j < nl.length; j++) { nl[j].classList.remove('act'); if (nl[j].getAttribute('data-p') === page) nl[j].classList.add('act'); }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setTimeout(function() { initFadeUp(); initReveal(); }, 80);
-    if (page === 'tools') setTimeout(initToolsEffects, 500);
+    if (page === 'tools') setTimeout(function() { initToolsEffects(); initToolClicks(); }, 500);
 };
 var fn = document.querySelector('.nv[data-p="beranda"]'); if (fn) fn.classList.add('act');
 
@@ -190,5 +191,71 @@ window.filtK = function(cat, btn) {
     var emp = document.getElementById('karyaEmpty'); if (emp) emp.classList.toggle('hidden', vis > 0);
     var kc = document.getElementById('karyaCount'); if (kc) kc.textContent = vis + ' PROJECTS';
 };
+
+/* ========== DETAIL OVERLAY ========== */
+window.openDetail = function(app) {
+    var el = null;
+    if (app === 'capcut') el = document.getElementById('detailCapCut');
+    else if (app === 'alight') el = document.getElementById('detailAlight');
+    if (!el) return;
+
+    document.body.style.overflow = 'hidden';
+    el.classList.add('open');
+    var scrollArea = el.querySelector('.detail-scroll');
+    if (scrollArea) scrollArea.scrollTop = 0;
+
+    var fus = el.querySelectorAll('.fu');
+    for (var i = 0; i < fus.length; i++) fus[i].classList.remove('sh');
+    setTimeout(function() {
+        for (var j = 0; j < fus.length; j++) fus[j].classList.add('sh');
+    }, 100);
+
+    var rvs = el.querySelectorAll('.rv');
+    for (var k = 0; k < rvs.length; k++) rvs[k].classList.remove('sh');
+
+    if (el._detailObs) { el._detailObs.disconnect(); el._detailObs = null; }
+
+    var root = el.querySelector('.detail-scroll');
+    var detailObs = new IntersectionObserver(function(entries) {
+        for (var x = 0; x < entries.length; x++) {
+            if (entries[x].isIntersecting) entries[x].target.classList.add('sh');
+        }
+    }, { threshold: 0.1, root: root, rootMargin: '0px 0px -5% 0px' });
+
+    for (var m = 0; m < rvs.length; m++) detailObs.observe(rvs[m]);
+    el._detailObs = detailObs;
+};
+
+window.closeDetail = function() {
+    var overlays = document.querySelectorAll('.detail-overlay.open');
+    for (var i = 0; i < overlays.length; i++) {
+        overlays[i].classList.remove('open');
+        if (overlays[i]._detailObs) {
+            overlays[i]._detailObs.disconnect();
+            overlays[i]._detailObs = null;
+        }
+    }
+    document.body.style.overflow = '';
+};
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeDetail();
+});
+
+function initToolClicks() {
+    var cards = document.querySelectorAll('.tool-card[data-tool]');
+    for (var i = 0; i < cards.length; i++) {
+        (function(card) {
+            var newCard = card.cloneNode(true);
+            card.parentNode.replaceChild(newCard, card);
+
+            newCard.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var tool = newCard.getAttribute('data-tool');
+                if (tool) openDetail(tool);
+            });
+        })(cards[i]);
+    }
+}
 
 console.log('>>> CEPEDIT ready');
