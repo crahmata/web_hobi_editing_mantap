@@ -419,3 +419,102 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
 @media(max-width:767px){.bcta{flex-direction:column!important}.bcta .bcta-r{width:100%;display:flex;flex-direction:column;align-items:stretch}}
 @media(max-width:640px){.data-rain-canvas{opacity:.15}}
 @media(max-width:640px){.detail-close{top:10px;right:10px;width:36px;height:36px}}
+
+/* ==========================================
+   FIX: Mobile Workflow (vertikal)
+   ========================================== */
+.workflow-mobile{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:1.5rem 0;
+    gap:0;
+}
+.wm-step{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    width:100%;
+    max-width:280px;
+    padding:10px 16px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.04);
+    background:rgba(10,11,14,.5);
+    transition:border-color .3s,background .3s,transform .2s;
+}
+.wm-step:active{
+    transform:scale(.97);
+    border-color:rgba(16,185,129,.15);
+    background:rgba(16,185,129,.03);
+}
+.wm-step-final{
+    border-color:rgba(16,185,129,.12);
+    background:rgba(16,185,129,.04);
+}
+.wm-icon{
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    background:rgba(16,185,129,.08);
+    border:1px solid rgba(16,185,129,.12);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+.wm-body{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+.wm-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:8px;
+    color:rgba(16,185,129,.45);
+    letter-spacing:.1em;
+    font-weight:600;
+}
+.wm-name{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:.875rem;
+    font-weight:600;
+    color:rgba(241,245,249,.75);
+}
+.wm-name-final{
+    color:#34d399;
+}
+.wm-line{
+    width:1px;
+    height:20px;
+    background:linear-gradient(to bottom,rgba(16,185,129,.15),rgba(16,185,129,.05));
+    flex-shrink:0;
+}
+
+/* ==========================================
+   FIX: Touch feedback untuk HP
+   (hover tidak ada di touch, pakai :active)
+   ========================================== */
+.glitch-shift:active{
+    animation:ghShift .2s ease;
+    border-color:rgba(16,185,129,.1) !important;
+}
+.glitch-block:active::before{
+    opacity:1;
+    transition:opacity 0s;
+}
+.glitch-block:active::after{
+    animation:ghSweep .4s ease-out forwards;
+}
+.cd:active{
+    border-color:rgba(16,185,129,.1) !important;
+    transform:translateY(-1px) !important;
+    box-shadow:0 6px 24px rgba(0,0,0,.25) !important;
+}
+.kc:active{
+    border-color:rgba(16,185,129,.1) !important;
+    transform:translateY(-1px) !important;
+}
+.tool-card:active{
+    border-color:rgba(16,185,129,.1) !important;
+    transform:translateY(-1px) !important;
+}

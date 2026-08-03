@@ -33,7 +33,12 @@ function initAllEffects(){try{initFadeUp()}catch(e){}try{initReveal()}catch(e){}
    BAGIAN 3: DATA RAIN (efek background)
    Jangan diubah
    ========================================== */
-function initDataRain(){var canvas=document.getElementById('dataRain');if(!canvas)return;var ctx=canvas.getContext('2d');if(!ctx)return;var cols,drops;var chars='01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;cols=Math.floor(canvas.width/14);drops=[];for(var i=0;i<cols;i++)drops[i]=Math.random()*-100}resize();window.addEventListener('resize',resize);function draw(){ctx.fillStyle='rgba(5,5,6,0.06)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font='10px JetBrains Mono,monospace';for(var i=0;i<cols;i++){if(drops[i]>0){ctx.fillStyle='rgba(16,185,129,0.12)';ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*14,drops[i]*14)}drops[i]+=0.3+Math.random()*0.3;if(drops[i]*14>canvas.height&&Math.random()>0.98)drops[i]=0}requestAnimationFrame(draw)}draw()}
+/* FIX: Data rain bisa di-pause saat pindah halaman */
+var _rainRAF=null,_rainActive=true,_rainCanvas=null,_rainCtx=null,_rainCols=null,_rainDrops=null;
+var _rainChars='01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+function _rainResize(){if(!_rainCanvas)return;_rainCanvas.width=window.innerWidth;_rainCanvas.height=window.innerHeight;_rainCols=Math.floor(_rainCanvas.width/14);_rainDrops=[];for(var i=0;i<_rainCols;i++)_rainDrops[i]=Math.random()*-100}
+function _rainDraw(){if(!_rainActive){_rainRAF=null;return}_rainCtx.fillStyle='rgba(5,5,6,0.06)';_rainCtx.fillRect(0,0,_rainCanvas.width,_rainCanvas.height);_rainCtx.font='10px JetBrains Mono,monospace';for(var i=0;i<_rainCols;i++){if(_rainDrops[i]>0){_rainCtx.fillStyle='rgba(16,185,129,0.12)';_rainCtx.fillText(_rainChars[Math.floor(Math.random()*_rainChars.length)],i*14,_rainDrops[i]*14)}_rainDrops[i]+=0.3+Math.random()*0.3;if(_rainDrops[i]*14>_rainCanvas.height&&Math.random()>0.98)_rainDrops[i]=0}_rainRAF=requestAnimationFrame(_rainDraw)}
+function initDataRain(){_rainCanvas=document.getElementById('dataRain');if(!_rainCanvas)return;_rainCtx=_rainCanvas.getContext('2d');if(!_rainCtx)return;_rainResize();window.addEventListener('resize',_rainResize);_rainActive=true;_rainRAF=requestAnimationFrame(_rainDraw)}
 
 /* ==========================================
    BAGIAN 4: GLITCH EFFECTS (hero)
@@ -78,8 +83,8 @@ function initReveal(){if(revealObs)revealObs.disconnect();revealObs=new Intersec
 window.toast=function(msg){var t=document.getElementById('toast'),m=document.getElementById('tmsg');if(t&&m){m.textContent=msg;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},2500)}};
 window.tmob=function(){var m=document.getElementById('mnav'),i=document.getElementById('mico');if(m)m.classList.toggle('op');if(i)i.setAttribute('icon',m&&m.classList.contains('op')?'mdi:close':'mdi:menu')};
 window.cmob=function(){var m=document.getElementById('mnav'),i=document.getElementById('mico');if(m)m.classList.remove('op');if(i)i.setAttribute('icon','mdi:menu')};
+window.go=function(page){var pages=document.querySelectorAll('.page');for(var i=0;i<pages.length;i++)pages[i].classList.remove('on');var t=document.getElementById('pg-'+page);if(t)t.classList.add('on');var nl=document.querySelectorAll('.nv');for(var j=0;j<nl.length;j++){nl[j].classList.remove('act');if(nl[j].getAttribute('data-p')===page)nl[j].classList.add('act')}window.scrollTo({top:0,behavior:'smooth'});setTimeout(function(){initFadeUp();initReveal()},80);if(page==='tools')setTimeout(function(){initToolsEffects();initToolClicks()},500);if(page==='karya')setTimeout(function(){initKaryaClicks();initKaryaVideos()},500);/* FIX: Pause/resume data rain */if(page==='beranda'){if(!_rainActive&&_rainCanvas){_rainActive=true;_rainRAF=requestAnimationFrame(_rainDraw)}}else{_rainActive=false;if(_rainRAF){cancelAnimationFrame(_rainRAF);_rainRAF=null}}};
 
-window.go=function(page){var pages=document.querySelectorAll('.page');for(var i=0;i<pages.length;i++)pages[i].classList.remove('on');var t=document.getElementById('pg-'+page);if(t)t.classList.add('on');var nl=document.querySelectorAll('.nv');for(var j=0;j<nl.length;j++){nl[j].classList.remove('act');if(nl[j].getAttribute('data-p')===page)nl[j].classList.add('act')}window.scrollTo({top:0,behavior:'smooth'});setTimeout(function(){initFadeUp();initReveal()},80);if(page==='tools')setTimeout(function(){initToolsEffects();initToolClicks()},500);if(page==='karya')setTimeout(function(){initKaryaClicks();initKaryaVideos()},500)};
 var fn=document.querySelector('.nv[data-p="beranda"]');if(fn)fn.classList.add('act');
 
 /* ==========================================
