@@ -518,3 +518,56 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
     border-color:rgba(16,185,129,.1) !important;
     transform:translateY(-1px) !important;
 }
+
+/* ==========================================
+   DETAIL OVERLAY — TOOL BACKGROUND EFFECTS
+   ========================================== */
+.detail-bg-tool-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+}
+
+.detail-overlay.open .detail-bg-tool-glow {
+    opacity: 1;
+}
+
+/* Emerald glow untuk CapCut */
+.detail-bg-glow-emerald {
+    background:
+        radial-gradient(ellipse 50% 40% at 30% 50%, rgba(16,185,129,0.15) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 75% 35%, rgba(16,185,129,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 30% at 50% 90%, rgba(6,182,212,0.06) 0%, transparent 50%);
+    animation: toolGlowPulse 6s ease-in-out infinite;
+}
+
+/* Cyan glow untuk Alight Motion */
+.detail-bg-glow-cyan {
+    background:
+        radial-gradient(ellipse 50% 40% at 70% 45%, rgba(6,182,212,0.15) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 25% 60%, rgba(6,182,212,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 30% at 50% 15%, rgba(16,185,129,0.06) 0%, transparent 50%);
+    animation: toolGlowPulse 7s ease-in-out infinite 1s;
+}
+
+@keyframes toolGlowPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+/* Grid lines overlay di background detail */
+.detail-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.5;
+}
