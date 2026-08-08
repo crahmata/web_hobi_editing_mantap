@@ -149,18 +149,18 @@
                         </div>
                     </div>
                     <div class="lg:col-span-5 fu d5 relative flex justify-center mt-2 lg:mt-0">
-                        <div class="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[420px] hero-tilt" id="heroTilt">
-                            <div class="relative rounded-xl overflow-hidden border border-white/[0.08] bg-[#0A0B0E] gh-scanline gh-scanline-dual gh-chroma-intense gh-border-flash">
-                                <img src="https://picsum.photos/seed/vidhero77/600/450.jpg" alt="Cinematic Night Edit" class="w-full h-[200px] sm:h-[260px] md:h-[370px] object-cover">
+    <div class="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[420px] hero-tilt" id="heroTilt">
+        <div class="relative rounded-xl overflow-hidden border border-white/[0.08] bg-[#0A0B0E] gh-scanline gh-scanline-dual gh-chroma-intense gh-border-flash">
+            <video src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4" autoplay loop muted playsinline class="w-full h-[200px] sm:h-[260px] md:h-[370px] object-cover" id="heroVid"></video>
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                                 <div class="absolute top-2 left-2 sm:top-3 sm:left-3 w-5 h-5 sm:w-6 sm:h-6 border-t-2 border-l-2 border-emerald-500/50"></div>
                                 <div class="absolute top-2 right-2 sm:top-3 sm:right-3 w-5 h-5 sm:w-6 sm:h-6 border-t-2 border-r-2 border-emerald-500/50"></div>
                                 <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 w-5 h-5 sm:w-6 sm:h-6 border-b-2 border-l-2 border-emerald-500/50"></div>
                                 <div class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 w-5 h-5 sm:w-6 sm:h-6 border-b-2 border-r-2 border-emerald-500/50"></div>
                                 <div class="absolute inset-0 flex items-center justify-center">
-                                    <button onclick="toast('Video demo segera!')" class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-emerald-500/10 backdrop-blur border border-emerald-500/25 flex items-center justify-center hover:bg-emerald-500/20 hover:scale-110 transition-all cursor-pointer" style="animation:pr 3s ease infinite" data-cursor="Play">
-                                        <iconify-icon icon="mdi:play" class="text-emerald-400 text-lg sm:text-xl md:text-2xl ml-0.5"></iconify-icon>
-                                    </button>
+                                    <button id="heroPlayBtn" class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-emerald-500/10 backdrop-blur border border-emerald-500/25 flex items-center justify-center hover:bg-emerald-500/20 hover:scale-110 transition-all cursor-pointer" style="animation:pr 3s ease infinite" data-cursor="Play">
+    <iconify-icon icon="mdi:play" class="text-emerald-400 text-lg sm:text-xl md:text-2xl ml-0.5"></iconify-icon>
+</button>>
                                 </div>
                                 <div class="absolute bottom-0 left-0 right-0 p-2.5 sm:p-4">
                                     <div class="font-mono text-[7px] sm:text-[9px] text-emerald-500/50 mb-0.5">REC ● 00:32:08 // 4K // 24fps</div>
@@ -212,51 +212,101 @@
             </div>
         </div>
 
-        <!-- Stats -->
+              <!-- Stats / Live Data Monitor -->
         <section class="py-8 sm:py-12 md:py-16 relative z-10">
             <div class="max-w-[1300px] mx-auto px-4 md:px-8">
                 <div class="rv flex items-center gap-2 mb-4 sm:mb-6">
                     <span class="sd inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                     <span class="font-mono text-[8px] sm:text-[10px] text-emerald-400/60 uppercase tracking-[.15em]">Live Data Monitor</span>
-                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-700 ml-auto hidden sm:block">SYS::STATS_01</span>
+                    <span class="font-mono text-[8px] sm:text-[9px] text-neutral-700 ml-auto hidden sm:block" id="ldmTimestamp">SYS::STATS_01 // --:--:--</span>
                 </div>
                 <div class="rv sp rounded">
+                    <!-- Corner brackets -->
                     <div class="sp-c absolute top-0 left-0 w-3 h-3 border-t border-l border-emerald-500/25 z-10"></div>
                     <div class="sp-c absolute top-0 right-0 w-3 h-3 border-t border-r border-emerald-500/25 z-10"></div>
                     <div class="sp-c absolute bottom-0 left-0 w-3 h-3 border-b border-l border-emerald-500/25 z-10"></div>
                     <div class="sp-c absolute bottom-0 right-0 w-3 h-3 border-b border-r border-emerald-500/25 z-10"></div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 relative z-[1]">
-                        <div class="si py-4 sm:py-6 md:py-8 text-center px-2">
-                            <div class="font-mono text-[6px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[.15em] mb-1 sm:mb-2">TIMELINE_HRS</div>
-                            <div class="sn font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-400 mb-0.5 sm:mb-2" id="c4">---</div>
-                            <div class="text-[10px] sm:text-[11px] text-slate-500 mb-0.5 sm:mb-2">Jam di Timeline</div>
-                            <div class="sc font-mono text-[6px] sm:text-[7px] text-emerald-500/20 uppercase">TERUS BERTAMBAH</div>
+
+                    <!-- Waveform -->
+                    <div class="relative z-[1] px-3 sm:px-5 pt-3 sm:pt-4">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="font-mono text-[6px] sm:text-[7px] text-emerald-500/25 uppercase tracking-[.12em]">SIGNAL_WAVEFORM</span>
+                            <span class="font-mono text-[6px] sm:text-[7px] text-neutral-800" id="ldmFreq">48.0 kHz</span>
                         </div>
-                        <div class="si py-4 sm:py-6 md:py-8 text-center px-2">
-                            <div class="font-mono text-[6px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[.15em] mb-1 sm:mb-2">PROJECTS_DONE</div>
-                            <div class="sn font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-400 mb-0.5 sm:mb-2" id="c5">---</div>
-                            <div class="text-[10px] sm:text-[11px] text-slate-500 mb-0.5 sm:mb-2">Proyek Selesai</div>
-                            <div class="sc font-mono text-[6px] sm:text-[7px] text-emerald-500/20 uppercase">MASIH NGENJOT</div>
-                        </div>
-                        <div class="si py-4 sm:py-6 md:py-8 text-center px-2">
-                            <div class="font-mono text-[6px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[.15em] mb-1 sm:mb-2">TEA_CONSUMED</div>
-                            <div class="sn font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-400 mb-0.5 sm:mb-2" id="c6">---</div>
-                            <div class="text-[10px] sm:text-[11px] text-slate-500 mb-0.5 sm:mb-2">Teh Dihabiskan</div>
-                            <div class="sc font-mono text-[6px] sm:text-[7px] text-emerald-500/20 uppercase">BAHAN BAKAR UTAMA</div>
-                        </div>
-                        <div class="si py-4 sm:py-6 md:py-8 text-center px-2">
-                            <div class="font-mono text-[6px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[.15em] mb-1 sm:mb-2">RE_RENDERS</div>
-                            <div class="sn font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-400 mb-0.5 sm:mb-2" id="c7">---</div>
-                            <div class="text-[10px] sm:text-[11px] text-slate-500 mb-0.5 sm:mb-2">Kali Render Ulang</div>
-                            <div class="sc font-mono text-[6px] sm:text-[7px] text-emerald-500/20 uppercase">"BISA LEBIH BAIK"</div>
+                        <div class="relative h-[32px] sm:h-[40px] bg-black/30 rounded border border-white/[0.03] overflow-hidden">
+                            <canvas id="ldmWaveform" class="w-full h-full"></canvas>
+                            <div class="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 pointer-events-none"></div>
+                            <div class="absolute left-[10%] top-1 bottom-1 w-px bg-emerald-500/10"></div>
+                            <div class="absolute left-[33%] top-1 bottom-1 w-px bg-emerald-500/5"></div>
+                            <div class="absolute left-1/2 top-1 bottom-1 w-px bg-emerald-500/10"></div>
+                            <div class="absolute left-[66%] top-1 bottom-1 w-px bg-emerald-500/5"></div>
+                            <div class="absolute left-[90%] top-1 bottom-1 w-px bg-emerald-500/10"></div>
+                            <div class="absolute left-0 right-0 top-1/2 h-px bg-emerald-500/5"></div>
                         </div>
                     </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 relative z-[1]">
+                        <div class="si py-4 sm:py-5 md:py-6 text-center px-2">
+                            <div class="font-mono text-[6px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[.15em] mb-1 sm:mb-2">TIMELINE_HRS</div>
+                            <div class="sn font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-400 mb-0.5 sm:mb-1" id="c4">---</div>
+                            <div class="text-[10px] sm:text-[11px] text-slate-500 mb-0.5 sm:mb-1">Jam di Timeline</div>
+                            <div class="sc font-mono text-[6px] sm:text-[7px] text-emerald-500/20 uppercase flex items-center justify-center gap-1">
+                                <span class="w-1 h-1 rounded-full bg-emerald-500/30" style="animation:pr 2s ease infinite"></span>
+                                LIVE
+                            </div>
+                        </div>
+                        <div class="si py-4 sm:py-5 md:py-6 text-center px-2">
+                            <div class="font-mono text-[6px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[.15em] mb-1 sm:mb-2">PROJECTS_DONE</div>
+                            <div class="sn font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-400 mb-0.5 sm:mb-1" id="c5">---</div>
+                            <div class="text-[10px] sm:text-[11px] text-slate-500 mb-0.5 sm:mb-1">Proyek Selesai</div>
+                            <div class="sc font-mono text-[6px] sm:text-[7px] text-emerald-500/20 uppercase flex items-center justify-center gap-1">
+                                <span class="w-1 h-1 rounded-full bg-emerald-500/30" style="animation:pr 2.5s ease infinite"></span>
+                                TRACKING
+                            </div>
+                        </div>
+                        <div class="si py-4 sm:py-5 md:py-6 text-center px-2">
+                            <div class="font-mono text-[6px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[.15em] mb-1 sm:mb-2">TEA_CONSUMED</div>
+                            <div class="sn font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-400 mb-0.5 sm:mb-1" id="c6">---</div>
+                            <div class="text-[10px] sm:text-[11px] text-slate-500 mb-0.5 sm:mb-1">Teh Dihabiskan</div>
+                            <div class="sc font-mono text-[6px] sm:text-[7px] text-emerald-500/20 uppercase flex items-center justify-center gap-1">
+                                <span class="w-1 h-1 rounded-full bg-emerald-500/30" style="animation:pr 1.8s ease infinite"></span>
+                                COUNTING
+                            </div>
+                        </div>
+                        <div class="si py-4 sm:py-5 md:py-6 text-center px-2">
+                            <div class="font-mono text-[6px] sm:text-[8px] text-emerald-500/40 uppercase tracking-[.15em] mb-1 sm:mb-2">RE_RENDERS</div>
+                            <div class="sn font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-400 mb-0.5 sm:mb-1" id="c7">---</div>
+                            <div class="text-[10px] sm:text-[11px] text-slate-500 mb-0.5 sm:mb-1">Kali Render Ulang</div>
+                            <div class="sc font-mono text-[6px] sm:text-[7px] text-emerald-500/20 uppercase flex items-center justify-center gap-1">
+                                <span class="w-1 h-1 rounded-full bg-emerald-500/30" style="animation:pr 2.2s ease infinite"></span>
+                                ALWAYS
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Bars -->
+                    <div class="relative z-[1] px-3 sm:px-5 pb-3 pt-1">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="font-mono text-[6px] sm:text-[7px] text-emerald-500/25 uppercase tracking-[.12em]">ACTIVITY_BARS</span>
+                            <span class="font-mono text-[6px] sm:text-[7px] text-neutral-800">LAST_24H</span>
+                        </div>
+                        <div class="flex items-end gap-[2px] sm:gap-[3px] h-[20px] sm:h-[28px]" id="ldmBars"></div>
+                    </div>
+
+                    <!-- Footer -->
                     <div class="border-t border-emerald-500/5 px-3 sm:px-5 py-1.5 flex items-center justify-between relative z-[1]">
                         <div class="flex items-center gap-1.5">
                             <span class="sd inline-block w-1 h-1 rounded-full bg-emerald-500/50"></span>
-                            <span class="font-mono text-[7px] sm:text-[8px] text-neutral-700">LIVE</span>
+                            <span class="font-mono text-[7px] sm:text-[8px] text-neutral-700 ldm-flicker">LIVE</span>
                         </div>
-                        <div class="font-mono text-[6px] sm:text-[8px] text-neutral-800 hidden sm:block">DATA_STREAM::ACTIVE</div>
+                        <div class="font-mono text-[6px] sm:text-[8px] text-neutral-800 hidden sm:flex items-center gap-2">
+                            <span id="ldmUptime">UPTIME: 00:00:00</span>
+                            <span class="w-px h-2.5 bg-white/5"></span>
+                            <span id="ldmPing">PING: --ms</span>
+                            <span class="w-px h-2.5 bg-white/5"></span>
+                            <span id="ldmFps">FPS: --</span>
+                        </div>
                         <div class="flex items-center gap-1">
                             <span class="w-2.5 h-[1px] bg-emerald-500/15"></span>
                             <span class="w-2.5 h-[1px] bg-emerald-500/30"></span>

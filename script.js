@@ -129,6 +129,7 @@ function initAllEffects() {
     try { initScrollTimeline(); } catch (e) { console.warn('initScrollTimeline:', e); }
     try { initHeroTilt(); } catch (e) { console.warn('initHeroTilt:', e); }
     try { initBackToTop(); } catch (e) { console.warn('initBackToTop:', e); }
+        try { initHeroVideo(); } catch (e) { console.warn('initHeroVideo:', e); }
 }
 
 /* ==========================================
@@ -326,34 +327,290 @@ function initToolsEffects() {
     }
 }
 
-/* ==========================================
-   BAGIAN 7: COUNTER ANIMASI
-   ========================================== */
+
+var _ldmInited = false;
+var _ldmTargets = { c4: 247, c5: 53, c6: 189, c7: 412 };
+var _ldmCurrent = { c4: 0, c5: 0, c6: 0, c7: 0 };
+var _ldmWaveRAF = null;
+var _ldmWaveCanvas = null;
+var _ldmWaveCtx = null;
+var _ldmStartTime = Date.now();
+var _ldmTickInterval = null;
+var _ldmGlitchInterval = null;
+var _ldmBarInterval = null;
+var _ldmClockInterval = null;
+var _ldmFpsFrames = 0;
+var _ldmFpsLast = performance.now();
+var _ldmFpsVal = 60;
+
 function initCounters() {
-    function gc(id, target, suffix) {
-        suffix = suffix || '+';
-        var el = document.getElementById(id);
-        if (!el) return;
-        var chars = '0123456789_/#@!?';
-        var st = performance.now();
-        (function tick(now) {
-            var p = Math.min((now - st) / 2200, 1);
-            if (p >= 1) { el.textContent = target + suffix; el.classList.add('done'); return; }
-            if (Math.random() < 1 - p) {
-                var t = String(target), r = '';
-                for (var i = 0; i < t.length; i++) r += Math.random() < (1 - p) * 0.6 ? chars[Math.floor(Math.random() * chars.length)] : t[i];
-                el.textContent = r;
-            } else { el.textContent = Math.floor(target * p); }
-            requestAnimationFrame(tick);
-        })(performance.now());
-    }
+    if (_ldmInited) return;
+    _ldmInited = true;
+    _ldmScramble();
+    _ldmInitWaveform();
+    _ldmInitBars();
+    _ldmInitClock();
+    _ldmInitFps();
+}
+
+/* --- 7a. Scramble lalu mulai live tick --- */
+function _ldmScramble() {
+    var chars = '0123456789_/#@!?';
+    var ids = ['c4', 'c5', 'c6', 'c7'];
+    var fired = false;
+
     var obs = new IntersectionObserver(function (e) {
         for (var i = 0; i < e.length; i++) {
-            if (e[i].isIntersecting) { gc('c4',247,'+'); gc('c5',53,'+'); gc('c6',189,'+'); gc('c7',412,'+'); obs.disconnect(); }
+            if (e[i].isIntersecting && !fired) {
+                fired = true;
+                for (var j = 0; j < ids.length; j++) {
+                    (function (id, target) {
+                        var el = document.getElementById(id);
+                        if (!el) return;
+                        var st = performance.now();
+                        (function tick(now) {
+                            var p = Math.min((now - st) / 2200, 1);
+                            if (p >= 1) {
+                                el.textContent = target + '+';
+                                el.classList.add('done');
+                                return;
+                            }
+                            if (Math.random() < 1 - p) {
+                                var t = String(target), r = '';
+                                for (var k = 0; k < t.length; k++) r += Math.random() < (1 - p) * 0.6 ? chars[Math.floor(Math.random() * chars.length)] : t[k];
+                                el.textContent = r;
+                            } else {
+                                el.textContent = Math.floor(target * p);
+                            }
+                            requestAnimationFrame(tick);
+                        })(performance.now());
+                    })(ids[j], _ldmTargets[ids[j]]);
+                }
+                obs.disconnect();
+                // Setelah scramble selesai, mulai live ticking
+                setTimeout(function () {
+                    _ldmCurrent = { c4: 247, c5: 53, c6: 189, c7: 412 };
+                    _ldmStartTicking();
+                }, 2400);
+            }
         }
     }, { threshold: 0.5 });
     var c4 = document.getElementById('c4');
     if (c4) obs.observe(c4);
+}
+
+/* --- 7b. Live ticking angka --- */
+function _ldmStartTicking() {
+    if (_ldmTickInterval) return;
+    _ldmTickInterval = setInterval(function () {
+        // Timeline hours — naik pelan tiap 3-7 detik
+        if (Math.random() < 0.35) {
+            _ldmCurrent.c4++;
+            _ldmUpdateNum('c4', _ldmCurrent.c4);
+        }
+        // Tea — jarang naik
+        if (Math.random() < 0.12) {
+            _ldmCurrent.c6++;
+            _ldmUpdateNum('c6', _ldmCurrent.c6);
+        }
+        // Re-renders — paling sering naik
+        if (Math.random() < 0.45) {
+            _ldmCurrent.c7++;
+            _ldmUpdateNum('c7', _ldmCurrent.c7);
+        }
+        // Projects — sangat jarang
+        if (Math.random() < 0.02) {
+            _ldmCurrent.c5++;
+            _ldmUpdateNum('c5', _ldmCurrent.c5);
+        }
+    }, 3000 + Math.random() * 4000);
+
+    // Glitch sesekali
+    _ldmGlitchInterval = setInterval(function () {
+        var ids = ['c4', 'c5', 'c6', 'c7'];
+        var id = ids[Math.floor(Math.random() * ids.length)];
+        var el = document.getElementById(id);
+        if (!el || !el.classList.contains('done')) return;
+
+        var original = el.textContent;
+        var numStr = original.replace('+', '');
+        var chars = '0123456789';
+        var glitched = '';
+        for (var i = 0; i < numStr.length; i++) {
+            glitched += Math.random() < 0.5 ? chars[Math.floor(Math.random() * chars.length)] : numStr[i];
+        }
+
+        el.classList.add('glitch-tick');
+        el.textContent = glitched + '+';
+
+        setTimeout(function () {
+            el.textContent = original;
+            el.classList.remove('glitch-tick');
+        }, 120 + Math.random() * 100);
+    }, 5000 + Math.random() * 8000);
+}
+
+function _ldmUpdateNum(id, value) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = value + '+';
+}
+
+/* --- 7c. Waveform canvas --- */
+function _ldmInitWaveform() {
+    _ldmWaveCanvas = document.getElementById('ldmWaveform');
+    if (!_ldmWaveCanvas) return;
+    _ldmWaveCtx = _ldmWaveCanvas.getContext('2d');
+    if (!_ldmWaveCtx) return;
+
+    function resize() {
+        var rect = _ldmWaveCanvas.parentElement.getBoundingClientRect();
+        _ldmWaveCanvas.width = rect.width;
+        _ldmWaveCanvas.height = rect.height;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var phase = 0;
+    var ampMod = 1;
+
+    function draw() {
+        if (!_ldmWaveCtx || !_ldmWaveCanvas) { _ldmWaveRAF = null; return; }
+        var w = _ldmWaveCanvas.width;
+        var h = _ldmWaveCanvas.height;
+        _ldmWaveCtx.clearRect(0, 0, w, h);
+
+        // Amplitude modulasi biar hidup
+        ampMod += (Math.random() - 0.5) * 0.05;
+        ampMod = Math.max(0.5, Math.min(1.3, ampMod));
+
+        var mid = h / 2;
+
+        // Layer 1 — emerald utama
+        _ldmWaveCtx.beginPath();
+        _ldmWaveCtx.strokeStyle = 'rgba(16,185,129,0.22)';
+        _ldmWaveCtx.lineWidth = 1;
+        for (var x = 0; x < w; x++) {
+            var t = x / w;
+            var y = mid +
+                Math.sin(t * 14 + phase) * h * 0.18 * ampMod +
+                Math.sin(t * 28 + phase * 1.6) * h * 0.06 * ampMod +
+                Math.sin(t * 7 + phase * 0.8) * h * 0.1 * ampMod +
+                (Math.random() - 0.5) * h * 0.025;
+            if (x === 0) _ldmWaveCtx.moveTo(x, y);
+            else _ldmWaveCtx.lineTo(x, y);
+        }
+        _ldmWaveCtx.stroke();
+
+        // Layer 2 — cyan secondary
+        _ldmWaveCtx.beginPath();
+        _ldmWaveCtx.strokeStyle = 'rgba(6,182,212,0.09)';
+        _ldmWaveCtx.lineWidth = 0.7;
+        for (var x2 = 0; x2 < w; x2++) {
+            var t2 = x2 / w;
+            var y2 = mid +
+                Math.sin(t2 * 20 + phase * 1.4) * h * 0.13 * ampMod +
+                Math.sin(t2 * 35 + phase * 0.9) * h * 0.04 * ampMod +
+                (Math.random() - 0.5) * h * 0.018;
+            if (x2 === 0) _ldmWaveCtx.moveTo(x2, y2);
+            else _ldmWaveCtx.lineTo(x2, y2);
+        }
+        _ldmWaveCtx.stroke();
+
+        // Layer 3 — subtle amber (sparce)
+        if (Math.random() > 0.92) {
+            _ldmWaveCtx.beginPath();
+            _ldmWaveCtx.strokeStyle = 'rgba(245,158,11,0.06)';
+            _ldmWaveCtx.lineWidth = 0.5;
+            for (var x3 = 0; x3 < w; x3 += 2) {
+                var t3 = x3 / w;
+                var y3 = mid +
+                    Math.sin(t3 * 40 + phase * 2) * h * 0.08 +
+                    (Math.random() - 0.5) * h * 0.04;
+                if (x3 === 0) _ldmWaveCtx.moveTo(x3, y3);
+                else _ldmWaveCtx.lineTo(x3, y3);
+            }
+            _ldmWaveCtx.stroke();
+        }
+
+        phase += 0.025;
+        _ldmWaveRAF = requestAnimationFrame(draw);
+    }
+    _ldmWaveRAF = requestAnimationFrame(draw);
+}
+
+/* --- 7d. Activity bars --- */
+function _ldmInitBars() {
+    var container = document.getElementById('ldmBars');
+    if (!container) return;
+    var count = 48;
+    var bars = [];
+
+    for (var i = 0; i < count; i++) {
+        var bar = document.createElement('div');
+        bar.className = 'ldm-bar';
+        bar.style.flex = '1';
+        var h = Math.random() * 75 + 10;
+        bar.style.height = h + '%';
+        bar.style.background = h > 70 ? 'rgba(16,185,129,0.35)' : h > 40 ? 'rgba(16,185,129,0.2)' : 'rgba(16,185,129,0.08)';
+        container.appendChild(bar);
+        bars.push(bar);
+    }
+
+    _ldmBarInterval = setInterval(function () {
+        for (var j = 0; j < bars.length; j++) {
+            var nh = Math.random() * 75 + 10;
+            bars[j].style.height = nh + '%';
+            bars[j].style.background = nh > 70 ? 'rgba(16,185,129,0.35)' : nh > 40 ? 'rgba(16,185,129,0.2)' : 'rgba(16,185,129,0.08)';
+        }
+    }, 2500 + Math.random() * 2000);
+}
+
+/* --- 7e. Clock, uptime, ping --- */
+function _ldmInitClock() {
+    function update() {
+        var now = new Date();
+        var ts = now.toTimeString().split(' ')[0];
+        var tsEl = document.getElementById('ldmTimestamp');
+        if (tsEl) tsEl.textContent = 'SYS::STATS_01 // ' + ts;
+
+        var diff = Math.floor((Date.now() - _ldmStartTime) / 1000);
+        var uh = String(Math.floor(diff / 3600)).padStart(2, '0');
+        var um = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+        var us = String(diff % 60).padStart(2, '0');
+        var upEl = document.getElementById('ldmUptime');
+        if (upEl) upEl.textContent = 'UPTIME: ' + uh + ':' + um + ':' + us;
+
+        var ping = Math.floor(6 + Math.random() * 18);
+        var pingEl = document.getElementById('ldmPing');
+        if (pingEl) pingEl.textContent = 'PING: ' + ping + 'ms';
+
+        var freq = (47.8 + Math.random() * 0.4).toFixed(1);
+        var freqEl = document.getElementById('ldmFreq');
+        if (freqEl) freqEl.textContent = freq + ' kHz';
+    }
+    update();
+    _ldmClockInterval = setInterval(update, 1000);
+}
+
+/* --- 7f. FPS counter (fake tapi smooth) --- */
+function _ldmInitFps() {
+    var fpsEl = document.getElementById('ldmFps');
+    if (!fpsEl) return;
+
+    function fpsLoop() {
+        _ldmFpsFrames++;
+        var now = performance.now();
+        if (now - _ldmFpsLast >= 1000) {
+            // Smooth fake FPS antara 58-62
+            _ldmFpsVal = Math.max(58, Math.min(62, _ldmFpsVal + (Math.random() - 0.5) * 2));
+            fpsEl.textContent = 'FPS: ' + Math.round(_ldmFpsVal);
+            _ldmFpsFrames = 0;
+            _ldmFpsLast = now;
+        }
+        requestAnimationFrame(fpsLoop);
+    }
+    requestAnimationFrame(fpsLoop);
 }
 
 /* ==========================================
@@ -931,5 +1188,54 @@ function initBackToTop() {
 window.scrollToTop = function () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
+
+/* ---------- 24e. Hero video play/pause toggle ---------- */
+function initHeroVideo() {
+    var vid = document.getElementById('heroVid');
+    var btn = document.getElementById('heroPlayBtn');
+    if (!vid || !btn) return;
+
+    // Video mulai auto-play
+    vid.play().catch(function() {});
+
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (vid.paused) {
+            vid.play().catch(function() {});
+            btn.innerHTML = '<iconify-icon icon="mdi:play" class="text-emerald-400 text-lg sm:text-xl md:text-2xl ml-0.5"></iconify-icon>';
+            btn.style.borderColor = 'rgba(16,185,129,.5)';
+            setTimeout(function() { btn.style.borderColor = ''; }, 600);
+        } else {
+            vid.pause();
+            btn.innerHTML = '<iconify-icon icon="mdi:pause" class="text-emerald-400 text-lg sm:text-xl md:text-2xl"></iconify-icon>';
+            btn.style.borderColor = 'rgba(16,185,129,.5)';
+            setTimeout(function() { btn.style.borderColor = ''; }, 600);
+        }
+    });
+
+    // Saat video bermain, sembunyikan ikon pelan
+    vid.addEventListener('playing', function() {
+        btn.style.opacity = '0';
+        btn.style.transform = 'scale(0.8)';
+    });
+    vid.addEventListener('pause', function() {
+        btn.style.opacity = '1';
+        btn.style.transform = 'scale(1)';
+    });
+    // Hover di container: munculin lagi
+    var container = vid.closest('.gh-scanline');
+    if (container) {
+        container.addEventListener('mouseenter', function() {
+            btn.style.opacity = '1';
+            btn.style.transform = 'scale(1)';
+        });
+        container.addEventListener('mouseleave', function() {
+            if (!vid.paused) {
+                btn.style.opacity = '0';
+                btn.style.transform = 'scale(0.8)';
+            }
+        });
+    }
+}
 
 console.log('>>> CEPEDIT ready (enhanced)');
