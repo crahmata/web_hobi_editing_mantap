@@ -1,5 +1,5 @@
 /* ============================================
-   CEPEDIT — script.js (COMPLETE)
+   CEPEDIT — script.js (COMPLETE + ENHANCEMENTS)
    ============================================ */
 console.log('>>> CEPEDIT loaded');
 
@@ -124,6 +124,11 @@ function initAllEffects() {
     try { initToolClicks(); } catch (e) { console.warn('initToolClicks:', e); }
     try { initKaryaClicks(); } catch (e) { console.warn('initKaryaClicks:', e); }
     try { initKaryaVideos(); } catch (e) { console.warn('initKaryaVideos:', e); }
+    /* ==== ENHANCEMENT: fitur baru ==== */
+    try { initViewfinderCursor(); } catch (e) { console.warn('initViewfinderCursor:', e); }
+    try { initScrollTimeline(); } catch (e) { console.warn('initScrollTimeline:', e); }
+    try { initHeroTilt(); } catch (e) { console.warn('initHeroTilt:', e); }
+    try { initBackToTop(); } catch (e) { console.warn('initBackToTop:', e); }
 }
 
 /* ==========================================
@@ -404,6 +409,9 @@ window.cmob = function () {
 };
 
 window.go = function (page) {
+    /* ==== ENHANCEMENT: glitch flash tiap pindah halaman ==== */
+    fireGlitchTransition();
+
     var pages = document.querySelectorAll('.page');
     for (var i = 0; i < pages.length; i++) pages[i].classList.remove('on');
     var target = document.getElementById('pg-' + page);
@@ -797,4 +805,131 @@ window.addEventListener('beforeunload', function () {
     for (var j = 0; j < videos.length; j++) { videos[j].pause(); videos[j].removeAttribute('src'); }
 });
 
-console.log('>>> CEPEDIT ready');
+/* ============================================================
+   ==========  BAGIAN 24: ENHANCEMENT PASS (BARU)  =============
+   ============================================================ */
+
+/* ---------- 24a. Custom viewfinder cursor ---------- */
+function initViewfinderCursor() {
+    var isFinePointer = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    if (!isFinePointer) return; // jangan aktif di HP/tablet
+
+    var cursor = document.getElementById('vfCursor');
+    var labelEl = document.getElementById('vfLabel');
+    if (!cursor) return;
+
+    var mx = 0, my = 0, cx = 0, cy = 0;
+    var active = false;
+
+    function onMove(e) {
+        mx = e.clientX; my = e.clientY;
+        if (!active) {
+            active = true;
+            cursor.classList.add('active');
+            document.body.classList.add('vf-active');
+        }
+    }
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseleave', function () {
+        active = false;
+        cursor.classList.remove('active');
+        document.body.classList.remove('vf-active');
+    });
+    document.addEventListener('mousedown', function () { cursor.classList.add('clicking'); });
+    document.addEventListener('mouseup', function () { cursor.classList.remove('clicking'); });
+
+    function raf() {
+        // smooth follow (lerp)
+        cx += (mx - cx) * 0.22;
+        cy += (my - cy) * 0.22;
+        cursor.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
+        requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Hover state pada elemen interaktif
+    document.addEventListener('mouseover', function (e) {
+        var t = e.target.closest('a, button, .karya-clickable, .tool-card, [data-cursor]');
+        if (t) {
+            cursor.classList.add('hovering');
+            var lbl = t.getAttribute('data-cursor');
+            if (labelEl) labelEl.textContent = lbl || 'Klik';
+        }
+    });
+    document.addEventListener('mouseout', function (e) {
+        var t = e.target.closest('a, button, .karya-clickable, .tool-card, [data-cursor]');
+        if (t) {
+            cursor.classList.remove('hovering');
+        }
+    });
+}
+
+/* ---------- 24b. Scroll timeline (progress bar) ---------- */
+function initScrollTimeline() {
+    var fill = document.getElementById('scrollTimelineFill');
+    if (!fill) return;
+    function update() {
+        var page = document.querySelector('.page.on');
+        var h = document.documentElement.scrollHeight - window.innerHeight;
+        var scrolled = window.scrollY || document.documentElement.scrollTop;
+        var pct = h > 0 ? Math.min(100, Math.max(0, (scrolled / h) * 100)) : 0;
+        fill.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+}
+
+/* ---------- 24c. Page transition glitch flash ---------- */
+function fireGlitchTransition() {
+    var g = document.getElementById('pageGlitch');
+    if (!g) return;
+    g.classList.remove('fire');
+    void g.offsetWidth;
+    g.classList.add('fire');
+    setTimeout(function () { g.classList.remove('fire'); }, 450);
+}
+
+/* ---------- 24d. Hero tilt (parallax mouse-move) ---------- */
+function initHeroTilt() {
+    var isFinePointer = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    if (!isFinePointer) return;
+    var el = document.getElementById('heroTilt');
+    if (!el || el._tiltInit) return;
+    el._tiltInit = true;
+
+    var section = document.querySelector('.hero-section');
+    if (!section) return;
+
+    section.addEventListener('mousemove', function (e) {
+        var rect = el.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        var dx = (e.clientX - cx) / (rect.width / 2);
+        var dy = (e.clientY - cy) / (rect.height / 2);
+        var rx = Math.max(-1, Math.min(1, -dy)) * 6;
+        var ry = Math.max(-1, Math.min(1, dx)) * 8;
+        el.style.transform = 'perspective(900px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(0)';
+    });
+    section.addEventListener('mouseleave', function () {
+        el.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+    });
+}
+
+/* ---------- 24e. Back to top ---------- */
+function initBackToTop() {
+    var btn = document.getElementById('backToTop');
+    if (!btn) return;
+    function update() {
+        if ((window.scrollY || document.documentElement.scrollTop) > 500) btn.classList.add('show');
+        else btn.classList.remove('show');
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+}
+
+window.scrollToTop = function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+console.log('>>> CEPEDIT ready (enhanced)');

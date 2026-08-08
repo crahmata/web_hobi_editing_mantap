@@ -24,6 +24,25 @@
 </head>
 <body>
 
+<!-- ===== CUSTOM VIEWFINDER CURSOR (desktop only, added via JS) ===== -->
+<div id="vfCursor" class="vf-cursor" aria-hidden="true">
+    <div class="vf-dot"></div>
+    <div class="vf-ring"></div>
+    <div class="vf-tick vf-tick-t"></div>
+    <div class="vf-tick vf-tick-b"></div>
+    <div class="vf-tick vf-tick-l"></div>
+    <div class="vf-tick vf-tick-r"></div>
+    <span class="vf-label" id="vfLabel"></span>
+</div>
+
+<!-- ===== SCROLL PROGRESS (timeline scrubber) ===== -->
+<div id="scrollTimeline" class="scroll-timeline" aria-hidden="true">
+    <div id="scrollTimelineFill" class="scroll-timeline-fill"></div>
+</div>
+
+<!-- ===== PAGE TRANSITION GLITCH FLASH ===== -->
+<div id="pageGlitch" class="page-glitch" aria-hidden="true"></div>
+
 <!-- ===== LOADER ===== -->
 <div id="loader">
     <div id="loaderFlash"></div>
@@ -125,12 +144,12 @@
                         </h1>
                         <p class="fu d3 text-[13px] sm:text-[14px] md:text-base text-slate-400 leading-relaxed max-w-lg">Bayangkan punya kekuatan untuk mengubah footage mentah jadi sesuatu yang bikin orang merinding. Ini bukan tugas — ini <span class="text-white">obsesi yang menyenangkan</span>.</p>
                         <div class="fu d5 flex flex-wrap gap-2.5">
-                            <button onclick="go('hobi')" class="gbtn gbtn-glitch text-[12px] sm:text-[14px] font-medium text-emerald-400 px-5 sm:px-7 py-2.5 sm:py-3">Pelajari Hobiku</button>
-                            <button onclick="go('karya')" class="gbtn gbtn-glitch text-[12px] sm:text-[14px] font-medium text-slate-400 hover:text-white px-5 sm:px-7 py-2.5 sm:py-3 rounded-full border border-white/10 hover:border-white/20 transition-all cursor-pointer min-h-[42px]">Lihat Hasilnya</button>
+                            <button onclick="go('hobi')" class="gbtn gbtn-glitch text-[12px] sm:text-[14px] font-medium text-emerald-400 px-5 sm:px-7 py-2.5 sm:py-3" data-cursor="Buka">Pelajari Hobiku</button>
+                            <button onclick="go('karya')" class="gbtn gbtn-glitch text-[12px] sm:text-[14px] font-medium text-slate-400 hover:text-white px-5 sm:px-7 py-2.5 sm:py-3 rounded-full border border-white/10 hover:border-white/20 transition-all cursor-pointer min-h-[42px]" data-cursor="Lihat">Lihat Hasilnya</button>
                         </div>
                     </div>
                     <div class="lg:col-span-5 fu d5 relative flex justify-center mt-2 lg:mt-0">
-                        <div class="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[420px]">
+                        <div class="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[420px] hero-tilt" id="heroTilt">
                             <div class="relative rounded-xl overflow-hidden border border-white/[0.08] bg-[#0A0B0E] gh-scanline gh-scanline-dual gh-chroma-intense gh-border-flash">
                                 <img src="https://picsum.photos/seed/vidhero77/600/450.jpg" alt="Cinematic Night Edit" class="w-full h-[200px] sm:h-[260px] md:h-[370px] object-cover">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
@@ -139,7 +158,7 @@
                                 <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 w-5 h-5 sm:w-6 sm:h-6 border-b-2 border-l-2 border-emerald-500/50"></div>
                                 <div class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 w-5 h-5 sm:w-6 sm:h-6 border-b-2 border-r-2 border-emerald-500/50"></div>
                                 <div class="absolute inset-0 flex items-center justify-center">
-                                    <button onclick="toast('Video demo segera!')" class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-emerald-500/10 backdrop-blur border border-emerald-500/25 flex items-center justify-center hover:bg-emerald-500/20 hover:scale-110 transition-all cursor-pointer" style="animation:pr 3s ease infinite">
+                                    <button onclick="toast('Video demo segera!')" class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-emerald-500/10 backdrop-blur border border-emerald-500/25 flex items-center justify-center hover:bg-emerald-500/20 hover:scale-110 transition-all cursor-pointer" style="animation:pr 3s ease infinite" data-cursor="Play">
                                         <iconify-icon icon="mdi:play" class="text-emerald-400 text-lg sm:text-xl md:text-2xl ml-0.5"></iconify-icon>
                                     </button>
                                 </div>
@@ -345,7 +364,7 @@
                                 <p class="text-[11px] sm:text-xs md:text-sm text-slate-400 leading-relaxed max-w-lg mx-auto md:mx-0">Yang sebenarnya terjadi jauh lebih dalam.</p>
                             </div>
                             <div class="flex-shrink-0 bcta-r">
-                                <button onclick="go('hobi')" class="gbtn gbtn-glitch text-[12px] sm:text-[14px] md:text-[15px] font-medium text-emerald-400 px-6 sm:px-8 py-2.5 sm:py-4 w-full sm:w-auto">Masuk Kedalaman <iconify-icon icon="mdi:arrow-right" class="ml-1 text-sm sm:text-base align-middle"></iconify-icon></button>
+                                <button onclick="go('hobi')" class="gbtn gbtn-glitch text-[12px] sm:text-[14px] md:text-[15px] font-medium text-emerald-400 px-6 sm:px-8 py-2.5 sm:py-4 w-full sm:w-auto" data-cursor="Buka">Masuk Kedalaman <iconify-icon icon="mdi:arrow-right" class="ml-1 text-sm sm:text-base align-middle"></iconify-icon></button>
                                 <div class="font-mono text-[7px] sm:text-[8px] text-neutral-700 text-center mt-2">ATAU LANJUT SCROLL</div>
                             </div>
                         </div>
@@ -444,7 +463,7 @@
                 </div>
                 <div class="rv tool-grid">
                     <!-- CapCut Card -->
-                    <div class="tool-card" data-tool="capcut">
+                    <div class="tool-card" data-tool="capcut" data-cursor="Detail">
     <div class="tool-card-img" style="display:flex;align-items:center;justify-content:center;background:#08090b">
         <img src="https://z-cdn-media.chatglm.cn/files/936c4499-c915-4d37-84f1-a6e2f693eca1.png?auth_key=1886094371-c9c11405413a4bb6b8eeb9f2a97e4260-0-5a94058a648e54a188373192c9b58787" alt="CapCut" style="filter:invert(1) brightness(1.5);width:55%;height:auto;object-fit:contain">
         <div class="tool-card-img-grad"></div>
@@ -459,7 +478,7 @@
     </div>
                     </div>
                     <!-- Alight Motion Card -->
-                   <div class="tool-card tool-card-cyan" data-tool="alight">
+                   <div class="tool-card tool-card-cyan" data-tool="alight" data-cursor="Detail">
     <div class="tool-card-img">
         <img src="https://z-cdn-media.chatglm.cn/files/a0dd12fc-19fb-40e8-baa2-84922bdc615b.jpg?auth_key=1886094371-7002179ea99d478bafdba18c9387ed4d-0-17bc50ac1dd52469a9c11f27fcfe31e2" alt="Alight Motion">
         <div class="tool-card-img-grad"></div>
@@ -517,7 +536,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5" id="karyaGrid">
 
                     <!-- Karya 1 -->
-                    <div class="kc karya-clickable" data-k="cinematic" data-kid="karya1">
+                    <div class="kc karya-clickable" data-k="cinematic" data-kid="karya1" data-cursor="Play">
                         <div class="relative kimg overflow-hidden">
                             <video class="karya-vid" src="WhatsApp Video 2026-08-03 at 07.49.49.mp4" loop muted playsinline preload="metadata"></video>
                             <div class="karya-vid-play"><iconify-icon icon="mdi:play" class="text-xl"></iconify-icon></div>
@@ -527,7 +546,7 @@
                     </div>
 
                     <!-- Karya 2 -->
-                    <div class="kc karya-clickable" data-k="mv" data-kid="karya2">
+                    <div class="kc karya-clickable" data-k="mv" data-kid="karya2" data-cursor="Play">
                         <div class="relative kimg overflow-hidden">
                             <video class="karya-vid" src="WhatsApp Video 2026-08-03 at 07.49.54.mp4" loop muted playsinline preload="metadata"></video>
                             <div class="karya-vid-play"><iconify-icon icon="mdi:play" class="text-xl"></iconify-icon></div>
@@ -537,7 +556,7 @@
                     </div>
 
                     <!-- Karya 3 -->
-                    <div class="kc karya-clickable" data-k="short" data-kid="karya3">
+                    <div class="kc karya-clickable" data-k="short" data-kid="karya3" data-cursor="Play">
                         <div class="relative kimg overflow-hidden">
                             <video class="karya-vid" src="WhatsApp Video 2026-08-03 at 07.50.19 (1).mp4" loop muted playsinline preload="metadata"></video>
                             <div class="karya-vid-play"><iconify-icon icon="mdi:play" class="text-xl"></iconify-icon></div>
@@ -547,7 +566,7 @@
                     </div>
 
                     <!-- Karya 4 -->
-                    <div class="kc karya-clickable" data-k="client" data-kid="karya4">
+                    <div class="kc karya-clickable" data-k="client" data-kid="karya4" data-cursor="Play">
                         <div class="relative kimg overflow-hidden">
                             <video class="karya-vid" src="WhatsApp Video 2026-08-03 at 07.50.19.mp4" loop muted playsinline preload="metadata"></video>
                             <div class="karya-vid-play"><iconify-icon icon="mdi:play" class="text-xl"></iconify-icon></div>
@@ -557,7 +576,7 @@
                     </div>
 
                     <!-- Karya 5 -->
-                    <div class="kc karya-clickable" data-k="cinematic" data-kid="karya5">
+                    <div class="kc karya-clickable" data-k="cinematic" data-kid="karya5" data-cursor="Play">
                         <div class="relative kimg overflow-hidden">
                             <video class="karya-vid" src="WhatsApp Video 2026-08-03 at 11.47.43.mp4" loop muted playsinline preload="metadata"></video>
                             <div class="karya-vid-play"><iconify-icon icon="mdi:play" class="text-xl"></iconify-icon></div>
@@ -567,7 +586,7 @@
                     </div>
 
                     <!-- Karya 6 -->
-                    <div class="kc karya-clickable" data-k="mv" data-kid="karya6">
+                    <div class="kc karya-clickable" data-k="mv" data-kid="karya6" data-cursor="Play">
                         <div class="relative kimg overflow-hidden">
                             <video class="karya-vid" src="WhatsApp Video 2026-08-03 at 11.48.02.mp4" loop muted playsinline preload="metadata"></video>
                             <div class="karya-vid-play"><iconify-icon icon="mdi:play" class="text-xl"></iconify-icon></div>
@@ -582,6 +601,15 @@
     </div>
 
 </div><!-- /mainContent -->
+
+<!-- ===== BACK TO TOP (viewfinder style) ===== -->
+<button id="backToTop" class="back-to-top" onclick="scrollToTop()" aria-label="Kembali ke atas" data-cursor="Naik">
+    <span class="btt-corner btt-tl"></span>
+    <span class="btt-corner btt-tr"></span>
+    <span class="btt-corner btt-bl"></span>
+    <span class="btt-corner btt-br"></span>
+    <iconify-icon icon="mdi:chevron-up" class="text-emerald-400 text-lg"></iconify-icon>
+</button>
 
 <!-- ============================================================
      OVERLAY: DETAIL KARYA
@@ -649,8 +677,9 @@
 <!-- ============================================================
      OVERLAY: DETAIL ALIGHT MOTION
      FIX: Elemen ini TIDAK ADA di HTML lama
+     FIX BUG: tag pembuka sebelumnya "<<div" (double `<`) — diperbaiki jadi "<div"
      ============================================================ -->
-<<div id="detailAlight" class="detail-overlay">
+<div id="detailAlight" class="detail-overlay">
     <div class="detail-bg">
         <img src="https://z-cdn-media.chatglm.cn/files/a0dd12fc-19fb-40e8-baa2-84922bdc615b.jpg?auth_key=1886094371-7002179ea99d478bafdba18c9387ed4d-0-17bc50ac1dd52469a9c11f27fcfe31e2" alt="Alight Motion" style="filter:brightness(0.5) blur(3px);transform:scale(1.15)">
         <div class="detail-bg-tool-glow detail-bg-glow-cyan"></div>

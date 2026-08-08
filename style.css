@@ -336,12 +336,10 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
 .detail-back-area{padding:2.5rem 0 3rem!important;display:flex;justify-content:center}
 
 /* ========== KARYA DETAIL PLAYER ========== */
-/* FIX: Added missing base styles for .karya-player */
 .karya-player{position:relative;overflow:hidden;border-radius:12px;border:1px solid rgba(255,255,255,.06);background:#08090b;height:280px!important;max-height:42vh!important}
 @media(min-width:640px){.karya-player{height:360px!important;max-height:50vh!important}}
 @media(min-width:1024px){.karya-player{height:420px!important;max-height:55vh!important}}
 
-/* FIX: Added missing .karya-player-hud */
 .karya-player-hud{position:absolute;top:0;left:0;right:0;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;z-index:5;pointer-events:none}
 .karya-player-hud span{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(16,185,129,.4);letter-spacing:.06em}
 
@@ -349,13 +347,11 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
 .karya-player-bar-track{height:4px;background:rgba(255,255,255,.1);border-radius:3px;overflow:visible;cursor:pointer;pointer-events:auto;position:relative;transition:height .15s ease}
 .karya-player-bar-track:hover{height:6px}
 
-/* FIX: Removed duplicate definition — now only ONE correct definition without slow transition */
 .karya-player-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:3px;position:relative;pointer-events:none;transition:none}
 .karya-player-bar-track:hover .karya-player-bar-fill{background:linear-gradient(90deg,#10b981,#6ee7b7)}
 .karya-player-bar-thumb{position:absolute;right:-6px;top:50%;transform:translateY(-50%) scale(0);width:12px;height:12px;border-radius:50%;background:#34d399;border:2px solid #0a0b0e;box-shadow:0 0 8px rgba(16,185,129,.4);pointer-events:none;transition:transform .15s ease}
 .karya-player-bar-track:hover .karya-player-bar-thumb{transform:translateY(-50%) scale(1)}
 
-/* FIX: Removed duplicate definition — now only ONE correct definition */
 .karya-player-bar-times{display:flex;justify-content:space-between;margin-top:5px;pointer-events:none}
 .karya-player-bar-times span{font-family:'JetBrains Mono',monospace;font-size:8px;color:rgba(255,255,255,.3);transition:color .15s ease}
 .karya-player-bar-track:hover~.karya-player-bar-times span{color:rgba(255,255,255,.5)}
@@ -398,10 +394,8 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
 .karya-player:has(.karya-detail-vid) .karya-player-overlay{display:none}
 .karya-player:has(.karya-detail-vid) img{display:none}
 
-/* FIX: Added missing sound toggle styles + fixed selector bug */
 .karya-detail-sound{position:absolute;bottom:52px;right:14px;z-index:6;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease;color:rgba(255,255,255,.6)}
 .karya-detail-sound:hover{background:rgba(0,0,0,.7);border-color:rgba(16,185,129,.3);color:rgba(16,185,129,.9);transform:scale(1.1)}
-/* FIX: was ".karya-detail-sound sound-on:hover" (missing dot) */
 .karya-detail-sound.sound-on{border-color:rgba(16,185,129,.3);color:rgba(16,185,129,.8)}
 .karya-detail-sound.sound-on:hover{border-color:rgba(16,185,129,.5);color:rgba(16,185,129,1)}
 
@@ -535,7 +529,6 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
     opacity: 1;
 }
 
-/* Emerald glow untuk CapCut */
 .detail-bg-glow-emerald {
     background:
         radial-gradient(ellipse 50% 40% at 30% 50%, rgba(16,185,129,0.15) 0%, transparent 70%),
@@ -544,7 +537,6 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
     animation: toolGlowPulse 6s ease-in-out infinite;
 }
 
-/* Cyan glow untuk Alight Motion */
 .detail-bg-glow-cyan {
     background:
         radial-gradient(ellipse 50% 40% at 70% 45%, rgba(6,182,212,0.15) 0%, transparent 70%),
@@ -558,7 +550,6 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
     50% { opacity: 1; }
 }
 
-/* Grid lines overlay di background detail */
 .detail-bg::after {
     content: '';
     position: absolute;
@@ -570,4 +561,198 @@ footer a{transition:color .2s}footer a:hover{color:#10b981}
         linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
     background-size: 60px 60px;
     opacity: 0.5;
+}
+
+/* ============================================================
+   ==========  TAMBAHAN BARU (ENHANCEMENT PASS)  ==============
+   ============================================================ */
+
+/* ---------- 1. SCROLL TIMELINE (progress bar ala video editor) ---------- */
+.scroll-timeline{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:2px;
+    z-index:250;
+    background:rgba(255,255,255,.03);
+    pointer-events:none;
+}
+.scroll-timeline-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#059669,#34d399,#06b6d4);
+    box-shadow:0 0 8px rgba(16,185,129,.5);
+    transition:width .1s linear;
+    position:relative;
+}
+.scroll-timeline-fill::after{
+    content:'';
+    position:absolute;
+    right:0;
+    top:-2px;
+    width:2px;
+    height:6px;
+    background:#fff;
+    box-shadow:0 0 6px rgba(52,211,153,.9);
+}
+
+/* ---------- 2. PAGE TRANSITION GLITCH FLASH ---------- */
+.page-glitch{
+    position:fixed;
+    inset:0;
+    z-index:260;
+    pointer-events:none;
+    opacity:0;
+    background:
+        linear-gradient(90deg,transparent 0%,rgba(16,185,129,.08) 50%,transparent 100%),
+        repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.02) 2px,rgba(255,255,255,.02) 3px);
+}
+.page-glitch.fire{
+    animation:pageGlitchFire .38s steps(4) forwards;
+}
+@keyframes pageGlitchFire{
+    0%{opacity:0;clip-path:inset(0 0 100% 0)}
+    20%{opacity:.9;clip-path:inset(10% 0 55% 0)}
+    40%{opacity:.5;clip-path:inset(60% 0 5% 0)}
+    60%{opacity:.8;clip-path:inset(20% 0 40% 0)}
+    80%{opacity:.3;clip-path:inset(80% 0 0 0)}
+    100%{opacity:0;clip-path:inset(0 0 100% 0)}
+}
+
+/* ---------- 3. CUSTOM VIEWFINDER CURSOR ---------- */
+.vf-cursor{
+    position:fixed;
+    top:0;
+    left:0;
+    width:0;
+    height:0;
+    pointer-events:none;
+    z-index:9998;
+    transform:translate(-50%,-50%);
+    opacity:0;
+    transition:opacity .3s ease;
+    mix-blend-mode:screen;
+}
+.vf-cursor.active{opacity:1}
+.vf-dot{
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    width:5px;height:5px;
+    border-radius:50%;
+    background:#34d399;
+    box-shadow:0 0 8px rgba(52,211,153,.8);
+}
+.vf-ring{
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    width:26px;height:26px;
+    border-radius:50%;
+    border:1px solid rgba(16,185,129,.35);
+    transition:width .2s ease,height .2s ease,border-color .2s ease,background .2s ease;
+}
+.vf-tick{
+    position:absolute;
+    background:rgba(16,185,129,.4);
+    transition:opacity .2s ease;
+}
+.vf-tick-t{top:-14px;left:50%;transform:translateX(-50%);width:1px;height:8px}
+.vf-tick-b{bottom:-14px;left:50%;transform:translateX(-50%);width:1px;height:8px}
+.vf-tick-l{left:-14px;top:50%;transform:translateY(-50%);width:8px;height:1px}
+.vf-tick-r{right:-14px;top:50%;transform:translateY(-50%);width:8px;height:1px}
+.vf-label{
+    position:absolute;
+    top:18px;
+    left:18px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:8px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:#34d399;
+    background:rgba(5,5,6,.85);
+    border:1px solid rgba(16,185,129,.25);
+    padding:3px 7px;
+    border-radius:4px;
+    white-space:nowrap;
+    opacity:0;
+    transform:translateY(2px);
+    transition:opacity .15s ease,transform .15s ease;
+}
+.vf-cursor.hovering .vf-ring{
+    width:44px;height:44px;
+    border-color:rgba(52,211,153,.7);
+    background:rgba(16,185,129,.06);
+}
+.vf-cursor.hovering .vf-tick{opacity:0}
+.vf-cursor.hovering .vf-label{opacity:1;transform:translateY(0)}
+.vf-cursor.clicking .vf-dot{transform:translate(-50%,-50%) scale(.5)}
+.vf-cursor.clicking .vf-ring{transform:translate(-50%,-50%) scale(.85)}
+
+/* Sembunyikan cursor bawaan hanya saat cursor kustom aktif (desktop, fine pointer) */
+@media (hover:hover) and (pointer:fine){
+    body.vf-active, body.vf-active a, body.vf-active button, body.vf-active .karya-clickable, body.vf-active .tool-card{
+        cursor:none;
+    }
+}
+
+/* ---------- 4. HERO TILT (parallax mouse-move, desktop only) ---------- */
+.hero-tilt{
+    transform-style:preserve-3d;
+    transition:transform .25s cubic-bezier(.22,.61,.36,1);
+    will-change:transform;
+}
+
+/* ---------- 5. BACK TO TOP ---------- */
+.back-to-top{
+    position:fixed;
+    right:16px;
+    bottom:16px;
+    z-index:220;
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    background:rgba(8,9,11,.85);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(16,185,129,.15);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(10px) scale(.9);
+    transition:opacity .3s ease,transform .3s ease,border-color .3s ease,box-shadow .3s ease;
+}
+.back-to-top.show{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0) scale(1);
+}
+.back-to-top:hover{
+    border-color:rgba(16,185,129,.4);
+    box-shadow:0 0 22px rgba(16,185,129,.12);
+}
+.back-to-top:active{transform:scale(.92)}
+.btt-corner{
+    position:absolute;
+    width:8px;height:8px;
+    opacity:.6;
+    transition:opacity .3s ease;
+}
+.back-to-top:hover .btt-corner{opacity:1}
+.btt-tl{top:4px;left:4px;border-top:1.5px solid rgba(16,185,129,.5);border-left:1.5px solid rgba(16,185,129,.5)}
+.btt-tr{top:4px;right:4px;border-top:1.5px solid rgba(16,185,129,.5);border-right:1.5px solid rgba(16,185,129,.5)}
+.btt-bl{bottom:4px;left:4px;border-bottom:1.5px solid rgba(16,185,129,.5);border-left:1.5px solid rgba(16,185,129,.5)}
+.btt-br{bottom:4px;right:4px;border-bottom:1.5px solid rgba(16,185,129,.5);border-right:1.5px solid rgba(16,185,129,.5)}
+
+@media(max-width:640px){
+    .back-to-top{right:12px;bottom:12px;width:40px;height:40px}
+}
+
+/* Hormati preferensi reduced motion */
+@media (prefers-reduced-motion: reduce){
+    .vf-ring,.hero-tilt,.scroll-timeline-fill,.back-to-top{transition:none!important}
+    .page-glitch.fire{animation:none!important}
 }
